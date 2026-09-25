@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ماژول ۱ — مقدمه: ایجنت چیست؟</title>
+<style>
+/* قالب مشترک اسلایدها — ایجنت‌های هوش مصنوعی برای کنشگران */
+
+:root {
+  --bg: #0f1420;
+  --bg2: #171f30;
+  --panel: #1c2740;
+  --ink: #e8eefc;
+  --muted: #9fb0d0;
+  --accent: #4da3ff;
+  --accent2: #7ee2b8;
+  --warn: #ffc46b;
+  --danger: #ff7a90;
+  --line: #2a3854;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Vazirmatn, "Vazirmatn UI", "Segoe UI", Tahoma, Arial, sans-serif;
+  direction: rtl;
+}
+
+/* ===== نوار پیشرفت ===== */
+#progress {
+  position: fixed;
+  top: 0; right: 0;
+  height: 4px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent2), var(--accent));
+  z-index: 50;
+  transition: width .25s ease;
+}
+
+/* ===== دک اسلاید ===== */
+.deck { height: 100%; }
+.slide {
+  display: none;
+  position: absolute;
+  inset: 0;
+  padding: 4rem 4.5rem 3.5rem;
+  overflow: auto;
+}
+.slide.active { display: block; }
+
+.slide h1 { font-size: 2.6rem; line-height: 1.35; margin: .3rem 0; }
+.slide h2 { font-size: 2rem; color: var(--accent); margin: 0 0 1.2rem; }
+.slide h3 { font-size: 1.15rem; margin: .4rem 0; }
+.slide p, .slide li { font-size: 1.12rem; line-height: 1.9; }
+.subtitle { font-size: 1.35rem; color: var(--accent2); margin: 0 0 1rem; }
+.meta { color: var(--muted); font-size: 1rem; margin-bottom: 1rem; }
+.hero { font-size: 4.5rem; margin: 1.2rem 0; }
+.small { color: var(--muted); font-size: .98rem; }
+.question {
+  margin-top: 1.2rem;
+  padding: .8rem 1.1rem;
+  background: rgba(126,226,184,.08);
+  border-inline-start: 4px solid var(--accent2);
+  border-radius: 8px;
+}
+.warning {
+  margin-top: 1rem;
+  padding: .7rem 1rem;
+  background: rgba(255,196,107,.09);
+  border-inline-start: 4px solid var(--warn);
+  border-radius: 8px;
+}
+.story-slide blockquote.inject {
+  background: rgba(255,122,144,.1);
+  border: 1px dashed var(--danger);
+  padding: .8rem 1.1rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+}
+
+/* ===== لیست‌ها ===== */
+.big-list li { margin-bottom: .7rem; }
+.checklist { list-style: none; padding: 0; }
+.checklist li {
+  padding: .55rem .9rem;
+  margin-bottom: .5rem;
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.checklist li::before { content: "☐  "; color: var(--accent); }
+
+/* ===== کارت‌ها ===== */
+.cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.cols3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+}
+.card .icon { font-size: 2rem; }
+.card h3 { color: var(--accent2); }
+.card p { font-size: 1rem; color: var(--ink); margin: .3rem 0 0; }
+
+/* ===== جدول مقایسه ===== */
+table.compare {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+table.compare th, table.compare td {
+  border: 1px solid var(--line);
+  padding: .6rem .9rem;
+  text-align: right;
+  font-size: 1.05rem;
+}
+table.compare th { background: var(--panel); color: var(--accent2); }
+table.compare td.danger { color: var(--danger); font-weight: 700; }
+
+/* ===== قواعد کلاس ===== */
+.rule {
+  display: flex; gap: 1rem; align-items: center;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: .9rem 1.1rem;
+  margin-bottom: .9rem;
+}
+.rule-num {
+  min-width: 2.4rem; height: 2.4rem;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent);
+  color: #0b1020;
+  font-weight: 800;
+  border-radius: 50%;
+  font-size: 1.2rem;
+}
+.rule-body { font-size: 1.15rem; }
+
+/* ===== حلقه / زنجیره ===== */
+.loop { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin: 1rem 0; }
+.loop .step {
+  background: var(--panel);
+  border: 1px solid var(--accent);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: .5rem 1.1rem;
+  font-size: 1.05rem;
+}
+.loop .step.loop-back { border-color: var(--accent2); color: var(--accent2); }
+.loop .arrow { color: var(--muted); }
+.chain { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin: 1rem 0; }
+.chain span {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: .5rem .9rem;
+  font-size: 1rem;
+}
+
+/* ===== سطوح خودمختاری ===== */
+.autonomy { display: grid; grid-template-columns: repeat(4, 1fr); gap: .8rem; margin: 1rem 0; }
+.aut-level { border-radius: 12px; padding: .9rem; border: 1px solid var(--line); }
+.aut-level h3 { margin: 0 0 .3rem; }
+.aut-level p { font-size: .95rem; margin: 0; color: var(--muted); }
+.aut-level.l1 { background: rgba(126,226,184,.12); }
+.aut-level.l2 { background: rgba(77,163,255,.12); }
+.aut-level.l3 { background: rgba(255,196,107,.12); }
+.aut-level.l4 { background: rgba(255,122,144,.12); }
+.aut-level.l4 h3 { color: var(--danger); }
+.rule-of-thumb {
+  margin-top: 1rem;
+  padding: .7rem 1rem;
+  background: rgba(77,163,255,.1);
+  border-inline-start: 4px solid var(--accent);
+  border-radius: 8px;
+}
+
+/* ===== ترازو ===== */
+.balance { display: flex; align-items: center; gap: 1rem; margin: 1.2rem 0; flex-wrap: wrap; }
+.balance .pan {
+  flex: 1 1 260px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: .9rem 1rem;
+  font-size: 1.05rem;
+}
+.balance .fulcrum { font-size: 2rem; }
+
+/* ===== پرامپت / اجزا ===== */
+.prompt-parts { display: flex; flex-direction: column; gap: .7rem; margin: 1rem 0; }
+.prompt-parts .part {
+  display: flex; gap: .9rem; align-items: flex-start;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: .7rem .9rem;
+}
+.prompt-parts .letter {
+  min-width: 2.2rem; height: 2.2rem;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent2);
+  color: #0b1020;
+  font-weight: 800;
+  border-radius: 8px;
+  font-size: 1.1rem;
+}
+.prompt-parts .part p { margin: .2rem 0 0; font-size: 1rem; color: var(--muted); }
+
+/* ===== تمرین‌ها ===== */
+.exercise {
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-inline-start: 4px solid var(--accent2);
+  border-radius: 10px;
+  padding: .8rem 1.1rem;
+  margin-bottom: .9rem;
+}
+.exercise h3 { margin: 0 0 .3rem; color: var(--accent2); }
+.exercise p { margin: .2rem 0; font-size: 1.05rem; }
+
+/* ===== کد ===== */
+pre.codebox {
+  background: #0b1020;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  font-family: Vazirmatn, Tahoma, monospace;
+  font-size: 1.02rem;
+  line-height: 1.9;
+  white-space: pre-wrap;
+  direction: rtl;
+  text-align: right;
+}
+
+code { background: var(--bg2); padding: .1rem .4rem; border-radius: 6px; direction: ltr; unicode-bidi: embed; }
+
+/* ===== ناوبری ===== */
+.nav {
+  position: fixed;
+  bottom: 1rem;
+  inset-inline-start: 1rem;
+  display: flex;
+  gap: .5rem;
+  z-index: 40;
+}
+.nav button {
+  background: var(--panel);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: .4rem .8rem;
+  font-family: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.nav button:hover { border-color: var(--accent); }
+.counter {
+  position: fixed;
+  bottom: 1.15rem;
+  inset-inline-end: 1.2rem;
+  color: var(--muted);
+  font-size: .95rem;
+  z-index: 40;
+}
+
+/* ===== حالت مدرس ===== */
+.notes {
+  display: none;
+  position: fixed;
+  inset-block-start: 0; inset-inline-end: 0;
+  width: 340px;
+  max-height: 100%;
+  overflow: auto;
+  background: #0b1020;
+  border-inline-start: 1px solid var(--line);
+  padding: 1rem 1.1rem;
+  font-size: .95rem;
+  color: var(--muted);
+  z-index: 60;
+  line-height: 1.8;
+}
+body.presenter .notes { display: block; }
+body.presenter .slide { padding-inline-end: 380px; }
+
+/* ===== چاپ ===== */
+@media print {
+  .slide { display: block; position: relative; page-break-after: always; padding: 2rem; }
+  #progress, .nav, .counter, .notes { display: none !important; }
+}
+
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<script>
+/* موتور اسلاید (inline برای استقلال کامل فایل) */
+(function(){
+"use strict";
+var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+var current=0,presenter=false,notesBox=null;
+if(slides.length===0)return;
+var h=parseInt((location.hash||"").replace("#",""),10);
+if(!isNaN(h)&&h>=1&&h<=slides.length)current=h-1;
+var nav=document.createElement("div");nav.className="nav";
+nav.innerHTML='<button type="button" data-act="next" title="بعدی (فلش چپ)">بعدی ←</button><button type="button" data-act="prev" title="قبلی (فلش راست)">→ قبلی</button>';
+document.body.appendChild(nav);
+var counter=document.createElement("div");counter.className="counter";document.body.appendChild(counter);
+function pad(n){return (n<10?"0":"")+n}
+function show(i){
+ current=Math.max(0,Math.min(slides.length-1,i));
+ slides.forEach(function(s,idx){s.classList.toggle("active",idx===current)});
+ counter.textContent=pad(current+1)+" / "+pad(slides.length);
+ var p=document.getElementById("progress");if(p)p.style.width=((current+1)/slides.length*100)+"%";
+ location.hash="#"+(current+1);
+ if(presenter&&notesBox)notesBox.textContent=slides[current].getAttribute("data-notes")||"—";
+}
+function togglePresenter(){
+ presenter=!presenter;document.body.classList.toggle("presenter",presenter);
+ if(presenter){notesBox=document.createElement("div");notesBox.className="notes";notesBox.title="یادداشت‌های مدرس — با P ببندید";document.body.appendChild(notesBox)}
+ else if(notesBox){notesBox.remove();notesBox=null}
+ show(current);
+}
+function toggleOverview(){
+ var any=document.body.classList.toggle("overview");
+ if(any){
+  slides.forEach(function(s,idx){
+   s.classList.add("active");s.style.display="block";s.style.position="relative";s.style.minHeight="140px";s.style.padding="1rem 2rem";s.style.borderBottom="1px solid #2a3854";s.style.cursor="pointer";
+   s.onclick=function(){clearOverview();show(idx)};
+  });
+  counter.textContent="فهرست — برای انتخاب کلیک کنید";
+ }else{clearOverview();show(current)}
+}
+function clearOverview(){
+ document.body.classList.remove("overview");
+ slides.forEach(function(s){s.style.display="";s.style.position="";s.style.minHeight="";s.style.padding="";s.style.borderBottom="";s.style.cursor="";s.onclick=null});
+}
+function next(){show(current+1)}
+function prev(){show(current-1)}
+document.addEventListener("keydown",function(e){
+ if(e.key==="ArrowLeft"||e.key===" "||e.key==="PageDown"){e.preventDefault();next()}
+ else if(e.key==="ArrowRight"||e.key==="PageUp"){e.preventDefault();prev()}
+ else if(e.key==="ArrowDown"){e.preventDefault();next()}
+ else if(e.key==="ArrowUp"){e.preventDefault();prev()}
+ else if(e.key==="Home"){e.preventDefault();show(0)}
+ else if(e.key==="End"){e.preventDefault();show(slides.length-1)}
+ else if(e.key==="f"||e.key==="F"){if(!document.fullscreenElement){document.documentElement.requestFullscreen()}else{document.exitFullscreen()}}
+ else if(e.key==="p"||e.key==="P"){togglePresenter()}
+ else if(e.key==="Escape"){toggleOverview()}
+});
+nav.addEventListener("click",function(e){var act=e.target&&e.target.getAttribute("data-act");if(act==="next")next();if(act==="prev")prev()});
+var touchX=null;
+document.addEventListener("touchstart",function(e){touchX=e.touches[0].clientX},{passive:true});
+document.addEventListener("touchend",function(e){if(touchX===null)return;var dx=e.changedTouches[0].clientX-touchX;if(Math.abs(dx)>50){dx>0?prev():next()}touchX=null},{passive:true});
+window.addEventListener("hashchange",function(){
+ var h=parseInt((location.hash||"").replace("#",""),10);
+ if(!isNaN(h)&&h>=1&&h<=slides.length&&h-1!==current)show(h-1);
+});
+show(current);
+})();
+</script>
+<script>
+// موتور ساده اسلاید — ایجنت‌های هوش مصنوعی برای کنشگران
+// کنترل: فلش راست/چپ یا Space، F تمام‌صفحه، Esc فهرست، P حالت مدرس
+
+(function () {
+  "use strict";
+
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var current = 0;
+  var presenter = false;
+  var notesBox = null;
+
+  if (slides.length === 0) return;
+
+  // شماره اولیه از هش (#3)
+  var h = parseInt((location.hash || "").replace("#", ""), 10);
+  if (!isNaN(h) && h >= 1 && h <= slides.length) current = h - 1;
+
+  // ناوبری پایین صفحه
+  var nav = document.createElement("div");
+  nav.className = "nav";
+  nav.innerHTML =
+    '<button type="button" data-act="next" title="بعدی (فلش چپ)">بعدی ←</button>' +
+    '<button type="button" data-act="prev" title="قبلی (فلش راست)">→ قبلی</button>';
+  document.body.appendChild(nav);
+
+  var counter = document.createElement("div");
+  counter.className = "counter";
+  document.body.appendChild(counter);
+
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+
+  function show(i) {
+    current = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach(function (s, idx) {
+      s.classList.toggle("active", idx === current);
+    });
+    counter.textContent = pad(current + 1) + " / " + pad(slides.length);
+    document.getElementById("progress").style.width =
+      ((current + 1) / slides.length) * 100 + "%";
+    location.hash = "#" + (current + 1);
+    if (presenter && notesBox) {
+      var n = slides[current].getAttribute("data-notes") || "—";
+      notesBox.textContent = n;
+    }
+  }
+
+  // جعبه یادداشت مدرس
+  function togglePresenter() {
+    presenter = !presenter;
+    document.body.classList.toggle("presenter", presenter);
+    if (presenter) {
+      notesBox = document.createElement("div");
+      notesBox.className = "notes";
+      notesBox.title = "یادداشت‌های مدرس — با P ببندید";
+      document.body.appendChild(notesBox);
+    } else if (notesBox) {
+      notesBox.remove();
+      notesBox = null;
+    }
+    show(current);
+  }
+
+  // نمای فهرست
+  function toggleOverview() {
+    var any = document.body.classList.toggle("overview");
+    if (any) {
+      slides.forEach(function (s, idx) {
+        s.classList.add("active");
+        s.style.display = "block";
+        s.style.position = "relative";
+        s.style.minHeight = "140px";
+        s.style.padding = "1rem 2rem";
+        s.style.borderBottom = "1px solid #2a3854";
+        s.style.cursor = "pointer";
+        s.onclick = function () {
+          clearOverview();
+          show(idx);
+        };
+      });
+      counter.textContent = "فهرست — برای انتخاب کلیک کنید";
+    } else {
+      clearOverview();
+      show(current);
+    }
+  }
+
+  function clearOverview() {
+    document.body.classList.remove("overview");
+    slides.forEach(function (s) {
+      s.style.display = "";
+      s.style.position = "";
+      s.style.minHeight = "";
+      s.style.padding = "";
+      s.style.borderBottom = "";
+      s.style.cursor = "";
+      s.onclick = null;
+    });
+  }
+
+  function next() { show(current + 1); }
+  function prev() { show(current - 1); }
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowLeft" || e.key === " " || e.key === "PageDown") {
+      e.preventDefault(); next();
+    } else if (e.key === "ArrowRight" || e.key === "PageUp") {
+      e.preventDefault(); prev();
+    } else if (e.key === "ArrowDown") { e.preventDefault(); next(); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); prev(); }
+    else if (e.key === "Home") { e.preventDefault(); show(0); }
+    else if (e.key === "End") { e.preventDefault(); show(slides.length - 1); }
+    else if (e.key === "f" || e.key === "F") {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    } else if (e.key === "p" || e.key === "P") {
+      togglePresenter();
+    } else if (e.key === "Escape") {
+      toggleOverview();
+    }
+  });
+
+  // کلیک روی دکمه‌های ناوبری
+  nav.addEventListener("click", function (e) {
+    var act = e.target && e.target.getAttribute("data-act");
+    if (act === "next") next();
+    if (act === "prev") prev();
+  });
+
+  // لمس (اسوایپ) برای تبلت
+  var touchX = null;
+  document.addEventListener("touchstart", function (e) {
+    touchX = e.touches[0].clientX;
+  }, { passive: true });
+  document.addEventListener("touchend", function (e) {
+    if (touchX === null) return;
+    var dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 50) { dx > 0 ? prev() : next(); }
+    touchX = null;
+  }, { passive: true });
+
+  window.addEventListener("hashchange", function () {
+    var h = parseInt((location.hash || "").replace("#", ""), 10);
+    if (!isNaN(h) && h >= 1 && h <= slides.length && h - 1 !== current) show(h - 1);
+  });
+
+  show(current);
+})();
+
+</script>
+<div class="deck" id="deck">
+
+<!-- ===== slide 1: cover ===== -->
+<section class="slide" data-notes="به شرکت‌کنندگان خوش‌آمد بگویید. خودتان را معرفی کنید، اهداف کارگاه را کوتاه بگویید. توضیح دهید که این دوره هم مهارت می‌آموزد و هم ریسک‌ها را باز می‌کند.">
+<h1>ایجنت‌های هوش مصنوعی برای کنشگران</h1>
+<p class="subtitle">ماژول ۱ — مقدمه: ایجنت چیست؟</p>
+<div class="meta">دوره‌ی کارگاهی · ۸ ماژول · مخاطب غیرفنی</div>
+<div class="hero">🤝</div>
+<p class="small">یک کارگاه مبتنی بر تعامل — نه سمینار یک‌طرفه</p>
+</section>
+
+<!-- ===== slide 2: توافق کلاس ===== -->
+<section class="slide" data-notes="این اسلاید حیاتی است. سه قاعده را با صدای بلند بخوانید. تاکید کنید پرده‌بندی پیش‌فرض است: هیچ‌کس ملزم به گفتن نام سازمان یا پروژه‌ی واقعی خودش نیست.">
+<h2>توافق کارگاه ما</h2>
+<div class="rule">
+  <div class="rule-num">۱</div>
+  <div class="rule-body"><strong>پرده‌بندی پیش‌فرض:</strong> کسی ملزم نیست شیوه‌ی کار واقعی‌اش را بگوید. مثال‌ها کلی است.</div>
+</div>
+<div class="rule">
+  <div class="rule-num">۲</div>
+  <div class="rule-body"><strong>هیچ داده‌ی واقعی وارد تمرین نمی‌شود:</strong> مثال‌ها ساختگی یا عمومی هستند.</div>
+</div>
+<div class="rule">
+  <div class="rule-num">۳</div>
+  <div class="rule-body">چیزی نپرسید که بقیه را ناچار به افشا کند. اگر سؤال حساس دارید، بعد از کلاس خصوصی بپرسید.</div>
+</div>
+</section>
+
+<!-- ===== slide 3: داستان آغازین ===== -->
+<section class="slide story-slide" data-notes="داستان را با جزئیات تعریف کنید. بعد بپرسید: شما جای لیلا بودید چطور این کار را انجام می‌دادید؟ چند دقیقه صحبت آزاد.">
+<h2>🎬 داستان: شبِ اطلاعیه</h2>
+<p>ساعت ۱۱ شب. لیلا، هماهنگ‌کننده‌ی یک شبکه‌ی کارگری، خبر می‌گیرد که فردا صبح اطلاعیه‌ی مهمی منتشر می‌شود.</p>
+<ul>
+<li>ترجمه‌ی متن اطلاعیه به سه زبان</li>
+<li>خلاصه برای شبکه‌های اجتماعی</li>
+<li>تهیه‌ی فهرست مخاطبان رسانه‌ای</li>
+<li>پاسخ به سؤالاتی که ممکن است پیش بیاید</li>
+</ul>
+<p class="question">💡 <strong>پرسش:</strong> شما جای لیلا بودید چطور این کار را انجام می‌دادید؟</p>
+</section>
+
+<!-- ===== slide 4: چت‌بات در برابر ایجنت ===== -->
+<section class="slide" data-notes="تفاوت اصلی را باز کنید: چت‌بات حرف می‌زند، ایجنت عمل می‌کند. تاکید کنید که خطای ایجنت یعنی اقدام اشتباه، نه فقط جواب اشتباه — این پایه‌ی بحث امنیت در ماژول‌های بعدی است.">
+<h2>چت‌بات ≠ ایجنت</h2>
+<table class="compare">
+<thead><tr><th></th><th>چت‌بات</th><th>ایجنت</th></tr></thead>
+<tbody>
+<tr><td>هدف</td><td>پاسخ به یک سؤال</td><td>انجام یک کار</td></tr>
+<tr><td>ابزار</td><td>فقط گفت‌وگو</td><td>مرورگر، فایل، تقویم، ایمیل</td></tr>
+<tr><td>حافظه</td><td>کوتاه‌مدت</td><td>طولانی‌مدت و چندمرحله‌ای</td></tr>
+<tr><td>خطا</td><td>پاسخ اشتباه</td><td class="danger">اقدام اشتباه</td></tr>
+</tbody>
+</table>
+<p class="small">خطای چت‌بات یعنی جواب بد؛ خطای ایجنت یعنی کار بد انجام‌شده.</p>
+</section>
+
+<!-- ===== slide 5: اجزای ایجنت ===== -->
+<section class="slide" data-notes="سه جزء را با تشبیه: مغز، دست‌ها، دفترچه. بعد بپرسید: کدام جزء خطرناک‌ترین است؟ (پاسخ: ابزارها — چون اقدام می‌کنند و هر ابزار یک در ورودی جدید است.)">
+<h2>سه جزء ایجنت</h2>
+<div class="cols3">
+  <div class="card"><div class="icon">🧠</div><h3>مدل زبانی — مغز</h3><p>می‌فهمد، برنامه‌ریزی می‌کند، تصمیم می‌گیرد. محدودیت‌های مدل = محدودیت ایجنت.</p></div>
+  <div class="card"><div class="icon">🛠️</div><h3>ابزارها — دست‌ها</h3><p>مرورگر، فایل، تقویم، ایمیل. ایجنت بدون ابزار فقط چت‌بات است. هر ابزار، یک درِ ورودی جدید.</p></div>
+  <div class="card"><div class="icon">📓</div><h3>حافظه — دفترچه</h3><p>کارهای قبلی را یاد می‌آورد. پرسش: چه چیزی از من ذخیره می‌شود؟ (ماژول ۴)</p></div>
+</div>
+</section>
+
+<!-- ===== slide 6: حلقه ===== -->
+<section class="slide" data-notes="حلقه را قدم به قدم روی تخته بکشید. تاکید کنید: خطای قدم اول می‌تواند در کل حلقه ادامه پیدا کند. از شرکت‌کنندگان بپرسید چطور جلوی این را می‌گیرند؟ پاسخ: نظارت انسانی در نقاط کلیدی.">
+<h2>حلقه‌ی کار ایجنت</h2>
+<div class="loop">
+  <div class="step">۱. هدف</div>
+  <div class="arrow">←</div>
+  <div class="step">۲. برنامه‌ریزی</div>
+  <div class="arrow">←</div>
+  <div class="step">۳. اقدام</div>
+  <div class="arrow">←</div>
+  <div class="step">۴. مشاهده</div>
+  <div class="arrow">←</div>
+  <div class="step loop-back">↺ تکرار یا پایان</div>
+</div>
+<p class="warning">⚠️ اگر در قدم اول اشتباه بفهمد، در کل حلقه همان اشتباه را دنبال می‌کند.</p>
+<p class="small">پس: <strong>نظارت انسانی در نقاط کلیدی</strong> لازم است.</p>
+</section>
+
+<!-- ===== slide 7: سطوح خودمختاری ===== -->
+<section class="slide" data-q="s7" data-notes="از شرکت‌کنندگان بخواهید خودشان را در طیف قرار دهند. قانون کارگاه: هرچه داده حساس‌تر، سطح پایین‌تر.">
+<h2>سطوح خودمختاری</h2>
+<div class="autonomy">
+  <div class="aut-level l1"><h3>۱ · پیشنهادگر</h3><p>ایجنت پیشنهاد می‌دهد، تو انجام می‌دهی</p></div>
+  <div class="aut-level l2"><h3>۲ · تأیید هر قدم</h3><p>هر اقدام قبل از اجرا نشان داده می‌شود</p></div>
+  <div class="aut-level l3"><h3>۳ · نقاط کنترلی</h3><p>چند قدم می‌دود، در نقاط کلیدی توقف می‌کند</p></div>
+  <div class="aut-level l4"><h3>۴ · خودمختار</h3><p>تا انتها می‌دود، در پایان گزارش می‌دهد</p></div>
+</div>
+<p class="rule-of-thumb">📏 <strong>قانون:</strong> هرچه داده حساس‌تر ← سطح پایین‌تر</p>
+</section>
+
+<!-- ===== slide 8: پارادوکس خودمختاری ===== -->
+<section class="slide" data-q="s8" data-notes="این اسلاید پایه‌ی انگیزشی کل دوره است. هرچه خودمختارتر، سودمندتر و خطرناک‌تر — به یک نسبت.">
+<h2>پارادوکس خودمختاری</h2>
+<div class="balance">
+  <div class="pan">✅ سود: صرفه‌جویی در زمان، کارهای تکراری، مقیاس‌پذیری</div>
+  <div class="fulcrum">⚖️</div>
+  <div class="pan">⚠️ خطر: خطا در مقیاس، اقدام غیرقابل‌برگشت، افشای ناخواسته</div>
+</div>
+<p>هرچه ایجنت خودمختارتر — <strong>سودمندتر و خطرناک‌تر</strong>، به یک نسبت.</p>
+<p class="small">به همین دلیل دوره هم ماژول توانمندسازی دارد (۲، ۳) و هم ماژول امنیت (۴، ۵، ۶).</p>
+</section>
+
+<!-- ===== slide 9: آیا ایجنت میفهمد؟ ===== -->
+<section class="slide" data-notes="سه محدودیت را با مثال بگویید. تشبیه پیشنهادی: نیروی تازه‌کار بسیار باهوش که گاهی بی‌مبنا با اعتمادبه‌نفس حرف می‌زند. شما سوپروایزر او هستید.">
+<h2>آیا ایجنت «می‌فهمد»؟</h2>
+<ul class="big-list">
+<li><strong>توهم:</strong> با اعتمادبه‌نفس کامل، چیزی کاملاً غلط می‌گوید.</li>
+<li><strong>سوگیری:</strong> داده‌ی آموزشی، سوگیری‌های اجتماعی را بازتاب می‌دهد.</li>
+<li><strong>نقص در منطق دقیق:</strong> در ریاضی و منطق سخت‌گیرانه ضعیف است.</li>
+</ul>
+<p class="question">🧠 تشبیه: نیروی تازه‌کار بسیار باهوش که گاهی بی‌مبنا حرف می‌زند — شما سوپروایزر او هستید.</p>
+</section>
+
+<!-- ===== slide 10: تمرین ===== -->
+<section class="slide" data-notes="تمرین زوجی ۱۰ دقیقه، گروهی ۱۵ دقیقه. کاغذها جمع نمیشود. یادآوری پرده‌بندی: هیچ داده واقعی وارد تمرین نمیشود.">
+<h2>📝 تمرین</h2>
+<div class="exercise">
+  <h3>۱ — زوجی (۱۰ دقیقه)</h3>
+  <p>«بزرگ‌ترین کار تکراری‌ای که در هفته انجام می‌دهید چیست؟» — کلی بگویید، بدون نام سازمان. آیا برای ایجنت مناسب است؟ کدام بخش؟</p>
+</div>
+<div class="exercise">
+  <h3>۲ — گروهی (۱۵ دقیقه)</h3>
+  <p>حلقه‌ی کار ایجنت را برای کارهای لیلا طی کنید: هدف → برنامه → اقدام → مشاهده. کدام گام‌ها نیاز به تأیید لیلا دارند؟</p>
+</div>
+<div class="exercise">
+  <h3>۳ — فردی (۵ دقیقه)</h3>
+  <p>روی کاغذ: «از یک ایجنت انتظار دارم _______ را انجام دهد.» کاغذها جمع نمی‌شود.</p>
+</div>
+</section>
+
+<!-- ===== slide 11: جمع‌بندی ===== -->
+<section class="slide" data-notes="جمع‌بندی کوتاه. حلقه‌ی بازخورد: دو سؤال. مسیر دوره را یادآوری کنید.">
+<h2>جمع‌بندی ماژول ۱</h2>
+<ul class="big-list">
+<li>ایجنت = مغز + دست‌ها + حافظه</li>
+<li>خطای ایجنت یعنی اقدام اشتباه، نه جواب اشتباه</li>
+<li>حلقه: هدف → برنامه → اقدام → مشاهده → تکرار</li>
+<li>هرچه داده حساس‌تر ← سطح خودمختاری پایین‌تر</li>
+</ul>
+<p class="question">🎤 <strong>حلقه‌ی بازخورد:</strong></p>
+<ul>
+<li>کدام ابزار یا مفهوم را می‌خواهید بعد از کارگاه امتحان کنید؟</li>
+<li>کدام ریسک شما را نگران کرد؟</li>
+</ul>
+<p class="small">ماژول بعد: کاربردهای واقعی برای کنشگری</p>
+</section>
+
+</div>
+
+</body>
+</html>

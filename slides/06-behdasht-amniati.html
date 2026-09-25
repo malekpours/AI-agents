@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ماژول ۶ — بهداشت امنیتی</title>
+<style>
+/* قالب مشترک اسلایدها — ایجنت‌های هوش مصنوعی برای کنشگران */
+
+:root {
+  --bg: #0f1420;
+  --bg2: #171f30;
+  --panel: #1c2740;
+  --ink: #e8eefc;
+  --muted: #9fb0d0;
+  --accent: #4da3ff;
+  --accent2: #7ee2b8;
+  --warn: #ffc46b;
+  --danger: #ff7a90;
+  --line: #2a3854;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Vazirmatn, "Vazirmatn UI", "Segoe UI", Tahoma, Arial, sans-serif;
+  direction: rtl;
+}
+
+/* ===== نوار پیشرفت ===== */
+#progress {
+  position: fixed;
+  top: 0; right: 0;
+  height: 4px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent2), var(--accent));
+  z-index: 50;
+  transition: width .25s ease;
+}
+
+/* ===== دک اسلاید ===== */
+.deck { height: 100%; }
+.slide {
+  display: none;
+  position: absolute;
+  inset: 0;
+  padding: 4rem 4.5rem 3.5rem;
+  overflow: auto;
+}
+.slide.active { display: block; }
+
+.slide h1 { font-size: 2.6rem; line-height: 1.35; margin: .3rem 0; }
+.slide h2 { font-size: 2rem; color: var(--accent); margin: 0 0 1.2rem; }
+.slide h3 { font-size: 1.15rem; margin: .4rem 0; }
+.slide p, .slide li { font-size: 1.12rem; line-height: 1.9; }
+.subtitle { font-size: 1.35rem; color: var(--accent2); margin: 0 0 1rem; }
+.meta { color: var(--muted); font-size: 1rem; margin-bottom: 1rem; }
+.hero { font-size: 4.5rem; margin: 1.2rem 0; }
+.small { color: var(--muted); font-size: .98rem; }
+.question {
+  margin-top: 1.2rem;
+  padding: .8rem 1.1rem;
+  background: rgba(126,226,184,.08);
+  border-inline-start: 4px solid var(--accent2);
+  border-radius: 8px;
+}
+.warning {
+  margin-top: 1rem;
+  padding: .7rem 1rem;
+  background: rgba(255,196,107,.09);
+  border-inline-start: 4px solid var(--warn);
+  border-radius: 8px;
+}
+.story-slide blockquote.inject {
+  background: rgba(255,122,144,.1);
+  border: 1px dashed var(--danger);
+  padding: .8rem 1.1rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+}
+
+/* ===== لیست‌ها ===== */
+.big-list li { margin-bottom: .7rem; }
+.checklist { list-style: none; padding: 0; }
+.checklist li {
+  padding: .55rem .9rem;
+  margin-bottom: .5rem;
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.checklist li::before { content: "☐  "; color: var(--accent); }
+
+/* ===== کارت‌ها ===== */
+.cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.cols3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+}
+.card .icon { font-size: 2rem; }
+.card h3 { color: var(--accent2); }
+.card p { font-size: 1rem; color: var(--ink); margin: .3rem 0 0; }
+
+/* ===== جدول مقایسه ===== */
+table.compare {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+table.compare th, table.compare td {
+  border: 1px solid var(--line);
+  padding: .6rem .9rem;
+  text-align: right;
+  font-size: 1.05rem;
+}
+table.compare th { background: var(--panel); color: var(--accent2); }
+table.compare td.danger { color: var(--danger); font-weight: 700; }
+
+/* ===== قواعد کلاس ===== */
+.rule {
+  display: flex; gap: 1rem; align-items: center;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: .9rem 1.1rem;
+  margin-bottom: .9rem;
+}
+.rule-num {
+  min-width: 2.4rem; height: 2.4rem;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent);
+  color: #0b1020;
+  font-weight: 800;
+  border-radius: 50%;
+  font-size: 1.2rem;
+}
+.rule-body { font-size: 1.15rem; }
+
+/* ===== حلقه / زنجیره ===== */
+.loop { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin: 1rem 0; }
+.loop .step {
+  background: var(--panel);
+  border: 1px solid var(--accent);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: .5rem 1.1rem;
+  font-size: 1.05rem;
+}
+.loop .step.loop-back { border-color: var(--accent2); color: var(--accent2); }
+.loop .arrow { color: var(--muted); }
+.chain { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin: 1rem 0; }
+.chain span {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: .5rem .9rem;
+  font-size: 1rem;
+}
+
+/* ===== سطوح خودمختاری ===== */
+.autonomy { display: grid; grid-template-columns: repeat(4, 1fr); gap: .8rem; margin: 1rem 0; }
+.aut-level { border-radius: 12px; padding: .9rem; border: 1px solid var(--line); }
+.aut-level h3 { margin: 0 0 .3rem; }
+.aut-level p { font-size: .95rem; margin: 0; color: var(--muted); }
+.aut-level.l1 { background: rgba(126,226,184,.12); }
+.aut-level.l2 { background: rgba(77,163,255,.12); }
+.aut-level.l3 { background: rgba(255,196,107,.12); }
+.aut-level.l4 { background: rgba(255,122,144,.12); }
+.aut-level.l4 h3 { color: var(--danger); }
+.rule-of-thumb {
+  margin-top: 1rem;
+  padding: .7rem 1rem;
+  background: rgba(77,163,255,.1);
+  border-inline-start: 4px solid var(--accent);
+  border-radius: 8px;
+}
+
+/* ===== ترازو ===== */
+.balance { display: flex; align-items: center; gap: 1rem; margin: 1.2rem 0; flex-wrap: wrap; }
+.balance .pan {
+  flex: 1 1 260px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: .9rem 1rem;
+  font-size: 1.05rem;
+}
+.balance .fulcrum { font-size: 2rem; }
+
+/* ===== پرامپت / اجزا ===== */
+.prompt-parts { display: flex; flex-direction: column; gap: .7rem; margin: 1rem 0; }
+.prompt-parts .part {
+  display: flex; gap: .9rem; align-items: flex-start;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: .7rem .9rem;
+}
+.prompt-parts .letter {
+  min-width: 2.2rem; height: 2.2rem;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent2);
+  color: #0b1020;
+  font-weight: 800;
+  border-radius: 8px;
+  font-size: 1.1rem;
+}
+.prompt-parts .part p { margin: .2rem 0 0; font-size: 1rem; color: var(--muted); }
+
+/* ===== تمرین‌ها ===== */
+.exercise {
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-inline-start: 4px solid var(--accent2);
+  border-radius: 10px;
+  padding: .8rem 1.1rem;
+  margin-bottom: .9rem;
+}
+.exercise h3 { margin: 0 0 .3rem; color: var(--accent2); }
+.exercise p { margin: .2rem 0; font-size: 1.05rem; }
+
+/* ===== کد ===== */
+pre.codebox {
+  background: #0b1020;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  font-family: Vazirmatn, Tahoma, monospace;
+  font-size: 1.02rem;
+  line-height: 1.9;
+  white-space: pre-wrap;
+  direction: rtl;
+  text-align: right;
+}
+
+code { background: var(--bg2); padding: .1rem .4rem; border-radius: 6px; direction: ltr; unicode-bidi: embed; }
+
+/* ===== ناوبری ===== */
+.nav {
+  position: fixed;
+  bottom: 1rem;
+  inset-inline-start: 1rem;
+  display: flex;
+  gap: .5rem;
+  z-index: 40;
+}
+.nav button {
+  background: var(--panel);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: .4rem .8rem;
+  font-family: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.nav button:hover { border-color: var(--accent); }
+.counter {
+  position: fixed;
+  bottom: 1.15rem;
+  inset-inline-end: 1.2rem;
+  color: var(--muted);
+  font-size: .95rem;
+  z-index: 40;
+}
+
+/* ===== حالت مدرس ===== */
+.notes {
+  display: none;
+  position: fixed;
+  inset-block-start: 0; inset-inline-end: 0;
+  width: 340px;
+  max-height: 100%;
+  overflow: auto;
+  background: #0b1020;
+  border-inline-start: 1px solid var(--line);
+  padding: 1rem 1.1rem;
+  font-size: .95rem;
+  color: var(--muted);
+  z-index: 60;
+  line-height: 1.8;
+}
+body.presenter .notes { display: block; }
+body.presenter .slide { padding-inline-end: 380px; }
+
+/* ===== چاپ ===== */
+@media print {
+  .slide { display: block; position: relative; page-break-after: always; padding: 2rem; }
+  #progress, .nav, .counter, .notes { display: none !important; }
+}
+
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div class="deck" id="deck">
+
+<!-- ===== slide 1: cover ===== -->
+<section class="slide" data-notes="لحن: عادتهای ساده که بیشتر از ابزار پیشرفته محافظت میکنند. از شرکتکنندگان بپرسید چند حساب فعال دارند؟">
+<h1>بهداشت امنیتی</h1>
+<p class="subtitle">ماژول ۶ — عادت‌هایی که از شما محافظت می‌کنند</p>
+<div class="meta">پیش‌نیاز: ماژول ۵</div>
+<div class="hero">🧼</div>
+</section>
+
+<!-- ===== slide 2: داستان ===== -->
+<section class="slide story-slide" data-notes="داستان را تعریف کنید و تاکید: هیچ حمله پیچیدهای نبود — فقط بهداشت ضعیف.">
+<h2>🎬 داستان: رمزی که همه‌جا بود</h2>
+<ul>
+<li>یک رمز برای همه‌چیز</li>
+<li>رمزها در «پسوردها.docx» روی دسکتاپ همه</li>
+<li>لپ‌تاپ در کافی‌شاپ جا ماند</li>
+<li>مرورگر همه‌ی حساب‌ها را خودکار باز می‌کرد</li>
+<li>دو روز بعد: پیام‌هایی از طرف شبکه منتشر شد که هیچ‌کس ننوشته بود</li>
+</ul>
+<p class="question">💡 هیچ حمله‌ی پیچیده‌ای در کار نبود — فقط <strong>بهداشت ضعیف</strong>.</p>
+</section>
+
+<!-- ===== slide 3: رمزگذار ===== -->
+<section class="slide" data-notes="گزینهها را معرفی کنید. برای کاربران ایران: KeePassXC کاملاً آفلاین — بهترین برای داده حساس. عادت اول را اعلام کنید.">
+<h2>رمزگذار — سطل رمزهای شما</h2>
+<div class="cols3">
+  <div class="card"><div class="icon">🦉</div><h3>Bitwarden</h3><p>متن‌باز، رایگان، ابری رمزنگاری‌شده</p></div>
+  <div class="card"><div class="icon">🗄️</div><h3>KeePassXC</h3><p>فایل محلی، بدون ابر — بهترین برای داده‌ی حساس</p></div>
+  <div class="card"><div class="icon">🎩</div><h3>1Password</h3><p>پولی، رابط بسیار راحت</p></div>
+</div>
+<p class="rule-of-thumb">📏 هر حساب، یک رمز یکتا. فقط رمز اصلی در ذهن.</p>
+<p class="question">✅ <strong>عادت ۱:</strong> همین امروز نصب کنید و سه حساب حساس را منتقل کنید.</p>
+</section>
+
+<!-- ===== slide 4: احراز دومرحله‌ای ===== -->
+<section class="slide" data-notes="اولویت: ایمیل اول — کلید همه حسابهاست. اپ تولید کد بهتر از پیامک. کدهای بازیابی: کاغذ در جای امن. عادت دوم را اعلام کنید.">
+<h2>احراز دومرحله‌ای (2FA)</h2>
+<ul class="big-list">
+<li><strong>اولویت ۱: ایمیل</strong> — کلید همه‌ی حساب‌های دیگر است</li>
+<li><strong>اولویت ۲:</strong> حساب ابزارهای ایجنت و فضای ابری</li>
+<li><strong>اولویت ۳:</strong> شبکه‌های اجتماعی</li>
+</ul>
+<p class="small">اپلیکیشن تولید کد (مثل Aegis) بهتر از پیامک — پیامک قابل رهگیری است. کدهای بازیابی: کاغذ در جای امن، نه فایل روی دسکتاپ.</p>
+<p class="question">✅ <strong>عادت ۲:</strong> همین هفته، 2FA روی ایمیل و حساب ابزار ایجنت.</p>
+</section>
+
+<!-- ===== slide 5: جداسازی هویتها ===== -->
+<section class="slide" data-notes="جدول سه هویت را باز کنید. قواعد مهم: ایمیل جدا، جابجایی ممنوع، عکس مشترک ممنوع (جستوجوی معکوس تصویر).">
+<h2>جداسازی هویت‌ها</h2>
+<table class="compare">
+<thead><tr><th>هویت</th><th>شامل</th><th>نکته</th></tr></thead>
+<tbody>
+<tr><td>شخصی</td><td>شبکه‌های اجتماعی، ایمیل روزمره</td><td>هرگز با کار حساس ترکیب نشود</td></tr>
+<tr><td>مدنی/عمومی</td><td>نام سازمان، رسانه</td><td>می‌تواند واقعی باشد</td></tr>
+<tr><td>مدنی/حساس</td><td>منابع، اسناد داخلی</td><td class="danger">مستعار، ایمیل جدا، در صورت نیاز دستگاه جدا</td></tr>
+</tbody>
+</table>
+<p class="small">عکس و نام کاربری بین هویت‌ها مشترک نباشد — جست‌وجوی معکوس تصویر، هویت‌ها را به هم وصل می‌کند.</p>
+</section>
+
+<!-- ===== slide 6: فیشینگ تقویتشده ===== -->
+<section class="slide" data-notes="هوش مصنوعی فیشینگ را بهتر کرده: بدون غلط، لحن طبیعی فارسی، مکالمه بلند اعتمادساز، صوت جعلی. چهار نشانه هشدار را با هم مرور کنید.">
+<h2>فیشینگ — حالا تقویت‌شده با AI</h2>
+<p>هوش مصنوعی فیشینگ را <strong>بهتر</strong> کرده: بدون غلط املایی، لحن طبیعی فارسی، مکالمه‌ی اعتمادساز، صوت جعلی از «مدیر».</p>
+<div class="prompt-parts">
+  <div class="part"><span class="letter">۱</span><div><strong>فوریت</strong><p>«همین حالا»، «تا ۱۰ دقیقه دیگر»</p></div></div>
+  <div class="part"><span class="letter">۲</span><div><strong>درخواست کد/رمز</strong><p>هیچ سرویس معتبری کد 2FA شما را نمی‌خواهد</p></div></div>
+  <div class="part"><span class="letter">۳</span><div><strong>آدرس نزدیک ولی غلط</strong><p><code>g0ogle-accounts.com</code> — آدرس را بخوانید</p></div></div>
+  <div class="part"><span class="letter">۴</span><div><strong>خارج از عادت</strong><p>حسابدار از شماره‌ی جدید؟ با کانال قبلی تأیید کنید</p></div></div>
+</div>
+<p class="rule-of-thumb">📏 <strong>قاعده‌ی طلایی:</strong> فوریت + درخواست کد/پول/لینک = توقف و تأیید از کانال دیگر.</p>
+</section>
+
+<!-- ===== slide 7: پروتکل دستگاه ===== -->
+<section class="slide" data-notes="قالب کامل در متن ماژول. از هر شرکتکننده بخواهید نسخه شخصی خودش را بنویسد (تمرین ۲).">
+<h2>پروتکل از دست دادن دستگاه</h2>
+<div class="loop">
+  <div class="step">۱. بیرون‌کردن همه‌ی نشست‌ها</div>
+  <div class="step">۲. عوض‌کردن رمز حیاتی‌ها</div>
+  <div class="step">۳. خبر به همکاران</div>
+  <div class="step">۴. اگر داده‌ی حساس بود → پروتکل افشا</div>
+  <div class="step loop-back">۵. چک کدهای بازیابی</div>
+</div>
+<p class="small">قبل از اتفاق بیفتد، بنویسید. نسخه‌ی شخصی، در جای امن، خارج از دستگاه.</p>
+</section>
+
+<!-- ===== slide 8: تمرین ===== -->
+<section class="slide" data-notes="تمرین ۱: تاکید — فهرست روی دستگاه نگاه ندارید؛ بنویسید، بعد پاره کنید یا در رمزگذار.">
+<h2>📝 تمرین</h2>
+<div class="exercise">
+  <h3>۱ — فردی (۲۰ دقیقه): شمارش حساب‌ها</h3>
+  <p>فهرست حساب‌ها (بدون رمز!). علامت بزنید: رمز تکراری؟ بدون 2FA؟ ایمیل اشتباه؟ بعد: پاره کنید یا در رمزگذار.</p>
+</div>
+<div class="exercise">
+  <h3>۲ — گروهی (۱۵ دقیقه): پروتکل دستگاه</h3>
+  <p>اگر لپ‌تاپِ <em>من</em> گم شود، چه کسی چه کاری می‌کند؟ نقش‌ها را مشخص کنید.</p>
+</div>
+<div class="exercise">
+  <h3>۳ — کلاسی (۱۵ دقیقه): فیشینگ یا نه؟</h3>
+  <p>پنج پیام نمونه — دو فیشینگ، سه سالم. با نشانه‌های هشدار رأی بدهید.</p>
+</div>
+</section>
+
+<!-- ===== slide 9: جمعبندی ===== -->
+<section class="slide" data-notes="حلقه بازخورد. پل به ماژول ۷: تا اینجا شناخت و عادت — حالا عمل.">
+<h2>جمع‌بندی ماژول ۶</h2>
+<ul class="big-list">
+<li>رمزگذار: هر حساب یک رمز یکتا</li>
+<li>2FA: اول ایمیل؛ اپ تولید کد بهتر از پیامک</li>
+<li>جداسازی هویت‌ها: ایمیل، عکس و نام کاربری جدا</li>
+<li>فیشینگ AI‌ای: فوریت + درخواست = توقف و تأیید</li>
+<li>پروتکل دستگاه را قبل از گم شدن بنویسید</li>
+</ul>
+<p class="question">🎤 <strong>حلقه‌ی بازخورد:</strong> کدام عادت را همین امشب شروع می‌کنید؟</p>
+<p class="small">ماژول بعد: کارگاه عملی — اولین ایجنت خودتان</p>
+</section>
+
+</div>
+<script>
+// موتور ساده اسلاید — ایجنت‌های هوش مصنوعی برای کنشگران
+// کنترل: فلش راست/چپ یا Space، F تمام‌صفحه، Esc فهرست، P حالت مدرس
+
+(function () {
+  "use strict";
+
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var current = 0;
+  var presenter = false;
+  var notesBox = null;
+
+  if (slides.length === 0) return;
+
+  // شماره اولیه از هش (#3)
+  var h = parseInt((location.hash || "").replace("#", ""), 10);
+  if (!isNaN(h) && h >= 1 && h <= slides.length) current = h - 1;
+
+  // ناوبری پایین صفحه
+  var nav = document.createElement("div");
+  nav.className = "nav";
+  nav.innerHTML =
+    '<button type="button" data-act="next" title="بعدی (فلش چپ)">بعدی ←</button>' +
+    '<button type="button" data-act="prev" title="قبلی (فلش راست)">→ قبلی</button>';
+  document.body.appendChild(nav);
+
+  var counter = document.createElement("div");
+  counter.className = "counter";
+  document.body.appendChild(counter);
+
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+
+  function show(i) {
+    current = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach(function (s, idx) {
+      s.classList.toggle("active", idx === current);
+    });
+    counter.textContent = pad(current + 1) + " / " + pad(slides.length);
+    document.getElementById("progress").style.width =
+      ((current + 1) / slides.length) * 100 + "%";
+    location.hash = "#" + (current + 1);
+    if (presenter && notesBox) {
+      var n = slides[current].getAttribute("data-notes") || "—";
+      notesBox.textContent = n;
+    }
+  }
+
+  // جعبه یادداشت مدرس
+  function togglePresenter() {
+    presenter = !presenter;
+    document.body.classList.toggle("presenter", presenter);
+    if (presenter) {
+      notesBox = document.createElement("div");
+      notesBox.className = "notes";
+      notesBox.title = "یادداشت‌های مدرس — با P ببندید";
+      document.body.appendChild(notesBox);
+    } else if (notesBox) {
+      notesBox.remove();
+      notesBox = null;
+    }
+    show(current);
+  }
+
+  // نمای فهرست
+  function toggleOverview() {
+    var any = document.body.classList.toggle("overview");
+    if (any) {
+      slides.forEach(function (s, idx) {
+        s.classList.add("active");
+        s.style.display = "block";
+        s.style.position = "relative";
+        s.style.minHeight = "140px";
+        s.style.padding = "1rem 2rem";
+        s.style.borderBottom = "1px solid #2a3854";
+        s.style.cursor = "pointer";
+        s.onclick = function () {
+          clearOverview();
+          show(idx);
+        };
+      });
+      counter.textContent = "فهرست — برای انتخاب کلیک کنید";
+    } else {
+      clearOverview();
+      show(current);
+    }
+  }
+
+  function clearOverview() {
+    document.body.classList.remove("overview");
+    slides.forEach(function (s) {
+      s.style.display = "";
+      s.style.position = "";
+      s.style.minHeight = "";
+      s.style.padding = "";
+      s.style.borderBottom = "";
+      s.style.cursor = "";
+      s.onclick = null;
+    });
+  }
+
+  function next() { show(current + 1); }
+  function prev() { show(current - 1); }
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowLeft" || e.key === " " || e.key === "PageDown") {
+      e.preventDefault(); next();
+    } else if (e.key === "ArrowRight" || e.key === "PageUp") {
+      e.preventDefault(); prev();
+    } else if (e.key === "ArrowDown") { e.preventDefault(); next(); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); prev(); }
+    else if (e.key === "Home") { e.preventDefault(); show(0); }
+    else if (e.key === "End") { e.preventDefault(); show(slides.length - 1); }
+    else if (e.key === "f" || e.key === "F") {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    } else if (e.key === "p" || e.key === "P") {
+      togglePresenter();
+    } else if (e.key === "Escape") {
+      toggleOverview();
+    }
+  });
+
+  // کلیک روی دکمه‌های ناوبری
+  nav.addEventListener("click", function (e) {
+    var act = e.target && e.target.getAttribute("data-act");
+    if (act === "next") next();
+    if (act === "prev") prev();
+  });
+
+  // لمس (اسوایپ) برای تبلت
+  var touchX = null;
+  document.addEventListener("touchstart", function (e) {
+    touchX = e.touches[0].clientX;
+  }, { passive: true });
+  document.addEventListener("touchend", function (e) {
+    if (touchX === null) return;
+    var dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 50) { dx > 0 ? prev() : next(); }
+    touchX = null;
+  }, { passive: true });
+
+  window.addEventListener("hashchange", function () {
+    var h = parseInt((location.hash || "").replace("#", ""), 10);
+    if (!isNaN(h) && h >= 1 && h <= slides.length && h - 1 !== current) show(h - 1);
+  });
+
+  show(current);
+})();
+
+</script>
+</body>
+</html>
