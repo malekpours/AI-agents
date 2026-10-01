@@ -3,21 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ماژول ۶ — بهداشت امنیتی</title>
+<title>ماژول ۶ — عادت‌های پایه‌ی امنیت دیجیتال</title>
 <style>
 /* قالب مشترک اسلایدها — ایجنت‌های هوش مصنوعی برای کنشگران */
 
 :root {
-  --bg: #0f1420;
-  --bg2: #171f30;
-  --panel: #1c2740;
-  --ink: #e8eefc;
-  --muted: #9fb0d0;
-  --accent: #4da3ff;
-  --accent2: #7ee2b8;
-  --warn: #ffc46b;
-  --danger: #ff7a90;
-  --line: #2a3854;
+  --bg: #0a1117;
+  --bg2: #111c24;
+  --panel: #15232c;
+  --ink: #f0f4ed;
+  --muted: #adbdba;
+  --accent: #f2b35f;
+  --accent2: #81d6bd;
+  --warn: #ffd080;
+  --danger: #ff8791;
+  --line: #2b4147;
+  --shadow: 0 18px 50px rgba(0, 0, 0, .22);
 }
 
 * { box-sizing: border-box; }
@@ -26,7 +27,10 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  background: var(--bg);
+  background:
+    radial-gradient(ellipse at 10% 5%, rgba(129, 214, 189, .08), transparent 32rem),
+    radial-gradient(ellipse at 95% 95%, rgba(242, 179, 95, .07), transparent 35rem),
+    var(--bg);
   color: var(--ink);
   font-family: Vazirmatn, "Vazirmatn UI", "Segoe UI", Tahoma, Arial, sans-serif;
   direction: rtl;
@@ -36,11 +40,12 @@ html, body {
 #progress {
   position: fixed;
   top: 0; right: 0;
-  height: 4px;
+  height: 5px;
   width: 0%;
   background: linear-gradient(90deg, var(--accent2), var(--accent));
   z-index: 50;
-  transition: width .25s ease;
+  transition: width .3s ease;
+  box-shadow: 0 0 18px rgba(129, 214, 189, .35);
 }
 
 /* ===== دک اسلاید ===== */
@@ -49,40 +54,62 @@ html, body {
   display: none;
   position: absolute;
   inset: 0;
-  padding: 4rem 4.5rem 3.5rem;
+  padding: clamp(2.5rem, 6vh, 4.5rem) clamp(1.5rem, 7vw, 7rem) 4.5rem;
   overflow: auto;
+  scrollbar-color: var(--line) transparent;
+  animation: slide-in .35s ease both;
 }
 .slide.active { display: block; }
 
-.slide h1 { font-size: 2.6rem; line-height: 1.35; margin: .3rem 0; }
-.slide h2 { font-size: 2rem; color: var(--accent); margin: 0 0 1.2rem; }
+.slide h1 { max-width: 17ch; font-size: clamp(2.25rem, 5vw, 4.5rem); line-height: 1.3; margin: .3rem 0; letter-spacing: -.035em; }
+.slide h2 { max-width: 27ch; font-size: clamp(1.6rem, 3vw, 2.55rem); color: var(--accent); margin: 0 0 1.2rem; line-height: 1.45; letter-spacing: -.02em; }
 .slide h3 { font-size: 1.15rem; margin: .4rem 0; }
-.slide p, .slide li { font-size: 1.12rem; line-height: 1.9; }
-.subtitle { font-size: 1.35rem; color: var(--accent2); margin: 0 0 1rem; }
-.meta { color: var(--muted); font-size: 1rem; margin-bottom: 1rem; }
-.hero { font-size: 4.5rem; margin: 1.2rem 0; }
+.slide p, .slide li { font-size: clamp(1rem, 1.3vw, 1.2rem); line-height: 1.9; }
+.subtitle { font-size: clamp(1.1rem, 2vw, 1.5rem); color: var(--accent2); margin: 0 0 1rem; }
+.meta { color: var(--muted); font-size: .95rem; margin-bottom: 1rem; }
+.hero { font-size: 4.5rem; margin: 1.2rem 0; filter: drop-shadow(0 12px 25px rgba(242, 179, 95, .16)); }
 .small { color: var(--muted); font-size: .98rem; }
 .question {
   margin-top: 1.2rem;
   padding: .8rem 1.1rem;
-  background: rgba(126,226,184,.08);
+  background: linear-gradient(110deg, rgba(129,214,189,.13), rgba(129,214,189,.035));
   border-inline-start: 4px solid var(--accent2);
-  border-radius: 8px;
+  border-radius: 4px 14px 14px 4px;
 }
 .warning {
   margin-top: 1rem;
   padding: .7rem 1rem;
   background: rgba(255,196,107,.09);
   border-inline-start: 4px solid var(--warn);
-  border-radius: 8px;
+  border-radius: 4px 14px 14px 4px;
 }
 .story-slide blockquote.inject {
   background: rgba(255,122,144,.1);
   border: 1px dashed var(--danger);
   padding: .8rem 1.1rem;
-  border-radius: 8px;
+  border-radius: 4px 14px 14px 4px;
   font-size: 1.1rem;
 }
+
+.slide:first-of-type {
+  display: none;
+  align-content: center;
+  background:
+    radial-gradient(ellipse at 15% 48%, rgba(129,214,189,.13), transparent 35%),
+    radial-gradient(ellipse at 88% 20%, rgba(242,179,95,.12), transparent 28%),
+    linear-gradient(135deg, rgba(255,255,255,.018), transparent 55%);
+}
+.slide:first-of-type.active { display: grid; }
+.slide:first-of-type::after {
+  content: "";
+  position: absolute;
+  inset-block: 15%;
+  inset-inline-end: clamp(1.5rem, 5vw, 5rem);
+  width: 3px;
+  background: linear-gradient(transparent, var(--accent), var(--accent2), transparent);
+  opacity: .75;
+}
+.slide:first-of-type .hero { margin-block: .4rem 0; font-size: clamp(3rem, 7vw, 6rem); }
 
 /* ===== لیست‌ها ===== */
 .big-list li { margin-bottom: .7rem; }
@@ -92,21 +119,24 @@ html, body {
   margin-bottom: .5rem;
   background: var(--bg2);
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 10px;
 }
-.checklist li::before { content: "☐  "; color: var(--accent); }
+.checklist li::before { content: "□  "; color: var(--accent); }
 
 /* ===== کارت‌ها ===== */
 .cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 .cols3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
 .card {
-  background: var(--panel);
+  background: linear-gradient(145deg, rgba(255,255,255,.035), transparent 60%), var(--panel);
   border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 1rem 1.1rem;
+  border-radius: 16px;
+  padding: 1.1rem 1.2rem;
+  box-shadow: var(--shadow);
+  transition: transform .2s ease, border-color .2s ease;
 }
+.card:hover { transform: translateY(-3px); border-color: rgba(129,214,189,.55); }
 .card .icon { font-size: 2rem; }
-.card h3 { color: var(--accent2); }
+.card h3 { color: var(--accent2); line-height: 1.5; }
 .card p { font-size: 1rem; color: var(--ink); margin: .3rem 0 0; }
 
 /* ===== جدول مقایسه ===== */
@@ -117,19 +147,21 @@ table.compare {
 }
 table.compare th, table.compare td {
   border: 1px solid var(--line);
-  padding: .6rem .9rem;
+  padding: .7rem .9rem;
   text-align: right;
-  font-size: 1.05rem;
+  font-size: clamp(.92rem, 1.15vw, 1.08rem);
+  line-height: 1.75;
 }
 table.compare th { background: var(--panel); color: var(--accent2); }
+table.compare tr:nth-child(even) td { background: rgba(255,255,255,.018); }
 table.compare td.danger { color: var(--danger); font-weight: 700; }
 
 /* ===== قواعد کلاس ===== */
 .rule {
   display: flex; gap: 1rem; align-items: center;
-  background: var(--panel);
+  background: linear-gradient(110deg, rgba(255,255,255,.035), transparent 70%), var(--panel);
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: 14px;
   padding: .9rem 1.1rem;
   margin-bottom: .9rem;
 }
@@ -147,7 +179,7 @@ table.compare td.danger { color: var(--danger); font-weight: 700; }
 /* ===== حلقه / زنجیره ===== */
 .loop { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin: 1rem 0; }
 .loop .step {
-  background: var(--panel);
+  background: linear-gradient(135deg, rgba(242,179,95,.09), transparent 70%), var(--panel);
   border: 1px solid var(--accent);
   color: var(--ink);
   border-radius: 999px;
@@ -229,12 +261,12 @@ table.compare td.danger { color: var(--danger); font-weight: 700; }
 
 /* ===== کد ===== */
 pre.codebox {
-  background: #0b1020;
+  background: #080f14;
   border: 1px solid var(--line);
   border-radius: 10px;
   padding: 1rem 1.2rem;
   font-family: Vazirmatn, Tahoma, monospace;
-  font-size: 1.02rem;
+  font-size: clamp(.9rem, 1.15vw, 1.05rem);
   line-height: 1.9;
   white-space: pre-wrap;
   direction: rtl;
@@ -253,7 +285,7 @@ code { background: var(--bg2); padding: .1rem .4rem; border-radius: 6px; directi
   z-index: 40;
 }
 .nav button {
-  background: var(--panel);
+  background: rgba(21, 35, 44, .94);
   color: var(--ink);
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -263,6 +295,7 @@ code { background: var(--bg2); padding: .1rem .4rem; border-radius: 6px; directi
   cursor: pointer;
 }
 .nav button:hover { border-color: var(--accent); }
+.nav button:focus-visible { outline: 2px solid var(--accent2); outline-offset: 3px; }
 .counter {
   position: fixed;
   bottom: 1.15rem;
@@ -291,9 +324,36 @@ code { background: var(--bg2); padding: .1rem .4rem; border-radius: 6px; directi
 body.presenter .notes { display: block; }
 body.presenter .slide { padding-inline-end: 380px; }
 
+@keyframes slide-in {
+  from { opacity: .5; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 760px) {
+  .slide { padding: 2.6rem 1.2rem 4.5rem; }
+  .cols2, .cols3, .autonomy { grid-template-columns: 1fr; }
+  .balance { align-items: stretch; }
+  .balance .pan { flex-basis: 100%; }
+  .balance .fulcrum { text-align: center; }
+  .slide h1 { max-width: 100%; }
+  .nav { bottom: .55rem; inset-inline-start: .55rem; }
+  .nav button { padding: .35rem .6rem; font-size: .9rem; }
+  .counter { bottom: .75rem; inset-inline-end: .65rem; font-size: .8rem; }
+  body.presenter .slide { padding-inline-end: 1.2rem; }
+  .notes { width: min(88vw, 340px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
 /* ===== چاپ ===== */
 @media print {
-  .slide { display: block; position: relative; page-break-after: always; padding: 2rem; }
+  html, body { height: auto; background: #fff; color: #172126; }
+  .slide { display: block !important; position: relative; page-break-after: always; padding: 2rem; background: #fff; color: #172126; }
+  .slide h2, .card h3 { color: #286d5c; }
+  .card, .exercise, .rule, .checklist li { background: #fff; color: #172126; box-shadow: none; }
+  .card p, .slide p, .slide li { color: #172126; }
   #progress, .nav, .counter, .notes { display: none !important; }
 }
 
@@ -301,125 +361,87 @@ body.presenter .slide { padding-inline-end: 380px; }
 </head>
 <body>
 <div id="progress"></div>
-<div class="deck" id="deck">
-
-<!-- ===== slide 1: cover ===== -->
-<section class="slide" data-notes="لحن: عادتهای ساده که بیشتر از ابزار پیشرفته محافظت میکنند. از شرکتکنندگان بپرسید چند حساب فعال دارند؟">
-<h1>بهداشت امنیتی</h1>
-<p class="subtitle">ماژول ۶ — عادت‌هایی که از شما محافظت می‌کنند</p>
-<div class="meta">پیش‌نیاز: ماژول ۵</div>
-<div class="hero">🧼</div>
+<main class="deck">
+<section class="slide" data-notes="این ماژول درباره‌ی کارهای روزمره و قابل انجام است. هر گروه بر اساس دستگاه‌ها و توان خودش تصمیم می‌گیرد؛ توصیه‌ی یکسان برای همه ندهید.">
+<h1>عادت‌های ساده برای امنیت دیجیتال (Digital Security Habits)</h1>
+<p class="subtitle">ماژول ۶ — گذرواژه، ورود دوباره و پیام مشکوک</p>
+<div class="meta">پیش‌نیاز: ماژول ۵ · ۱۰۵ دقیقه</div>
+<div class="hero">🔑</div>
 </section>
-
-<!-- ===== slide 2: داستان ===== -->
-<section class="slide story-slide" data-notes="داستان را تعریف کنید و تاکید: هیچ حمله پیچیدهای نبود — فقط بهداشت ضعیف.">
-<h2>🎬 داستان: رمزی که همه‌جا بود</h2>
+<section class="slide story-slide" data-notes="از گروه بپرسید کدام تصمیم روزمره مشکل را بیشتر کرد. روی سرزنش فردی که دستگاه را گم کرده تمرکز نکنید؛ بررسی کنید چه عادت یا روالی می‌توانست اثر را کم کند.">
+<h2>یک لپ‌تاپ گم شد؛ چه چیزهایی در خطر بود؟</h2>
+<p>مینا چند حساب اینترنتی دارد؛ برای بیشترشان از یک رمز استفاده می‌کند و نسخه‌ای از رمزها را در فایلی روی لپ‌تاپ نگه داشته است. لپ‌تاپ گم می‌شود و حساب ایمیل هنوز روی آن باز است.</p>
 <ul>
-<li>یک رمز برای همه‌چیز</li>
-<li>رمزها در «پسوردها.docx» روی دسکتاپ همه</li>
-<li>لپ‌تاپ در کافی‌شاپ جا ماند</li>
-<li>مرورگر همه‌ی حساب‌ها را خودکار باز می‌کرد</li>
-<li>دو روز بعد: پیام‌هایی از طرف شبکه منتشر شد که هیچ‌کس ننوشته بود</li>
+<li>اگر کسی به ایمیل برسد، شاید بتواند رمز حساب‌های دیگر را عوض کند.</li>
+<li>فایلِ رمزها هم‌زمان در معرض دسترسی قرار گرفته است.</li>
+<li>همکاران مینا نمی‌دانند چه زمانی باید نشست‌ها را ببندند یا به چه کسی خبر بدهند.</li>
 </ul>
-<p class="question">💡 هیچ حمله‌ی پیچیده‌ای در کار نبود — فقط <strong>بهداشت ضعیف</strong>.</p>
+<p class="question"><strong>پرسش:</strong> کدام آمادگی پیش از گم‌شدن لپ‌تاپ می‌توانست کمک کند؟</p>
 </section>
-
-<!-- ===== slide 3: رمزگذار ===== -->
-<section class="slide" data-notes="گزینهها را معرفی کنید. برای کاربران ایران: KeePassXC کاملاً آفلاین — بهترین برای داده حساس. عادت اول را اعلام کنید.">
-<h2>رمزگذار — سطل رمزهای شما</h2>
+<section class="slide" data-notes="مدیر گذرواژه را با صندوقچه‌ی قفل‌شده تشبیه کنید. نسخه‌ی ابری در برابر محلی را بدون حکم «بهترین» توضیح دهید و به بازیابی امن اشاره کنید.">
+<h2>برنامه‌ی مدیریت رمز (Password Manager) چیست؟</h2>
+<p>این برنامه برای هر حساب یک رمز بلند و متفاوت می‌سازد و آن را در صندوقچه‌ای رمزگذاری‌شده (encrypted vault) نگه می‌دارد؛ یعنی صندوقچه بدون رمز اصلی خوانده نمی‌شود.</p>
+<div class="cols2">
+<div class="card"><h3>چرا به‌درد می‌خورد؟</h3><p>اگر رمز یک سایت لو برود، رمزهای دیگر متفاوت‌اند. لازم نیست ده‌ها رمز را حفظ کنید یا در فایل ساده بنویسید.</p></div>
+<div class="card"><h3>چه چیزی باید از قبل روشن باشد؟</h3><p>رمز اصلی چگونه به خاطر می‌ماند؟ اگر دستگاه خراب یا گم شود، نسخه‌ی پشتیبان و راه بازیابی کجاست؟</p></div>
+</div>
+<p class="small">مدیر ابری و برنامه‌ی محلی هر دو نیازمند انتخاب، به‌روزرسانی و نگهداری درست‌اند.</p>
+</section>
+<section class="slide" data-notes="توضیح دهید که مرحله‌ی دوم می‌تواند برنامه، پیامک یا کلید فیزیکی باشد. روش‌های در دسترس و راه بازیابی را برای هر حساب جداگانه بررسی کنید.">
+<h2>ورود دومرحله‌ای (Two-Factor Authentication / 2FA): یک قفل دیگر برای حساب</h2>
+<p>ورود دومرحله‌ای پس از گذرواژه، یک راه تأیید دیگر می‌خواهد؛ مثلاً کدی از برنامه یا کلیدی جداگانه. اگر کسی فقط رمز را پیدا کند، شاید باز هم نتواند وارد شود.</p>
 <div class="cols3">
-  <div class="card"><div class="icon">🦉</div><h3>Bitwarden</h3><p>متن‌باز، رایگان، ابری رمزنگاری‌شده</p></div>
-  <div class="card"><div class="icon">🗄️</div><h3>KeePassXC</h3><p>فایل محلی، بدون ابر — بهترین برای داده‌ی حساس</p></div>
-  <div class="card"><div class="icon">🎩</div><h3>1Password</h3><p>پولی، رابط بسیار راحت</p></div>
+<div class="card"><h3>از کدام حساب شروع کنم؟</h3><p>از ایمیلی که برای بازیابی بقیه‌ی حساب‌ها استفاده می‌کنید آغاز کنید.</p></div>
+<div class="card"><h3>چه روشی در دسترس است؟</h3><p>گزینه‌ها در هر سرویس متفاوت‌اند؛ محدودیت و میزان اتکای هر روش را بررسی کنید.</p></div>
+<div class="card"><h3>اگر تلفن در دسترس نبود؟</h3><p>کدهای بازیابی (Recovery Codes) یا روش جایگزین را پیشاپیش و در جای امن نگه دارید.</p></div>
 </div>
-<p class="rule-of-thumb">📏 هر حساب، یک رمز یکتا. فقط رمز اصلی در ذهن.</p>
-<p class="question">✅ <strong>عادت ۱:</strong> همین امروز نصب کنید و سه حساب حساس را منتقل کنید.</p>
+<p class="warning">کد ورود و کد بازیابی را برای هیچ‌کس در پیام نفرستید؛ حتی اگر فرستنده ادعا کند از پشتیبانی است.</p>
 </section>
-
-<!-- ===== slide 4: احراز دومرحله‌ای ===== -->
-<section class="slide" data-notes="اولویت: ایمیل اول — کلید همه حسابهاست. اپ تولید کد بهتر از پیامک. کدهای بازیابی: کاغذ در جای امن. عادت دوم را اعلام کنید.">
-<h2>احراز دومرحله‌ای (2FA)</h2>
-<ul class="big-list">
-<li><strong>اولویت ۱: ایمیل</strong> — کلید همه‌ی حساب‌های دیگر است</li>
-<li><strong>اولویت ۲:</strong> حساب ابزارهای ایجنت و فضای ابری</li>
-<li><strong>اولویت ۳:</strong> شبکه‌های اجتماعی</li>
-</ul>
-<p class="small">اپلیکیشن تولید کد (مثل Aegis) بهتر از پیامک — پیامک قابل رهگیری است. کدهای بازیابی: کاغذ در جای امن، نه فایل روی دسکتاپ.</p>
-<p class="question">✅ <strong>عادت ۲:</strong> همین هفته، 2FA روی ایمیل و حساب ابزار ایجنت.</p>
+<section class="slide" data-notes="جداسازی را به اندازه‌ی نیاز انجام دهید. میان مدیریت چند حساب و جداکردن کامل همه‌ی فعالیت‌ها فرق است؛ هزینه‌ی نگهداری و امکان بازیابی را بسنجید.">
+<h2>حساب‌های مختلف را از هم جدا کنیم (Account Separation)</h2>
+<div class="cols3">
+<div class="card"><h3>حساب روزمره</h3><p>برای نامه‌ها و کارهای شخصی. اگر سرویس اجازه می‌دهد، دسترسی غیرضروری را از آن بردارید.</p></div>
+<div class="card"><h3>حساب کاری</h3><p>برای نوشته‌ها و کارهای عمومیِ حرفه‌ای. دسترسی و مالکیت حساب را روشن کنید.</p></div>
+<div class="card"><h3>حساب با دسترسی محدود</h3><p>اگر یک کار به حساب یا فایل ویژه نیاز دارد، فقط همان دسترسی و زمان موردنیاز را بدهید.</p></div>
+</div>
+<p class="question">جداکردن حساب‌ها فقط وقتی کمک می‌کند که خودتان بتوانید آن‌ها را نگهداری و در زمان لازم بازیابی کنید.</p>
 </section>
-
-<!-- ===== slide 5: جداسازی هویتها ===== -->
-<section class="slide" data-notes="جدول سه هویت را باز کنید. قواعد مهم: ایمیل جدا، جابجایی ممنوع، عکس مشترک ممنوع (جستوجوی معکوس تصویر).">
-<h2>جداسازی هویت‌ها</h2>
-<table class="compare">
-<thead><tr><th>هویت</th><th>شامل</th><th>نکته</th></tr></thead>
-<tbody>
-<tr><td>شخصی</td><td>شبکه‌های اجتماعی، ایمیل روزمره</td><td>هرگز با کار حساس ترکیب نشود</td></tr>
-<tr><td>مدنی/عمومی</td><td>نام سازمان، رسانه</td><td>می‌تواند واقعی باشد</td></tr>
-<tr><td>مدنی/حساس</td><td>منابع، اسناد داخلی</td><td class="danger">مستعار، ایمیل جدا، در صورت نیاز دستگاه جدا</td></tr>
-</tbody>
-</table>
-<p class="small">عکس و نام کاربری بین هویت‌ها مشترک نباشد — جست‌وجوی معکوس تصویر، هویت‌ها را به هم وصل می‌کند.</p>
-</section>
-
-<!-- ===== slide 6: فیشینگ تقویتشده ===== -->
-<section class="slide" data-notes="هوش مصنوعی فیشینگ را بهتر کرده: بدون غلط، لحن طبیعی فارسی، مکالمه بلند اعتمادساز، صوت جعلی. چهار نشانه هشدار را با هم مرور کنید.">
-<h2>فیشینگ — حالا تقویت‌شده با AI</h2>
-<p>هوش مصنوعی فیشینگ را <strong>بهتر</strong> کرده: بدون غلط املایی، لحن طبیعی فارسی، مکالمه‌ی اعتمادساز، صوت جعلی از «مدیر».</p>
+<section class="slide" data-notes="پیام خوش‌نویس هم ممکن است جعلی باشد. قاعده‌ی اصلی، کانال تأیید مستقلی است که خودتان از قبل می‌شناسید؛ با شماره‌ی درج‌شده در پیام تماس نگیرید.">
+<h2>پیام فوری رسید؟ مکث کنید و از راه دیگری بسنجید</h2>
 <div class="prompt-parts">
-  <div class="part"><span class="letter">۱</span><div><strong>فوریت</strong><p>«همین حالا»، «تا ۱۰ دقیقه دیگر»</p></div></div>
-  <div class="part"><span class="letter">۲</span><div><strong>درخواست کد/رمز</strong><p>هیچ سرویس معتبری کد 2FA شما را نمی‌خواهد</p></div></div>
-  <div class="part"><span class="letter">۳</span><div><strong>آدرس نزدیک ولی غلط</strong><p><code>g0ogle-accounts.com</code> — آدرس را بخوانید</p></div></div>
-  <div class="part"><span class="letter">۴</span><div><strong>خارج از عادت</strong><p>حسابدار از شماره‌ی جدید؟ با کانال قبلی تأیید کنید</p></div></div>
+<div class="part"><span class="letter">۱</span><div><strong>درخواست عجولانه</strong><p>«همین حالا رمز یا کد را بفرست؛ وقت نداریم.»</p></div></div>
+<div class="part"><span class="letter">۲</span><div><strong>فرستنده‌ی ناآشنا</strong><p>پیام از نشانی یا شماره‌ای تازه آمده، هرچند نام آشنایی روی آن دیده می‌شود.</p></div></div>
+<div class="part"><span class="letter">۳</span><div><strong>فیشینگ (Phishing)</strong><p>نشانی سایت را خودتان بررسی کنید؛ از پیوند داخل پیام عجولانه وارد نشوید.</p></div></div>
+<div class="part"><span class="letter">۴</span><div><strong>تأیید مستقل</strong><p>با راه ارتباطی‌ای که از قبل دارید، خودتان از شخص یا سازمان بپرسید.</p></div></div>
 </div>
-<p class="rule-of-thumb">📏 <strong>قاعده‌ی طلایی:</strong> فوریت + درخواست کد/پول/لینک = توقف و تأیید از کانال دیگر.</p>
+<p class="rule-of-thumb"><strong>قاعده‌ی ساده:</strong> عجله + درخواستِ رمز، کد یا پرداخت = مکث و بررسی از یک راه جداگانه.</p>
 </section>
-
-<!-- ===== slide 7: پروتکل دستگاه ===== -->
-<section class="slide" data-notes="قالب کامل در متن ماژول. از هر شرکتکننده بخواهید نسخه شخصی خودش را بنویسد (تمرین ۲).">
-<h2>پروتکل از دست دادن دستگاه</h2>
+<section class="slide" data-notes="گم‌شدن تلفن، نشتی گذرواژه یا کلیک روی لینک را به‌عنوان سناریوهای متفاوت ببینید. یک نسخه‌ی روال واکنش برای همه رویدادها کافی نیست؛ از قبل مسئول و کانال امن را تعیین کنید.">
+<h2>اگر دستگاه گم شد یا پیام مشکوک را باز کردیم</h2>
 <div class="loop">
-  <div class="step">۱. بیرون‌کردن همه‌ی نشست‌ها</div>
-  <div class="step">۲. عوض‌کردن رمز حیاتی‌ها</div>
-  <div class="step">۳. خبر به همکاران</div>
-  <div class="step">۴. اگر داده‌ی حساس بود → پروتکل افشا</div>
-  <div class="step loop-back">۵. چک کدهای بازیابی</div>
+<div class="step">آرام بمان و زمان را ثبت کن</div><div class="step">از دستگاه مطمئن کمک بگیر</div><div class="step">نشست‌های ناشناس را ببند</div><div class="step">مسئول یا پشتیبانی را خبر کن</div><div class="step loop-back">رمز و راه بازیابی را بررسی کن</div>
 </div>
-<p class="small">قبل از اتفاق بیفتد، بنویسید. نسخه‌ی شخصی، در جای امن، خارج از دستگاه.</p>
+<p class="small">گام‌ها به نوع حساب و رخداد بستگی دارد. از پیش بنویسید چه کسی کمک می‌کند و با چه روشی او را پیدا می‌کنید.</p>
+<p class="warning">اگر فکر می‌کنید دستگاه یا حساب در دسترس فرد دیگری است، از همان دستگاه برای هماهنگی و تغییر رمز استفاده نکنید.</p>
 </section>
-
-<!-- ===== slide 8: تمرین ===== -->
-<section class="slide" data-notes="تمرین ۱: تاکید — فهرست روی دستگاه نگاه ندارید؛ بنویسید، بعد پاره کنید یا در رمزگذار.">
-<h2>📝 تمرین</h2>
-<div class="exercise">
-  <h3>۱ — فردی (۲۰ دقیقه): شمارش حساب‌ها</h3>
-  <p>فهرست حساب‌ها (بدون رمز!). علامت بزنید: رمز تکراری؟ بدون 2FA؟ ایمیل اشتباه؟ بعد: پاره کنید یا در رمزگذار.</p>
-</div>
-<div class="exercise">
-  <h3>۲ — گروهی (۱۵ دقیقه): پروتکل دستگاه</h3>
-  <p>اگر لپ‌تاپِ <em>من</em> گم شود، چه کسی چه کاری می‌کند؟ نقش‌ها را مشخص کنید.</p>
-</div>
-<div class="exercise">
-  <h3>۳ — کلاسی (۱۵ دقیقه): فیشینگ یا نه؟</h3>
-  <p>پنج پیام نمونه — دو فیشینگ، سه سالم. با نشانه‌های هشدار رأی بدهید.</p>
-</div>
+<section class="slide" data-notes="این تمرین کاملاً شخصی است و نباید افراد رمز یا نام حساب‌های واقعی خود را در گروه بیان کنند. کاغذی را که می‌نویسند در پایان نگه دارند یا خرد کنند.">
+<h2>تمرین شخصی: یک برنامه‌ی کوتاه برای حساب‌ها</h2>
+<div class="exercise"><h3>۱ · کدام حساب را اول محافظت می‌کنید؟</h3><p>برای نمونه، ایمیلی که رمزهای دیگر را بازیابی می‌کند. رمز آن را روی برگه ننویسید.</p></div>
+<div class="exercise"><h3>۲ · چه چیزی هنوز تنظیم نشده؟</h3><p>مدیر گذرواژه، ورود دومرحله‌ای، ایمیل بازیابی یا کدهای اضطراری؟ یکی را انتخاب کنید.</p></div>
+<div class="exercise"><h3>۳ · اگر تلفن فردا نبود چه می‌کنید؟</h3><p>نام یک فرد مسئول، یک راه تماس جایگزین و یک گام نخست را یادداشت کنید.</p></div>
 </section>
-
-<!-- ===== slide 9: جمعبندی ===== -->
-<section class="slide" data-notes="حلقه بازخورد. پل به ماژول ۷: تا اینجا شناخت و عادت — حالا عمل.">
+<section class="slide" data-notes="هرکس یک کار کوچک و شدنی برای هفته‌ی آینده انتخاب کند. از ایجاد فشار برای تقسیم اطلاعات حساب‌ها یا گفتن جزئیات شخصی پرهیز کنید.">
 <h2>جمع‌بندی ماژول ۶</h2>
 <ul class="big-list">
-<li>رمزگذار: هر حساب یک رمز یکتا</li>
-<li>2FA: اول ایمیل؛ اپ تولید کد بهتر از پیامک</li>
-<li>جداسازی هویت‌ها: ایمیل، عکس و نام کاربری جدا</li>
-<li>فیشینگ AI‌ای: فوریت + درخواست = توقف و تأیید</li>
-<li>پروتکل دستگاه را قبل از گم شدن بنویسید</li>
+<li>برای هر حساب، گذرواژه‌ی متفاوت و قابل نگهداری داشته باشید.</li>
+<li>ورود دومرحله‌ای و راه بازیابی را با هم تنظیم و آزمایش کنید.</li>
+<li>به درخواست فوری رمز یا کد پاسخ ندهید؛ از راه مستقل تأیید کنید.</li>
+<li>برای گم‌شدن دستگاه یا پیام مشکوک، مسئول و گام نخست را از پیش تعیین کنید.</li>
 </ul>
-<p class="question">🎤 <strong>حلقه‌ی بازخورد:</strong> کدام عادت را همین امشب شروع می‌کنید؟</p>
-<p class="small">ماژول بعد: کارگاه عملی — اولین ایجنت خودتان</p>
+<p class="question">در ماژول بعد، همین اصول را هنگام ساخت و آزمودن یک ایجنت به‌کار می‌بریم.</p>
 </section>
+</main>
 
-</div>
 <script>
 // موتور ساده اسلاید — ایجنت‌های هوش مصنوعی برای کنشگران
 // کنترل: فلش راست/چپ یا Space، F تمام‌صفحه، Esc فهرست، P حالت مدرس

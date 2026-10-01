@@ -3,21 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ماژول ۱ — مقدمه: ایجنت چیست؟</title>
+<title>ماژول ۱ — ایجنت هوش مصنوعی چیست؟</title>
 <style>
 /* قالب مشترک اسلایدها — ایجنت‌های هوش مصنوعی برای کنشگران */
 
 :root {
-  --bg: #0f1420;
-  --bg2: #171f30;
-  --panel: #1c2740;
-  --ink: #e8eefc;
-  --muted: #9fb0d0;
-  --accent: #4da3ff;
-  --accent2: #7ee2b8;
-  --warn: #ffc46b;
-  --danger: #ff7a90;
-  --line: #2a3854;
+  --bg: #0a1117;
+  --bg2: #111c24;
+  --panel: #15232c;
+  --ink: #f0f4ed;
+  --muted: #adbdba;
+  --accent: #f2b35f;
+  --accent2: #81d6bd;
+  --warn: #ffd080;
+  --danger: #ff8791;
+  --line: #2b4147;
+  --shadow: 0 18px 50px rgba(0, 0, 0, .22);
 }
 
 * { box-sizing: border-box; }
@@ -26,7 +27,10 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  background: var(--bg);
+  background:
+    radial-gradient(ellipse at 10% 5%, rgba(129, 214, 189, .08), transparent 32rem),
+    radial-gradient(ellipse at 95% 95%, rgba(242, 179, 95, .07), transparent 35rem),
+    var(--bg);
   color: var(--ink);
   font-family: Vazirmatn, "Vazirmatn UI", "Segoe UI", Tahoma, Arial, sans-serif;
   direction: rtl;
@@ -36,11 +40,12 @@ html, body {
 #progress {
   position: fixed;
   top: 0; right: 0;
-  height: 4px;
+  height: 5px;
   width: 0%;
   background: linear-gradient(90deg, var(--accent2), var(--accent));
   z-index: 50;
-  transition: width .25s ease;
+  transition: width .3s ease;
+  box-shadow: 0 0 18px rgba(129, 214, 189, .35);
 }
 
 /* ===== دک اسلاید ===== */
@@ -49,40 +54,62 @@ html, body {
   display: none;
   position: absolute;
   inset: 0;
-  padding: 4rem 4.5rem 3.5rem;
+  padding: clamp(2.5rem, 6vh, 4.5rem) clamp(1.5rem, 7vw, 7rem) 4.5rem;
   overflow: auto;
+  scrollbar-color: var(--line) transparent;
+  animation: slide-in .35s ease both;
 }
 .slide.active { display: block; }
 
-.slide h1 { font-size: 2.6rem; line-height: 1.35; margin: .3rem 0; }
-.slide h2 { font-size: 2rem; color: var(--accent); margin: 0 0 1.2rem; }
+.slide h1 { max-width: 17ch; font-size: clamp(2.25rem, 5vw, 4.5rem); line-height: 1.3; margin: .3rem 0; letter-spacing: -.035em; }
+.slide h2 { max-width: 27ch; font-size: clamp(1.6rem, 3vw, 2.55rem); color: var(--accent); margin: 0 0 1.2rem; line-height: 1.45; letter-spacing: -.02em; }
 .slide h3 { font-size: 1.15rem; margin: .4rem 0; }
-.slide p, .slide li { font-size: 1.12rem; line-height: 1.9; }
-.subtitle { font-size: 1.35rem; color: var(--accent2); margin: 0 0 1rem; }
-.meta { color: var(--muted); font-size: 1rem; margin-bottom: 1rem; }
-.hero { font-size: 4.5rem; margin: 1.2rem 0; }
+.slide p, .slide li { font-size: clamp(1rem, 1.3vw, 1.2rem); line-height: 1.9; }
+.subtitle { font-size: clamp(1.1rem, 2vw, 1.5rem); color: var(--accent2); margin: 0 0 1rem; }
+.meta { color: var(--muted); font-size: .95rem; margin-bottom: 1rem; }
+.hero { font-size: 4.5rem; margin: 1.2rem 0; filter: drop-shadow(0 12px 25px rgba(242, 179, 95, .16)); }
 .small { color: var(--muted); font-size: .98rem; }
 .question {
   margin-top: 1.2rem;
   padding: .8rem 1.1rem;
-  background: rgba(126,226,184,.08);
+  background: linear-gradient(110deg, rgba(129,214,189,.13), rgba(129,214,189,.035));
   border-inline-start: 4px solid var(--accent2);
-  border-radius: 8px;
+  border-radius: 4px 14px 14px 4px;
 }
 .warning {
   margin-top: 1rem;
   padding: .7rem 1rem;
   background: rgba(255,196,107,.09);
   border-inline-start: 4px solid var(--warn);
-  border-radius: 8px;
+  border-radius: 4px 14px 14px 4px;
 }
 .story-slide blockquote.inject {
   background: rgba(255,122,144,.1);
   border: 1px dashed var(--danger);
   padding: .8rem 1.1rem;
-  border-radius: 8px;
+  border-radius: 4px 14px 14px 4px;
   font-size: 1.1rem;
 }
+
+.slide:first-of-type {
+  display: none;
+  align-content: center;
+  background:
+    radial-gradient(ellipse at 15% 48%, rgba(129,214,189,.13), transparent 35%),
+    radial-gradient(ellipse at 88% 20%, rgba(242,179,95,.12), transparent 28%),
+    linear-gradient(135deg, rgba(255,255,255,.018), transparent 55%);
+}
+.slide:first-of-type.active { display: grid; }
+.slide:first-of-type::after {
+  content: "";
+  position: absolute;
+  inset-block: 15%;
+  inset-inline-end: clamp(1.5rem, 5vw, 5rem);
+  width: 3px;
+  background: linear-gradient(transparent, var(--accent), var(--accent2), transparent);
+  opacity: .75;
+}
+.slide:first-of-type .hero { margin-block: .4rem 0; font-size: clamp(3rem, 7vw, 6rem); }
 
 /* ===== لیست‌ها ===== */
 .big-list li { margin-bottom: .7rem; }
@@ -92,21 +119,24 @@ html, body {
   margin-bottom: .5rem;
   background: var(--bg2);
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 10px;
 }
-.checklist li::before { content: "☐  "; color: var(--accent); }
+.checklist li::before { content: "□  "; color: var(--accent); }
 
 /* ===== کارت‌ها ===== */
 .cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 .cols3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
 .card {
-  background: var(--panel);
+  background: linear-gradient(145deg, rgba(255,255,255,.035), transparent 60%), var(--panel);
   border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 1rem 1.1rem;
+  border-radius: 16px;
+  padding: 1.1rem 1.2rem;
+  box-shadow: var(--shadow);
+  transition: transform .2s ease, border-color .2s ease;
 }
+.card:hover { transform: translateY(-3px); border-color: rgba(129,214,189,.55); }
 .card .icon { font-size: 2rem; }
-.card h3 { color: var(--accent2); }
+.card h3 { color: var(--accent2); line-height: 1.5; }
 .card p { font-size: 1rem; color: var(--ink); margin: .3rem 0 0; }
 
 /* ===== جدول مقایسه ===== */
@@ -117,19 +147,21 @@ table.compare {
 }
 table.compare th, table.compare td {
   border: 1px solid var(--line);
-  padding: .6rem .9rem;
+  padding: .7rem .9rem;
   text-align: right;
-  font-size: 1.05rem;
+  font-size: clamp(.92rem, 1.15vw, 1.08rem);
+  line-height: 1.75;
 }
 table.compare th { background: var(--panel); color: var(--accent2); }
+table.compare tr:nth-child(even) td { background: rgba(255,255,255,.018); }
 table.compare td.danger { color: var(--danger); font-weight: 700; }
 
 /* ===== قواعد کلاس ===== */
 .rule {
   display: flex; gap: 1rem; align-items: center;
-  background: var(--panel);
+  background: linear-gradient(110deg, rgba(255,255,255,.035), transparent 70%), var(--panel);
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: 14px;
   padding: .9rem 1.1rem;
   margin-bottom: .9rem;
 }
@@ -147,7 +179,7 @@ table.compare td.danger { color: var(--danger); font-weight: 700; }
 /* ===== حلقه / زنجیره ===== */
 .loop { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin: 1rem 0; }
 .loop .step {
-  background: var(--panel);
+  background: linear-gradient(135deg, rgba(242,179,95,.09), transparent 70%), var(--panel);
   border: 1px solid var(--accent);
   color: var(--ink);
   border-radius: 999px;
@@ -229,12 +261,12 @@ table.compare td.danger { color: var(--danger); font-weight: 700; }
 
 /* ===== کد ===== */
 pre.codebox {
-  background: #0b1020;
+  background: #080f14;
   border: 1px solid var(--line);
   border-radius: 10px;
   padding: 1rem 1.2rem;
   font-family: Vazirmatn, Tahoma, monospace;
-  font-size: 1.02rem;
+  font-size: clamp(.9rem, 1.15vw, 1.05rem);
   line-height: 1.9;
   white-space: pre-wrap;
   direction: rtl;
@@ -253,7 +285,7 @@ code { background: var(--bg2); padding: .1rem .4rem; border-radius: 6px; directi
   z-index: 40;
 }
 .nav button {
-  background: var(--panel);
+  background: rgba(21, 35, 44, .94);
   color: var(--ink);
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -263,6 +295,7 @@ code { background: var(--bg2); padding: .1rem .4rem; border-radius: 6px; directi
   cursor: pointer;
 }
 .nav button:hover { border-color: var(--accent); }
+.nav button:focus-visible { outline: 2px solid var(--accent2); outline-offset: 3px; }
 .counter {
   position: fixed;
   bottom: 1.15rem;
@@ -291,9 +324,36 @@ code { background: var(--bg2); padding: .1rem .4rem; border-radius: 6px; directi
 body.presenter .notes { display: block; }
 body.presenter .slide { padding-inline-end: 380px; }
 
+@keyframes slide-in {
+  from { opacity: .5; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 760px) {
+  .slide { padding: 2.6rem 1.2rem 4.5rem; }
+  .cols2, .cols3, .autonomy { grid-template-columns: 1fr; }
+  .balance { align-items: stretch; }
+  .balance .pan { flex-basis: 100%; }
+  .balance .fulcrum { text-align: center; }
+  .slide h1 { max-width: 100%; }
+  .nav { bottom: .55rem; inset-inline-start: .55rem; }
+  .nav button { padding: .35rem .6rem; font-size: .9rem; }
+  .counter { bottom: .75rem; inset-inline-end: .65rem; font-size: .8rem; }
+  body.presenter .slide { padding-inline-end: 1.2rem; }
+  .notes { width: min(88vw, 340px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
 /* ===== چاپ ===== */
 @media print {
-  .slide { display: block; position: relative; page-break-after: always; padding: 2rem; }
+  html, body { height: auto; background: #fff; color: #172126; }
+  .slide { display: block !important; position: relative; page-break-after: always; padding: 2rem; background: #fff; color: #172126; }
+  .slide h2, .card h3 { color: #286d5c; }
+  .card, .exercise, .rule, .checklist li { background: #fff; color: #172126; box-shadow: none; }
+  .card p, .slide p, .slide li { color: #172126; }
   #progress, .nav, .counter, .notes { display: none !important; }
 }
 
@@ -301,72 +361,115 @@ body.presenter .slide { padding-inline-end: 380px; }
 </head>
 <body>
 <div id="progress"></div>
-<script>
-/* موتور اسلاید (inline برای استقلال کامل فایل) */
-(function(){
-"use strict";
-var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
-var current=0,presenter=false,notesBox=null;
-if(slides.length===0)return;
-var h=parseInt((location.hash||"").replace("#",""),10);
-if(!isNaN(h)&&h>=1&&h<=slides.length)current=h-1;
-var nav=document.createElement("div");nav.className="nav";
-nav.innerHTML='<button type="button" data-act="next" title="بعدی (فلش چپ)">بعدی ←</button><button type="button" data-act="prev" title="قبلی (فلش راست)">→ قبلی</button>';
-document.body.appendChild(nav);
-var counter=document.createElement("div");counter.className="counter";document.body.appendChild(counter);
-function pad(n){return (n<10?"0":"")+n}
-function show(i){
- current=Math.max(0,Math.min(slides.length-1,i));
- slides.forEach(function(s,idx){s.classList.toggle("active",idx===current)});
- counter.textContent=pad(current+1)+" / "+pad(slides.length);
- var p=document.getElementById("progress");if(p)p.style.width=((current+1)/slides.length*100)+"%";
- location.hash="#"+(current+1);
- if(presenter&&notesBox)notesBox.textContent=slides[current].getAttribute("data-notes")||"—";
-}
-function togglePresenter(){
- presenter=!presenter;document.body.classList.toggle("presenter",presenter);
- if(presenter){notesBox=document.createElement("div");notesBox.className="notes";notesBox.title="یادداشت‌های مدرس — با P ببندید";document.body.appendChild(notesBox)}
- else if(notesBox){notesBox.remove();notesBox=null}
- show(current);
-}
-function toggleOverview(){
- var any=document.body.classList.toggle("overview");
- if(any){
-  slides.forEach(function(s,idx){
-   s.classList.add("active");s.style.display="block";s.style.position="relative";s.style.minHeight="140px";s.style.padding="1rem 2rem";s.style.borderBottom="1px solid #2a3854";s.style.cursor="pointer";
-   s.onclick=function(){clearOverview();show(idx)};
-  });
-  counter.textContent="فهرست — برای انتخاب کلیک کنید";
- }else{clearOverview();show(current)}
-}
-function clearOverview(){
- document.body.classList.remove("overview");
- slides.forEach(function(s){s.style.display="";s.style.position="";s.style.minHeight="";s.style.padding="";s.style.borderBottom="";s.style.cursor="";s.onclick=null});
-}
-function next(){show(current+1)}
-function prev(){show(current-1)}
-document.addEventListener("keydown",function(e){
- if(e.key==="ArrowLeft"||e.key===" "||e.key==="PageDown"){e.preventDefault();next()}
- else if(e.key==="ArrowRight"||e.key==="PageUp"){e.preventDefault();prev()}
- else if(e.key==="ArrowDown"){e.preventDefault();next()}
- else if(e.key==="ArrowUp"){e.preventDefault();prev()}
- else if(e.key==="Home"){e.preventDefault();show(0)}
- else if(e.key==="End"){e.preventDefault();show(slides.length-1)}
- else if(e.key==="f"||e.key==="F"){if(!document.fullscreenElement){document.documentElement.requestFullscreen()}else{document.exitFullscreen()}}
- else if(e.key==="p"||e.key==="P"){togglePresenter()}
- else if(e.key==="Escape"){toggleOverview()}
-});
-nav.addEventListener("click",function(e){var act=e.target&&e.target.getAttribute("data-act");if(act==="next")next();if(act==="prev")prev()});
-var touchX=null;
-document.addEventListener("touchstart",function(e){touchX=e.touches[0].clientX},{passive:true});
-document.addEventListener("touchend",function(e){if(touchX===null)return;var dx=e.changedTouches[0].clientX-touchX;if(Math.abs(dx)>50){dx>0?prev():next()}touchX=null},{passive:true});
-window.addEventListener("hashchange",function(){
- var h=parseInt((location.hash||"").replace("#",""),10);
- if(!isNaN(h)&&h>=1&&h<=slides.length&&h-1!==current)show(h-1);
-});
-show(current);
-})();
-</script>
+<main class="deck">
+<section class="slide" data-notes="به شرکت‌کنندگان خوش‌آمد بگویید. بگویید در این دوره قرار نیست ابزار خاصی را تبلیغ کنیم یا کسی را از استفاده بترسانیم؛ می‌خواهیم بفهمیم این ابزارها چه می‌کنند و کجا باید خودمان تصمیم بگیریم.">
+<h1>ایجنت‌های هوش مصنوعی: از گفت‌وگو تا انجام کار</h1>
+<p class="subtitle">ماژول ۱ — آشنایی با مفهوم، توانایی‌ها و مرزها</p>
+<div class="meta">برای همه، حتی بدون پیش‌زمینه‌ی فنی · ۱۰۵ دقیقه</div>
+<div class="hero">🧭</div>
+<p class="small">یک کارگاه گفت‌وگومحور؛ با مثال‌های ساختگی و قابل‌آزمودن</p>
+</section>
+<section class="slide" data-notes="این واژه‌ها را با زبان ساده مرور کنید. لازم نیست همه را حفظ کنند؛ هدف این است که وقتی در دوره یا متن انگلیسی می‌بینند، معنی کلی را بشناسند. درباره‌ی هوش مصنوعی تأکید کنید که ابزارها توانایی‌ها و محدودیت‌های متفاوتی دارند.">
+<h2>اصطلاحات ضروری: فارسی و انگلیسی</h2>
+<table class="compare">
+<thead><tr><th>واژه</th><th>اصطلاح انگلیسی</th><th>به زبان ساده</th></tr></thead>
+<tbody>
+<tr><td>هوش مصنوعی</td><td><span dir="ltr">Artificial Intelligence (AI)</span></td><td>برنامه‌هایی که کارهایی مثل فهم متن، پاسخ‌دادن یا ساختن تصویر انجام می‌دهند.</td></tr>
+<tr><td>مدل زبانی بزرگ</td><td><span dir="ltr">Large Language Model (LLM)</span></td><td>برنامه‌ای که از نمونه‌های بسیار متن، الگوهای زبان را یاد گرفته و بر پایه‌ی آن‌ها پاسخ می‌سازد.</td></tr>
+<tr><td>چت‌بات</td><td><span dir="ltr">Chatbot</span></td><td>برنامه‌ای که با آن پیام ردوبدل می‌کنیم و معمولاً به پرسش‌ها پاسخ می‌دهد.</td></tr>
+<tr><td>ایجنت هوش مصنوعی</td><td><span dir="ltr">AI Agent</span></td><td>برنامه‌ای که می‌تواند چند گام را برای رسیدن به یک هدف دنبال کند و گاهی از ابزارها کمک بگیرد.</td></tr>
+<tr><td>درخواست یا دستور</td><td><span dir="ltr">Prompt</span></td><td>متنی که به هوش مصنوعی می‌گوییم تا بداند چه کاری انجام دهد.</td></tr>
+<tr><td>ابزار</td><td><span dir="ltr">Tool</span></td><td>قابلیتی مثل جست‌وجوی وب، خواندن فایل یا فرستادن پیام که ایجنت ممکن است به آن دسترسی داشته باشد.</td></tr>
+<tr><td>حافظه</td><td><span dir="ltr">Memory</span></td><td>اطلاعاتی که برنامه برای ادامه‌ی کار یا یادآوری در گفت‌وگو نگه می‌دارد؛ شیوه‌ی نگهداری در هر سرویس فرق دارد.</td></tr>
+<tr><td>رابط برنامه‌نویسی</td><td><span dir="ltr">Application Programming Interface (API)</span></td><td>راهی که دو برنامه با آن اطلاعات ردوبدل می‌کنند.</td></tr>
+<tr><td>نظارت انسانی</td><td><span dir="ltr">Human-in-the-Loop (HITL)</span></td><td>یعنی انسان در بخش‌های مهم کار را بررسی یا تأیید می‌کند.</td></tr>
+</tbody>
+</table>
+<p class="small">در متن‌های انگلیسی ممکن است به‌جای «هوش مصنوعی» از <span dir="ltr">AI</span> و به‌جای «مدل زبانی بزرگ» از <span dir="ltr">LLM</span> استفاده شود.</p>
+</section>
+<section class="slide" data-notes="توافق را با گروه بخوانید. تأکید کنید هیچ‌کس مجبور نیست تجربه‌ی شخصی یا اطلاعات مربوط به کار و زندگی خود را تعریف کند.">
+<h2>پیش از شروع، بر سر سه چیز توافق کنیم</h2>
+<div class="rule"><div class="rule-num">۱</div><div class="rule-body"><strong>مثال‌ها ساختگی یا عمومی‌اند.</strong> در تمرین‌ها اطلاعات شخصی یا محرمانه وارد نمی‌کنیم.</div></div>
+<div class="rule"><div class="rule-num">۲</div><div class="rule-body"><strong>هرکس خودش انتخاب می‌کند چه بگوید.</strong> نام، تجربه یا جزئیات خصوصی لازم نیست.</div></div>
+<div class="rule"><div class="rule-num">۳</div><div class="rule-body"><strong>سؤال‌پرسیدن آزاد است.</strong> اگر پاسخ به دانسته‌های مدرس وابسته نیست، می‌گوییم چه چیزی را نمی‌دانیم و کجا باید بررسی کنیم.</div></div>
+</section>
+<section class="slide story-slide" data-notes="داستان را شمرده بخوانید. از مخاطبان بخواهید پیش از دیدن پاسخ، کارهایی را که باید انجام شود به ترتیب نام ببرند. روشن کنید انتشار نهایی در اختیار انسان است.">
+<h2>یک خبر، سه زبان، چند شکل انتشار</h2>
+<p>سارا ویراستار یک وب‌سایت خبری است. خبری عمومی را برای انتشار آماده می‌کند و می‌خواهد تا عصر نسخه‌های فارسی، انگلیسی و عربی آن آماده باشد.</p>
+<ul class="big-list">
+<li>اول باید متن را بفهمد و نکته‌های اصلی را جدا کند.</li>
+<li>بعد، خبر را به سه زبان برگرداند و اصطلاح‌ها و نام‌ها را دوباره بررسی کند.</li>
+<li>برای وب‌سایت نسخه‌ی کامل و برای شبکه‌ی اجتماعی نسخه‌ی کوتاه‌تری بنویسد.</li>
+<li>در پایان، متن‌ها را با منبع خبر مقایسه کند و خودش تصمیم بگیرد چه چیزی منتشر شود.</li>
+</ul>
+<p class="question"><strong>پرسش:</strong> کدام بخش را می‌توان به نرم‌افزار سپرد و کدام بخش هنوز به داوری سارا نیاز دارد؟</p>
+</section>
+<section class="slide" data-notes="فرق را به صورت پیوستار توضیح دهید. بعضی محصول‌ها ترکیبی هستند: متن می‌نویسند و چند ابزار محدود دارند. معیار، اختیار واقعی و تنظیمات است، نه نام روی محصول.">
+<h2>چت‌بات پاسخ می‌دهد؛ ایجنت می‌تواند کار را دنبال کند</h2>
+<div class="cols2">
+<div class="card"><div class="icon">💬</div><h3>گفت‌وگوی ساده</h3><p>سارا متن خبر را می‌دهد و می‌پرسد: «این را به انگلیسی ترجمه کن.» ابزار یک پاسخ می‌سازد؛ سارا مرحله‌ی بعد را خودش آغاز می‌کند.</p></div>
+<div class="card"><div class="icon">🧩</div><h3>ایجنت چندمرحله‌ای</h3><p>سارا هدف و محدودیت‌ها را توضیح می‌دهد. ابزار ممکن است متن را خلاصه کند، ترجمه‌ها را آماده کند و نسخه‌های کوتاه‌تر پیشنهاد دهد؛ برخی ایجنت‌ها می‌توانند از ابزارهای دیگر هم کمک بگیرند.</p></div>
+</div>
+<p class="warning">«ایجنت» همیشه به معنی نرم‌افزاری با اختیار کامل نیست. ببینید واقعاً به چه ابزارهایی وصل است و چه کارهایی اجازه‌ی اجرا دارد.</p>
+</section>
+<section class="slide" data-notes="هر واژه را با مثال خبر توضیح دهید. در صورت نیاز بگویید «مدل» بخش تولیدکننده‌ی پاسخ است؛ به‌تنهایی نمی‌داند کدام خبر درست است.">
+<h2>یک ایجنت از چه چیزهایی ساخته می‌شود؟</h2>
+<div class="cols3">
+<div class="card"><div class="icon">🧠</div><h3>مدل</h3><p>متن را می‌خواند و بر اساس آنچه آموخته، پاسخ یا پیشنهاد می‌سازد. ممکن است اشتباه کند یا بخشی از متن را بد بفهمد.</p></div>
+<div class="card"><div class="icon">🛠️</div><h3>ابزار</h3><p>مرورگر، فایل، فرهنگ لغت یا سامانه‌ی انتشار می‌تواند در انجام کار به ایجنت کمک کند. هر اتصال، توانایی و مسئولیت تازه‌ای می‌آورد.</p></div>
+<div class="card"><div class="icon">📚</div><h3>زمینه و حافظه</h3><p>دستورها، متن‌های ورودی و گاهی تاریخچه یا فایل‌های مرجع به پاسخ شکل می‌دهند. باید بدانیم چه چیزهایی ذخیره می‌شوند.</p></div>
+</div>
+<p class="small">کاربر هم بخشی از این چرخه است: او هدف را تعیین می‌کند، دسترسی می‌دهد و تصمیم می‌گیرد چه چیزی را بپذیرد.</p>
+</section>
+<section class="slide" data-notes="داستان را روی تخته به پنج مرحله تقسیم کنید. در هر مرحله بپرسید خطا چه شکلی دارد و آیا انسان پیش از مرحله‌ی بعد می‌تواند آن را ببیند.">
+<h2>ایجنت چگونه از درخواست به نتیجه می‌رسد؟</h2>
+<div class="loop">
+<div class="step">هدف: سه نسخه‌ی خبری</div><div class="arrow">←</div>
+<div class="step">برنامه: خلاصه، ترجمه، ویرایش</div><div class="arrow">←</div>
+<div class="step">اقدام: خواندن یا نوشتن</div><div class="arrow">←</div>
+<div class="step">بازبینی نتیجه</div><div class="arrow">←</div>
+<div class="step loop-back">اصلاح یا پایان</div>
+</div>
+<p>اگر نام یک خیابان در ترجمه اشتباه شود، همان اشتباه ممکن است در نسخه‌ی کوتاه شبکه‌ی اجتماعی هم تکرار شود. دیدن نتیجه‌ی هر مرحله فرصت اصلاح می‌دهد.</p>
+<p class="question"><strong>مکث کن:</strong> پیش از انتشار، در کدام مرحله باید سارا متن را دوباره با منبع مقایسه کند؟</p>
+</section>
+<section class="slide" data-notes="مثال‌ها را از کم‌خطر به پرپیامد بخوانید. این سطح‌بندی آموزشی است، نه دسته‌بندی رسمی یا تضمین ایمنی.">
+<h2>چه‌قدر اختیار (Autonomy) به ایجنت بدهیم؟</h2>
+<div class="autonomy">
+<div class="aut-level l1"><h3>۱ · پیشنهاد بدهد</h3><p>پیش‌نویس را سارا می‌گیرد، بررسی و خودش اجرا می‌کند.</p></div>
+<div class="aut-level l2"><h3>۲ · با اجازه پیش برود</h3><p>ایجنت هر مرحله را نشان می‌دهد و برای ادامه اجازه می‌گیرد.</p></div>
+<div class="aut-level l3"><h3>۳ · در نقاط مشخص مکث کند</h3><p>چند کار کم‌خطر را انجام می‌دهد، اما پیش از انتشار متوقف می‌شود.</p></div>
+<div class="aut-level l4"><h3>۴ · خودش اقدام کند</h3><p>می‌تواند تا پایان کار برود؛ خطا هم ممکن است به بیرون برسد.</p></div>
+</div>
+<p class="rule-of-thumb"><strong>برای شروع:</strong> از پیشنهاد و پیش‌نویس آغاز کنید. انتشار، حذف یا ارسال را فقط با بررسی و اجازه‌ی روشن انجام دهید.</p>
+</section>
+<section class="slide" data-notes="روان‌بودن پاسخ را با درست‌بودن اشتباه نگیرید. از شرکت‌کنندگان بخواهید نمونه‌ای بی‌خطر از اطمینان کاذب یا ترجمه‌ی دوپهلو تصور کنند.">
+<h2>پاسخ روان، لزوماً پاسخ درست نیست</h2>
+<div class="cols3">
+<div class="card"><h3>ممکن است چیزی بسازد</h3><p>نام منبع یا عددی را که در متن نیامده با لحنی مطمئن اضافه کند.</p></div>
+<div class="card"><h3>ممکن است نکته‌ای را جا بیندازد</h3><p>واژه‌ی «هنوز» یا «گزارش‌شده» را در ترجمه حذف کند و معنی خبر را عوض کند.</p></div>
+<div class="card"><h3>ممکن است لحن را بد منتقل کند</h3><p>عبارت محترمانه یا طنز را در زبان دیگر تند یا گمراه‌کننده ترجمه کند.</p></div>
+</div>
+<p class="warning">از ایجنت بخواهید بگوید به کدام بخش منبع تکیه کرده؛ بعد، همان بخش را خودتان بخوانید.</p>
+</section>
+<section class="slide" data-notes="تمرین کاغذی است. از افراد بخواهید سه نقطه‌ی نیازمند نظارت را مشخص کنند؛ هیچ متن شخصی یا خبری حساس لازم نیست.">
+<h2>تمرین: نقشه‌ی کار سارا</h2>
+<div class="exercise"><h3>گام اول · کارها را مرتب کنید</h3><p>خلاصه‌کردن، ترجمه‌ی سه زبان، نوشتن کپشن و انتشار را به ترتیب روی کاغذ بنویسید.</p></div>
+<div class="exercise"><h3>گام دوم · نقطه‌های بررسی را علامت بزنید</h3><p>کجا باید متن اصلی، اسم‌ها، تاریخ و عددها با نسخه‌های ترجمه‌شده مقایسه شوند؟</p></div>
+<div class="exercise"><h3>گام سوم · اختیار انتشار را روشن کنید</h3><p>چه کسی نسخه‌ی وب‌سایت یا شبکه‌ی اجتماعی را تأیید می‌کند؟ آیا ایجنت اجازه‌ی انتشار دارد؟ چرا؟</p></div>
+</section>
+<section class="slide" data-notes="جمع‌بندی را به داستان آغازین وصل کنید. از داوطلبان بخواهید یک جمله بگویند که تفاوت «پیشنهاد» و «اقدام» را بیان کند.">
+<h2>آنچه در این ماژول یاد گرفتیم</h2>
+<ul class="big-list">
+<li>ایجنت می‌تواند چند مرحله را دنبال کند؛ میزان اختیارش به ابزار و تنظیمات بستگی دارد.</li>
+<li>مدل، ابزار، زمینه و حافظه هرکدام در نتیجه نقش دارند.</li>
+<li>هرچه اقدام پرپیامدتر باشد، باید روشن‌تر و زودتر آن را انسان بررسی کند.</li>
+<li>پاسخ خوش‌خوان به‌تنهایی مدرک درستی نیست؛ منبع را ببینیم.</li>
+</ul>
+<p class="question">برای ماژول بعد، سارا چه کارهای دیگری می‌تواند انجام دهد و چه چیزهایی را نباید بی‌بررسی بسپارد؟</p>
+</section>
+</main>
+
 <script>
 // موتور ساده اسلاید — ایجنت‌های هوش مصنوعی برای کنشگران
 // کنترل: فلش راست/چپ یا Space، F تمام‌صفحه، Esc فهرست، P حالت مدرس
@@ -517,160 +620,5 @@ show(current);
 })();
 
 </script>
-<div class="deck" id="deck">
-
-<!-- ===== slide 1: cover ===== -->
-<section class="slide" data-notes="به شرکت‌کنندگان خوش‌آمد بگویید. خودتان را معرفی کنید، اهداف کارگاه را کوتاه بگویید. توضیح دهید که این دوره هم مهارت می‌آموزد و هم ریسک‌ها را باز می‌کند.">
-<h1>ایجنت‌های هوش مصنوعی برای کنشگران</h1>
-<p class="subtitle">ماژول ۱ — مقدمه: ایجنت چیست؟</p>
-<div class="meta">دوره‌ی کارگاهی · ۸ ماژول · مخاطب غیرفنی</div>
-<div class="hero">🤝</div>
-<p class="small">یک کارگاه مبتنی بر تعامل — نه سمینار یک‌طرفه</p>
-</section>
-
-<!-- ===== slide 2: توافق کلاس ===== -->
-<section class="slide" data-notes="این اسلاید حیاتی است. سه قاعده را با صدای بلند بخوانید. تاکید کنید پرده‌بندی پیش‌فرض است: هیچ‌کس ملزم به گفتن نام سازمان یا پروژه‌ی واقعی خودش نیست.">
-<h2>توافق کارگاه ما</h2>
-<div class="rule">
-  <div class="rule-num">۱</div>
-  <div class="rule-body"><strong>پرده‌بندی پیش‌فرض:</strong> کسی ملزم نیست شیوه‌ی کار واقعی‌اش را بگوید. مثال‌ها کلی است.</div>
-</div>
-<div class="rule">
-  <div class="rule-num">۲</div>
-  <div class="rule-body"><strong>هیچ داده‌ی واقعی وارد تمرین نمی‌شود:</strong> مثال‌ها ساختگی یا عمومی هستند.</div>
-</div>
-<div class="rule">
-  <div class="rule-num">۳</div>
-  <div class="rule-body">چیزی نپرسید که بقیه را ناچار به افشا کند. اگر سؤال حساس دارید، بعد از کلاس خصوصی بپرسید.</div>
-</div>
-</section>
-
-<!-- ===== slide 3: داستان آغازین ===== -->
-<section class="slide story-slide" data-notes="داستان را با جزئیات تعریف کنید. بعد بپرسید: شما جای لیلا بودید چطور این کار را انجام می‌دادید؟ چند دقیقه صحبت آزاد.">
-<h2>🎬 داستان: شبِ اطلاعیه</h2>
-<p>ساعت ۱۱ شب. لیلا، هماهنگ‌کننده‌ی یک شبکه‌ی کارگری، خبر می‌گیرد که فردا صبح اطلاعیه‌ی مهمی منتشر می‌شود.</p>
-<ul>
-<li>ترجمه‌ی متن اطلاعیه به سه زبان</li>
-<li>خلاصه برای شبکه‌های اجتماعی</li>
-<li>تهیه‌ی فهرست مخاطبان رسانه‌ای</li>
-<li>پاسخ به سؤالاتی که ممکن است پیش بیاید</li>
-</ul>
-<p class="question">💡 <strong>پرسش:</strong> شما جای لیلا بودید چطور این کار را انجام می‌دادید؟</p>
-</section>
-
-<!-- ===== slide 4: چت‌بات در برابر ایجنت ===== -->
-<section class="slide" data-notes="تفاوت اصلی را باز کنید: چت‌بات حرف می‌زند، ایجنت عمل می‌کند. تاکید کنید که خطای ایجنت یعنی اقدام اشتباه، نه فقط جواب اشتباه — این پایه‌ی بحث امنیت در ماژول‌های بعدی است.">
-<h2>چت‌بات ≠ ایجنت</h2>
-<table class="compare">
-<thead><tr><th></th><th>چت‌بات</th><th>ایجنت</th></tr></thead>
-<tbody>
-<tr><td>هدف</td><td>پاسخ به یک سؤال</td><td>انجام یک کار</td></tr>
-<tr><td>ابزار</td><td>فقط گفت‌وگو</td><td>مرورگر، فایل، تقویم، ایمیل</td></tr>
-<tr><td>حافظه</td><td>کوتاه‌مدت</td><td>طولانی‌مدت و چندمرحله‌ای</td></tr>
-<tr><td>خطا</td><td>پاسخ اشتباه</td><td class="danger">اقدام اشتباه</td></tr>
-</tbody>
-</table>
-<p class="small">خطای چت‌بات یعنی جواب بد؛ خطای ایجنت یعنی کار بد انجام‌شده.</p>
-</section>
-
-<!-- ===== slide 5: اجزای ایجنت ===== -->
-<section class="slide" data-notes="سه جزء را با تشبیه: مغز، دست‌ها، دفترچه. بعد بپرسید: کدام جزء خطرناک‌ترین است؟ (پاسخ: ابزارها — چون اقدام می‌کنند و هر ابزار یک در ورودی جدید است.)">
-<h2>سه جزء ایجنت</h2>
-<div class="cols3">
-  <div class="card"><div class="icon">🧠</div><h3>مدل زبانی — مغز</h3><p>می‌فهمد، برنامه‌ریزی می‌کند، تصمیم می‌گیرد. محدودیت‌های مدل = محدودیت ایجنت.</p></div>
-  <div class="card"><div class="icon">🛠️</div><h3>ابزارها — دست‌ها</h3><p>مرورگر، فایل، تقویم، ایمیل. ایجنت بدون ابزار فقط چت‌بات است. هر ابزار، یک درِ ورودی جدید.</p></div>
-  <div class="card"><div class="icon">📓</div><h3>حافظه — دفترچه</h3><p>کارهای قبلی را یاد می‌آورد. پرسش: چه چیزی از من ذخیره می‌شود؟ (ماژول ۴)</p></div>
-</div>
-</section>
-
-<!-- ===== slide 6: حلقه ===== -->
-<section class="slide" data-notes="حلقه را قدم به قدم روی تخته بکشید. تاکید کنید: خطای قدم اول می‌تواند در کل حلقه ادامه پیدا کند. از شرکت‌کنندگان بپرسید چطور جلوی این را می‌گیرند؟ پاسخ: نظارت انسانی در نقاط کلیدی.">
-<h2>حلقه‌ی کار ایجنت</h2>
-<div class="loop">
-  <div class="step">۱. هدف</div>
-  <div class="arrow">←</div>
-  <div class="step">۲. برنامه‌ریزی</div>
-  <div class="arrow">←</div>
-  <div class="step">۳. اقدام</div>
-  <div class="arrow">←</div>
-  <div class="step">۴. مشاهده</div>
-  <div class="arrow">←</div>
-  <div class="step loop-back">↺ تکرار یا پایان</div>
-</div>
-<p class="warning">⚠️ اگر در قدم اول اشتباه بفهمد، در کل حلقه همان اشتباه را دنبال می‌کند.</p>
-<p class="small">پس: <strong>نظارت انسانی در نقاط کلیدی</strong> لازم است.</p>
-</section>
-
-<!-- ===== slide 7: سطوح خودمختاری ===== -->
-<section class="slide" data-q="s7" data-notes="از شرکت‌کنندگان بخواهید خودشان را در طیف قرار دهند. قانون کارگاه: هرچه داده حساس‌تر، سطح پایین‌تر.">
-<h2>سطوح خودمختاری</h2>
-<div class="autonomy">
-  <div class="aut-level l1"><h3>۱ · پیشنهادگر</h3><p>ایجنت پیشنهاد می‌دهد، تو انجام می‌دهی</p></div>
-  <div class="aut-level l2"><h3>۲ · تأیید هر قدم</h3><p>هر اقدام قبل از اجرا نشان داده می‌شود</p></div>
-  <div class="aut-level l3"><h3>۳ · نقاط کنترلی</h3><p>چند قدم می‌دود، در نقاط کلیدی توقف می‌کند</p></div>
-  <div class="aut-level l4"><h3>۴ · خودمختار</h3><p>تا انتها می‌دود، در پایان گزارش می‌دهد</p></div>
-</div>
-<p class="rule-of-thumb">📏 <strong>قانون:</strong> هرچه داده حساس‌تر ← سطح پایین‌تر</p>
-</section>
-
-<!-- ===== slide 8: پارادوکس خودمختاری ===== -->
-<section class="slide" data-q="s8" data-notes="این اسلاید پایه‌ی انگیزشی کل دوره است. هرچه خودمختارتر، سودمندتر و خطرناک‌تر — به یک نسبت.">
-<h2>پارادوکس خودمختاری</h2>
-<div class="balance">
-  <div class="pan">✅ سود: صرفه‌جویی در زمان، کارهای تکراری، مقیاس‌پذیری</div>
-  <div class="fulcrum">⚖️</div>
-  <div class="pan">⚠️ خطر: خطا در مقیاس، اقدام غیرقابل‌برگشت، افشای ناخواسته</div>
-</div>
-<p>هرچه ایجنت خودمختارتر — <strong>سودمندتر و خطرناک‌تر</strong>، به یک نسبت.</p>
-<p class="small">به همین دلیل دوره هم ماژول توانمندسازی دارد (۲، ۳) و هم ماژول امنیت (۴، ۵، ۶).</p>
-</section>
-
-<!-- ===== slide 9: آیا ایجنت میفهمد؟ ===== -->
-<section class="slide" data-notes="سه محدودیت را با مثال بگویید. تشبیه پیشنهادی: نیروی تازه‌کار بسیار باهوش که گاهی بی‌مبنا با اعتمادبه‌نفس حرف می‌زند. شما سوپروایزر او هستید.">
-<h2>آیا ایجنت «می‌فهمد»؟</h2>
-<ul class="big-list">
-<li><strong>توهم:</strong> با اعتمادبه‌نفس کامل، چیزی کاملاً غلط می‌گوید.</li>
-<li><strong>سوگیری:</strong> داده‌ی آموزشی، سوگیری‌های اجتماعی را بازتاب می‌دهد.</li>
-<li><strong>نقص در منطق دقیق:</strong> در ریاضی و منطق سخت‌گیرانه ضعیف است.</li>
-</ul>
-<p class="question">🧠 تشبیه: نیروی تازه‌کار بسیار باهوش که گاهی بی‌مبنا حرف می‌زند — شما سوپروایزر او هستید.</p>
-</section>
-
-<!-- ===== slide 10: تمرین ===== -->
-<section class="slide" data-notes="تمرین زوجی ۱۰ دقیقه، گروهی ۱۵ دقیقه. کاغذها جمع نمیشود. یادآوری پرده‌بندی: هیچ داده واقعی وارد تمرین نمیشود.">
-<h2>📝 تمرین</h2>
-<div class="exercise">
-  <h3>۱ — زوجی (۱۰ دقیقه)</h3>
-  <p>«بزرگ‌ترین کار تکراری‌ای که در هفته انجام می‌دهید چیست؟» — کلی بگویید، بدون نام سازمان. آیا برای ایجنت مناسب است؟ کدام بخش؟</p>
-</div>
-<div class="exercise">
-  <h3>۲ — گروهی (۱۵ دقیقه)</h3>
-  <p>حلقه‌ی کار ایجنت را برای کارهای لیلا طی کنید: هدف → برنامه → اقدام → مشاهده. کدام گام‌ها نیاز به تأیید لیلا دارند؟</p>
-</div>
-<div class="exercise">
-  <h3>۳ — فردی (۵ دقیقه)</h3>
-  <p>روی کاغذ: «از یک ایجنت انتظار دارم _______ را انجام دهد.» کاغذها جمع نمی‌شود.</p>
-</div>
-</section>
-
-<!-- ===== slide 11: جمع‌بندی ===== -->
-<section class="slide" data-notes="جمع‌بندی کوتاه. حلقه‌ی بازخورد: دو سؤال. مسیر دوره را یادآوری کنید.">
-<h2>جمع‌بندی ماژول ۱</h2>
-<ul class="big-list">
-<li>ایجنت = مغز + دست‌ها + حافظه</li>
-<li>خطای ایجنت یعنی اقدام اشتباه، نه جواب اشتباه</li>
-<li>حلقه: هدف → برنامه → اقدام → مشاهده → تکرار</li>
-<li>هرچه داده حساس‌تر ← سطح خودمختاری پایین‌تر</li>
-</ul>
-<p class="question">🎤 <strong>حلقه‌ی بازخورد:</strong></p>
-<ul>
-<li>کدام ابزار یا مفهوم را می‌خواهید بعد از کارگاه امتحان کنید؟</li>
-<li>کدام ریسک شما را نگران کرد؟</li>
-</ul>
-<p class="small">ماژول بعد: کاربردهای واقعی برای کنشگری</p>
-</section>
-
-</div>
-
 </body>
 </html>

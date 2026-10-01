@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>فهرست اسلایدها — ایجنت‌های هوش مصنوعی برای کنشگران</title>
+<title>فهرست اسلایدها — ایجنت‌های هوش مصنوعی</title>
 <style>
 /* قالب مشترک اسلایدها — ایجنت‌های هوش مصنوعی برای کنشگران */
 
@@ -299,52 +299,89 @@ body.presenter .slide { padding-inline-end: 380px; }
 
 </style>
 <style>
+  :root {
+    --bg: #0a1117;
+    --bg2: #111c24;
+    --panel: #15232c;
+    --ink: #f0f4ed;
+    --muted: #adbdba;
+    --accent: #f2b35f;
+    --accent2: #81d6bd;
+    --warn: #ffd080;
+    --danger: #ff8791;
+    --line: #2b4147;
+  }
+  * { box-sizing: border-box; }
+  html { min-height: 100%; }
+  body {
+    min-height: 100%;
+    background:
+      radial-gradient(ellipse at 10% 5%, rgba(129,214,189,.08), transparent 32rem),
+      radial-gradient(ellipse at 95% 95%, rgba(242,179,95,.07), transparent 35rem),
+      var(--bg);
+  }
   .toc { max-width: 900px; margin: 0 auto; padding: 3rem 2rem; }
-  .toc h1 { color: var(--accent); }
-  .toc-list { list-style: none; padding: 0; }
+  .toc h1 { color: var(--ink); font-size: clamp(2.3rem, 6vw, 4.2rem); line-height: 1.35; letter-spacing: -.04em; }
+  .toc > .subtitle { display: inline-block; padding: .45rem .85rem; border: 1px solid var(--line); border-radius: 999px; background: rgba(129,214,189,.07); }
+  .toc-list { list-style: none; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; }
   .toc-list li {
-    background: var(--panel);
+    background: linear-gradient(145deg, rgba(255,255,255,.035), transparent 60%), var(--panel);
     border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 1rem 1.3rem;
-    margin-bottom: .8rem;
+    border-radius: 16px;
+    padding: 1.1rem 1.2rem;
     display: flex;
     align-items: center;
     gap: 1rem;
+    min-height: 94px;
+    box-shadow: 0 18px 50px rgba(0,0,0,.18);
+    transition: transform .2s ease, border-color .2s ease;
   }
-  .toc-list a { color: var(--ink); text-decoration: none; font-size: 1.15rem; }
+  .toc-list li:hover { transform: translateY(-3px); border-color: var(--accent2); }
+  .toc-list a { color: var(--ink); text-decoration: none; font-size: 1.08rem; font-weight: 700; }
   .toc-list a:hover { color: var(--accent2); }
   .toc-list .num {
-    min-width: 2.6rem; height: 2.6rem;
+    min-width: 2.8rem; height: 2.8rem;
     display: flex; align-items: center; justify-content: center;
-    background: var(--accent);
-    color: #0b1020;
+    background: rgba(242,179,95,.13);
+    color: var(--accent);
     font-weight: 800;
-    border-radius: 50%;
+    border: 1px solid rgba(242,179,95,.38);
+    border-radius: 12px;
     font-size: 1.2rem;
   }
   .toc-list .desc { color: var(--muted); font-size: .95rem; display: block; margin-top: .2rem; }
-  .toc-note { margin-top: 2rem; }
+  .toc-note { margin-top: 2rem; padding: 1rem 1.3rem; border: 1px solid var(--line); border-radius: 16px; background: rgba(17,28,36,.7); }
+  .toc-note p { line-height: 1.9; }
+  .toc-intro { max-width: 70ch; color: var(--muted); font-size: 1.08rem; line-height: 2; }
+  .toc-points { display: flex; flex-wrap: wrap; gap: .55rem; margin: 1.2rem 0 1.8rem; }
+  .toc-points span { border: 1px solid var(--line); border-radius: 999px; padding: .35rem .75rem; color: var(--accent2); background: rgba(129,214,189,.05); }
+  @media (max-width: 680px) {
+    .toc { padding: 2rem 1rem; }
+    .toc-list { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
 <div class="toc">
-  <h1>ایجنت‌های هوش مصنوعی برای کنشگران</h1>
-  <p class="subtitle">دوره‌ی کارگاهی ۸ ماژوله — اسلایدها و منابع</p>
+  <h1>ایجنت‌های هوش مصنوعی و روش کار با آن‌ها</h1>
+  <p class="subtitle">دوره‌ی کارگاهی در ۸ بخش · حدود ۱۵ ساعت یادگیری و تمرین</p>
+  <p class="toc-intro">در این دوره با ایجنت‌های هوش مصنوعی و روش کار با آن‌ها آشنا می‌شویم. مزایا و محدودیت‌ها، بایدها و نبایدهای استفاده از آن‌ها را با مثال یاد می‌گیریم. واژه‌های مهم فارسی و انگلیسی را هم می‌شناسیم تا بتوانیم نوشته‌های انگلیسی درباره‌ی هوش مصنوعی را بهتر بخوانیم. برای نمونه، تمرین می‌کنیم یک خبر را به سه زبان برای وب‌سایت یا شبکه‌های اجتماعی آماده کنیم.</p>
+  <div class="toc-points"><span>بدون نیاز به دانش فنی</span><span>به زبان فارسی و قابل اجرا بدون اینترنت</span><span>تمرین با نمونه‌های ساختگی</span><span>یادگیری همراه با توجه به خطرها</span></div>
   <ul class="toc-list">
-    <li><span class="num">۱</span><div><a href="01-mabani.html">مقدمه: ایجنت چیست؟</a><span class="desc">مفاهیم پایه · حلقه‌ی کار · سطوح خودمختاری · ۹۰ دقیقه</span></div></li>
-    <li><span class="num">۲</span><div><a href="02-karborda.html">کاربردها برای کنشگران</a><span class="desc">پنج قلمرو کاربرد · قاعده‌ی سپردن · پرامپت‌نویسی ک.م.ق.ه · ۹۰ دقیقه</span></div></li>
-    <li><span class="num">۳</span><div><a href="03-abzar.html">انتخاب ابزار و ملاحظات دسترسی</a><span class="desc">سه دسته ابزار · چک‌لیست ۵گانه · واقعیت‌های دسترسی · ۶۰ دقیقه</span></div></li>
-    <li><span class="num">۴</span><div><a href="04-harimi-omumi.html">حریم خصوصی و داده‌ها 🔐</a><span class="desc">قلب دوره · چرخه‌ی عمر داده · بی‌نام‌سازی · قرارداد داده · ۱۲۰ دقیقه</span></div></li>
-    <li><span class="num">۵</span><div><a href="05-khatarat.html">خطرات و حملات</a><span class="desc">تزریق پرامپت · توهم خطرناک · جعل · آلودگی داده · ۹۰ دقیقه</span></div></li>
-    <li><span class="num">۶</span><div><a href="06-behdasht-amniati.html">بهداشت امنیتی</a><span class="desc">رمزگذار · 2FA · جداسازی هویت‌ها · فیشینگ AI‌ای · ۹۰ دقیقه</span></div></li>
-    <li><span class="num">۷</span><div><a href="07-kargah-amali.html">کارگاه عملی: اولین ایجنت</a><span class="desc">ساخت، آزمون، کارت مشخصات · ۱۲۰ دقیقه</span></div></li>
-    <li><span class="num">۸</span><div><a href="08-jam-bandi.html">جمع‌بندی و چک‌لیست‌ها</a><span class="desc">چک‌لیست نهایی · سه عادت · پنج اصل ثابت · ۶۰ دقیقه</span></div></li>
+    <li><span class="num">۱</span><div><a href="01-mabani.html">ایجنت چیست و چطور کار می‌کند؟</a><span class="desc">آشنایی با بخش‌های ایجنت و کارهایی که می‌تواند انجام دهد · ۱۰۵ دقیقه</span></div></li>
+    <li><span class="num">۲</span><div><a href="02-karborda.html">از ایجنت چه کمکی بگیریم؟</a><span class="desc">انتخاب کار، نوشتن درخواست و بررسی پاسخ · ۱۰۵ دقیقه</span></div></li>
+    <li><span class="num">۳</span><div><a href="03-abzar.html">چطور ابزار مناسب را انتخاب کنیم؟</a><span class="desc">بررسی امکانات، هزینه، اطلاعات شخصی و راه‌های دیگر · ۷۵ دقیقه</span></div></li>
+    <li><span class="num">۴</span><div><a href="04-harimi-omumi.html">چطور از اطلاعاتمان مراقبت کنیم؟</a><span class="desc">چه اطلاعاتی بدهیم، چه چیزهایی را نگه داریم و چه کسی آن‌ها را می‌بیند · ۱۵۰ دقیقه</span></div></li>
+    <li><span class="num">۵</span><div><a href="05-khatarat.html">چه وقت ایجنت ممکن است اشتباه کند؟</a><span class="desc">آشنایی با فریب‌ها، پاسخ‌های نادرست و راه بررسی آن‌ها · ۱۰۵ دقیقه</span></div></li>
+    <li><span class="num">۶</span><div><a href="06-behdasht-amniati.html">چطور از حساب‌ها و دستگاه‌ها مراقبت کنیم؟</a><span class="desc">رمزها، پیام‌های مشکوک و کارهایی که وقت گم‌شدن دستگاه باید کرد · ۱۰۵ دقیقه</span></div></li>
+    <li><span class="num">۷</span><div><a href="07-kargah-amali.html">با هم یک ایجنت ساده را می‌سازیم و امتحان می‌کنیم</a><span class="desc">ساخت یک راهنمای پرسش‌وپاسخ و پیدا کردن خطاهای آن · ۱۵۰ دقیقه</span></div></li>
+    <li><span class="num">۸</span><div><a href="08-jam-bandi.html">مرور آموخته‌ها و انتخاب قدم بعدی</a><span class="desc">چه چیزهایی یاد گرفتیم و از این به بعد چه کنیم؟ · ۱۰۵ دقیقه</span></div></li>
   </ul>
   <div class="toc-note">
+    <p><strong>در پایان دوره:</strong> می‌دانیم چه کارهایی را می‌توان به ایجنت سپرد، چه اطلاعاتی نباید به آن داد و چطور جواب‌هایش را پیش از استفاده بررسی کنیم.</p>
     <p class="small">کنترل‌ها در هر دک: <strong>← / →</strong> حرکت · <strong>F</strong> تمام‌صفحه · <strong>Esc</strong> فهرست · <strong>P</strong> حالت مدرس (یادداشت‌های سخنران)</p>
     <p class="small">متن کامل ماژول‌ها در پوشه‌ی <code>modules/</code> و برگه‌های تمرین در <code>handouts/</code> است.</p>
-    <p class="small">این دوره کاملاً آفلاین کار می‌کند — برای محیط‌های با نظارت اینترنتی، قبل از جلسه دانلود کنید.</p>
+    <p class="small">فایل‌های اسلاید برای نمایش آفلاین آماده‌اند؛ استفاده از ابزارهای برخط در تمرین اختیاری است.</p>
   </div>
 </div>
 </body>

@@ -25,18 +25,23 @@ for name in sorted(target_files):
         html = f.read()
     original = html
 
-    # ۱) حذف هر نسخه‌ای از قالب/اسکریپت درج‌شده‌ی قبلی
-    html = html.replace(STYLE_BLOCK, "@@CSS_SLOT@@")
-    html = html.replace(SCRIPT_BLOCK, "@@JS_SLOT@@")
+    # Remove every embedded copy so repeated builds never leave stale assets behind.
+    def remove_theme(match):
+        block = match.group(0)
+        if "قالب مشترک اسلایدها" in block or "/* قالب مشترک اسلایدها" in block:
+            return "@@CSS_SLOT@@"
+        return block
 
-    # ۲) حذف ارجاع به فایل خارجی
+    def remove_deck_script(match):
+        block = match.group(0)
+        if "موتور اسلاید" in block or "موتور ساده اسلاید" in block:
+            return "@@JS_SLOT@@"
+        return block
+
+    html = re.sub(r"<style\b[^>]*>.*?</style>", remove_theme, html, flags=re.S | re.I)
+    html = re.sub(r"<script\b[^>]*>.*?</script>", remove_deck_script, html, flags=re.S | re.I)
     html = html.replace('<link rel="stylesheet" href="theme.css">', "@@CSS_SLOT@@")
     html = html.replace('<script src="deck.js"></script>', "@@JS_SLOT@@")
-
-    # ۳) قطعه‌های خراب احتمالی از تلاش قبلی — پاک‌سازی
-    html = re.sub(r"<style>\s*/\* ===== قالب مشترک.*?</style>", "@@CSS_SLOT@@", html, flags=re.S)
-    html = re.sub(r"<script>\s*/\* موتور اسلاید.*?</script>\s*<script>\s*/\* موتور اسلاید.*?</script>",
-                  "@@JS_SLOT@@", html, flags=re.S)
 
     # ۴) جای‌گذاری نهایی: اولین اسلات CSS را با بلوک کامل پر کن، بقیه حذف
     def fill_single(text, slot, block):
@@ -47,13 +52,13 @@ for name in sorted(target_files):
         return out, True
 
     html, css_done = fill_single(html, "@@CSS_SLOT@@", STYLE_BLOCK)
-    html, js_done = fill_single(html, "@@JS_SLOT@@", SCRIPT_BLOCK)
+    html = html.replace("@@JS_SLOT@@", "")
+    html = re.sub(r"\n{3,}", "\n\n", html)
 
     # اگر اصلاً اسلاتی نبود (فایل دست‌نخورده)، درج استاندارد
     if not css_done:
         html = html.replace("</head>", STYLE_BLOCK + "\n</head>", 1)
-    if not js_done:
-        html = html.replace("</body>", SCRIPT_BLOCK + "\n</body>", 1)
+    html = html.replace("</body>", SCRIPT_BLOCK + "\n</body>", 1)
 
     if html != original:
         with io.open(path, "w", encoding="utf-8", newline="\n") as f:

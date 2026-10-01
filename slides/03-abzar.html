@@ -3,21 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ماژول ۳ — انتخاب ابزار و ملاحظات دسترسی</title>
+<title>ماژول ۳ — انتخاب ابزار</title>
 <style>
 /* قالب مشترک اسلایدها — ایجنت‌های هوش مصنوعی برای کنشگران */
 
 :root {
-  --bg: #0f1420;
-  --bg2: #171f30;
-  --panel: #1c2740;
-  --ink: #e8eefc;
-  --muted: #9fb0d0;
-  --accent: #4da3ff;
-  --accent2: #7ee2b8;
-  --warn: #ffc46b;
-  --danger: #ff7a90;
-  --line: #2a3854;
+  --bg: #0a1117;
+  --bg2: #111c24;
+  --panel: #15232c;
+  --ink: #f0f4ed;
+  --muted: #adbdba;
+  --accent: #f2b35f;
+  --accent2: #81d6bd;
+  --warn: #ffd080;
+  --danger: #ff8791;
+  --line: #2b4147;
+  --shadow: 0 18px 50px rgba(0, 0, 0, .22);
 }
 
 * { box-sizing: border-box; }
@@ -26,7 +27,10 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  background: var(--bg);
+  background:
+    radial-gradient(ellipse at 10% 5%, rgba(129, 214, 189, .08), transparent 32rem),
+    radial-gradient(ellipse at 95% 95%, rgba(242, 179, 95, .07), transparent 35rem),
+    var(--bg);
   color: var(--ink);
   font-family: Vazirmatn, "Vazirmatn UI", "Segoe UI", Tahoma, Arial, sans-serif;
   direction: rtl;
@@ -36,11 +40,12 @@ html, body {
 #progress {
   position: fixed;
   top: 0; right: 0;
-  height: 4px;
+  height: 5px;
   width: 0%;
   background: linear-gradient(90deg, var(--accent2), var(--accent));
   z-index: 50;
-  transition: width .25s ease;
+  transition: width .3s ease;
+  box-shadow: 0 0 18px rgba(129, 214, 189, .35);
 }
 
 /* ===== دک اسلاید ===== */
@@ -49,40 +54,62 @@ html, body {
   display: none;
   position: absolute;
   inset: 0;
-  padding: 4rem 4.5rem 3.5rem;
+  padding: clamp(2.5rem, 6vh, 4.5rem) clamp(1.5rem, 7vw, 7rem) 4.5rem;
   overflow: auto;
+  scrollbar-color: var(--line) transparent;
+  animation: slide-in .35s ease both;
 }
 .slide.active { display: block; }
 
-.slide h1 { font-size: 2.6rem; line-height: 1.35; margin: .3rem 0; }
-.slide h2 { font-size: 2rem; color: var(--accent); margin: 0 0 1.2rem; }
+.slide h1 { max-width: 17ch; font-size: clamp(2.25rem, 5vw, 4.5rem); line-height: 1.3; margin: .3rem 0; letter-spacing: -.035em; }
+.slide h2 { max-width: 27ch; font-size: clamp(1.6rem, 3vw, 2.55rem); color: var(--accent); margin: 0 0 1.2rem; line-height: 1.45; letter-spacing: -.02em; }
 .slide h3 { font-size: 1.15rem; margin: .4rem 0; }
-.slide p, .slide li { font-size: 1.12rem; line-height: 1.9; }
-.subtitle { font-size: 1.35rem; color: var(--accent2); margin: 0 0 1rem; }
-.meta { color: var(--muted); font-size: 1rem; margin-bottom: 1rem; }
-.hero { font-size: 4.5rem; margin: 1.2rem 0; }
+.slide p, .slide li { font-size: clamp(1rem, 1.3vw, 1.2rem); line-height: 1.9; }
+.subtitle { font-size: clamp(1.1rem, 2vw, 1.5rem); color: var(--accent2); margin: 0 0 1rem; }
+.meta { color: var(--muted); font-size: .95rem; margin-bottom: 1rem; }
+.hero { font-size: 4.5rem; margin: 1.2rem 0; filter: drop-shadow(0 12px 25px rgba(242, 179, 95, .16)); }
 .small { color: var(--muted); font-size: .98rem; }
 .question {
   margin-top: 1.2rem;
   padding: .8rem 1.1rem;
-  background: rgba(126,226,184,.08);
+  background: linear-gradient(110deg, rgba(129,214,189,.13), rgba(129,214,189,.035));
   border-inline-start: 4px solid var(--accent2);
-  border-radius: 8px;
+  border-radius: 4px 14px 14px 4px;
 }
 .warning {
   margin-top: 1rem;
   padding: .7rem 1rem;
   background: rgba(255,196,107,.09);
   border-inline-start: 4px solid var(--warn);
-  border-radius: 8px;
+  border-radius: 4px 14px 14px 4px;
 }
 .story-slide blockquote.inject {
   background: rgba(255,122,144,.1);
   border: 1px dashed var(--danger);
   padding: .8rem 1.1rem;
-  border-radius: 8px;
+  border-radius: 4px 14px 14px 4px;
   font-size: 1.1rem;
 }
+
+.slide:first-of-type {
+  display: none;
+  align-content: center;
+  background:
+    radial-gradient(ellipse at 15% 48%, rgba(129,214,189,.13), transparent 35%),
+    radial-gradient(ellipse at 88% 20%, rgba(242,179,95,.12), transparent 28%),
+    linear-gradient(135deg, rgba(255,255,255,.018), transparent 55%);
+}
+.slide:first-of-type.active { display: grid; }
+.slide:first-of-type::after {
+  content: "";
+  position: absolute;
+  inset-block: 15%;
+  inset-inline-end: clamp(1.5rem, 5vw, 5rem);
+  width: 3px;
+  background: linear-gradient(transparent, var(--accent), var(--accent2), transparent);
+  opacity: .75;
+}
+.slide:first-of-type .hero { margin-block: .4rem 0; font-size: clamp(3rem, 7vw, 6rem); }
 
 /* ===== لیست‌ها ===== */
 .big-list li { margin-bottom: .7rem; }
@@ -92,21 +119,24 @@ html, body {
   margin-bottom: .5rem;
   background: var(--bg2);
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 10px;
 }
-.checklist li::before { content: "☐  "; color: var(--accent); }
+.checklist li::before { content: "□  "; color: var(--accent); }
 
 /* ===== کارت‌ها ===== */
 .cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 .cols3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
 .card {
-  background: var(--panel);
+  background: linear-gradient(145deg, rgba(255,255,255,.035), transparent 60%), var(--panel);
   border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 1rem 1.1rem;
+  border-radius: 16px;
+  padding: 1.1rem 1.2rem;
+  box-shadow: var(--shadow);
+  transition: transform .2s ease, border-color .2s ease;
 }
+.card:hover { transform: translateY(-3px); border-color: rgba(129,214,189,.55); }
 .card .icon { font-size: 2rem; }
-.card h3 { color: var(--accent2); }
+.card h3 { color: var(--accent2); line-height: 1.5; }
 .card p { font-size: 1rem; color: var(--ink); margin: .3rem 0 0; }
 
 /* ===== جدول مقایسه ===== */
@@ -117,19 +147,21 @@ table.compare {
 }
 table.compare th, table.compare td {
   border: 1px solid var(--line);
-  padding: .6rem .9rem;
+  padding: .7rem .9rem;
   text-align: right;
-  font-size: 1.05rem;
+  font-size: clamp(.92rem, 1.15vw, 1.08rem);
+  line-height: 1.75;
 }
 table.compare th { background: var(--panel); color: var(--accent2); }
+table.compare tr:nth-child(even) td { background: rgba(255,255,255,.018); }
 table.compare td.danger { color: var(--danger); font-weight: 700; }
 
 /* ===== قواعد کلاس ===== */
 .rule {
   display: flex; gap: 1rem; align-items: center;
-  background: var(--panel);
+  background: linear-gradient(110deg, rgba(255,255,255,.035), transparent 70%), var(--panel);
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: 14px;
   padding: .9rem 1.1rem;
   margin-bottom: .9rem;
 }
@@ -147,7 +179,7 @@ table.compare td.danger { color: var(--danger); font-weight: 700; }
 /* ===== حلقه / زنجیره ===== */
 .loop { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin: 1rem 0; }
 .loop .step {
-  background: var(--panel);
+  background: linear-gradient(135deg, rgba(242,179,95,.09), transparent 70%), var(--panel);
   border: 1px solid var(--accent);
   color: var(--ink);
   border-radius: 999px;
@@ -229,12 +261,12 @@ table.compare td.danger { color: var(--danger); font-weight: 700; }
 
 /* ===== کد ===== */
 pre.codebox {
-  background: #0b1020;
+  background: #080f14;
   border: 1px solid var(--line);
   border-radius: 10px;
   padding: 1rem 1.2rem;
   font-family: Vazirmatn, Tahoma, monospace;
-  font-size: 1.02rem;
+  font-size: clamp(.9rem, 1.15vw, 1.05rem);
   line-height: 1.9;
   white-space: pre-wrap;
   direction: rtl;
@@ -253,7 +285,7 @@ code { background: var(--bg2); padding: .1rem .4rem; border-radius: 6px; directi
   z-index: 40;
 }
 .nav button {
-  background: var(--panel);
+  background: rgba(21, 35, 44, .94);
   color: var(--ink);
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -263,6 +295,7 @@ code { background: var(--bg2); padding: .1rem .4rem; border-radius: 6px; directi
   cursor: pointer;
 }
 .nav button:hover { border-color: var(--accent); }
+.nav button:focus-visible { outline: 2px solid var(--accent2); outline-offset: 3px; }
 .counter {
   position: fixed;
   bottom: 1.15rem;
@@ -291,9 +324,36 @@ code { background: var(--bg2); padding: .1rem .4rem; border-radius: 6px; directi
 body.presenter .notes { display: block; }
 body.presenter .slide { padding-inline-end: 380px; }
 
+@keyframes slide-in {
+  from { opacity: .5; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 760px) {
+  .slide { padding: 2.6rem 1.2rem 4.5rem; }
+  .cols2, .cols3, .autonomy { grid-template-columns: 1fr; }
+  .balance { align-items: stretch; }
+  .balance .pan { flex-basis: 100%; }
+  .balance .fulcrum { text-align: center; }
+  .slide h1 { max-width: 100%; }
+  .nav { bottom: .55rem; inset-inline-start: .55rem; }
+  .nav button { padding: .35rem .6rem; font-size: .9rem; }
+  .counter { bottom: .75rem; inset-inline-end: .65rem; font-size: .8rem; }
+  body.presenter .slide { padding-inline-end: 1.2rem; }
+  .notes { width: min(88vw, 340px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
 /* ===== چاپ ===== */
 @media print {
-  .slide { display: block; position: relative; page-break-after: always; padding: 2rem; }
+  html, body { height: auto; background: #fff; color: #172126; }
+  .slide { display: block !important; position: relative; page-break-after: always; padding: 2rem; background: #fff; color: #172126; }
+  .slide h2, .card h3 { color: #286d5c; }
+  .card, .exercise, .rule, .checklist li { background: #fff; color: #172126; box-shadow: none; }
+  .card p, .slide p, .slide li { color: #172126; }
   #progress, .nav, .counter, .notes { display: none !important; }
 }
 
@@ -301,106 +361,102 @@ body.presenter .slide { padding-inline-end: 380px; }
 </head>
 <body>
 <div id="progress"></div>
-<div class="deck" id="deck">
-
-<!-- ===== slide 1: cover ===== -->
-<section class="slide" data-notes="یادآوری: تا اینجا، ایجنت چیست و چه کارهایی می‌کند. حالا: با کدام ابزار؟">
-<h1>انتخاب ابزار و ملاحظات دسترسی</h1>
-<p class="subtitle">ماژول ۳ — ابزار درست برای کار درست</p>
-<div class="meta">پیش‌نیاز: ماژول‌های ۱ و ۲</div>
+<main class="deck">
+<section class="slide" data-notes="ماژول را با هدف روشن کنید: به‌جای این‌که بگوییم کدام ابزار از همه بهتر است، یاد می‌گیریم برای هر کار چه چیزهایی را بررسی کنیم.">
+<h1>ابزار مناسب را چطور انتخاب کنیم؟</h1>
+<p class="subtitle">ماژول ۳ — توانایی، دسترسی، هزینه و شیوه‌ی نگهداری داده</p>
+<div class="meta">پیش‌نیاز: ماژول‌های ۱ و ۲ · ۷۵ دقیقه</div>
 <div class="hero">🧰</div>
 </section>
-
-<!-- ===== slide 2: داستان ===== -->
-<section class="slide story-slide" data-notes="سه گروه، سه انتخاب. تاکید: هیچ‌کدام اشتباه نکردند — گروه سوم آگاهانه تصمیم گرفت. هدف این ماژول تصمیم آگاهانه است.">
-<h2>🎬 داستان: سه ابزار، سه سرنوشت</h2>
-<ul>
-<li><strong>گروه اول:</strong> همه‌چیز با ایجنت ابری مشهور → بعد فهمید تاریخچه برای بهبود مدل ذخیره می‌شده</li>
-<li><strong>گروه دوم:</strong> مدل متن‌باز روی لپ‌تاپ قدیمی → ضعیف و ناامیدکننده، کنار گذاشته شد</li>
-<li><strong>گروه سوم:</strong> ترکیبی: حساس → محلی، عمومی → ابری، با یک سیاست نوشته</li>
-</ul>
-<p class="question">💡 تصمیم <strong>آگاهانه</strong>، نه تصادفی.</p>
-</section>
-
-<!-- ===== slide 3: سه دسته ابزار ===== -->
-<section class="slide" data-notes="هر دسته را با نقاط قوت و ضعف باز کنید. تاکید: هیچ ابزاری برای همه‌چیز نیست.">
-<h2>سه دسته‌ی ایجنت‌ها</h2>
+<section class="slide story-slide" data-notes="هر گزینه را بدون داوری اخلاقی بررسی کنید. از گروه بپرسید اگر سرویس از دسترس خارج شود کدام بخش کار متوقف می‌شود.">
+<h2>سه راه، سه جور دادوستد</h2>
+<p>سارا برای آماده‌کردن خبر سه ابزار را بررسی می‌کند:</p>
 <div class="cols3">
-  <div class="card"><div class="icon">☁️</div><h3>ابری تجاری</h3><p><strong>+</strong> قدرتمند، رابط آسان<br><strong>−</strong> داده به سرور خارجی، تحریم، ذخیره‌ی تاریخچه</p></div>
-  <div class="card"><div class="icon">🏠</div><h3>متن‌باز / محلی</h3><p><strong>+</strong> داده از دستگاه خارج نمی‌شود، بدون تحریم<br><strong>−</strong> سخت‌افزار و نصب، معمولاً ضعیف‌تر</p></div>
-  <div class="card"><div class="icon">🧩</div><h3>پلتفرم ساخت ایجنت</h3><p><strong>+</strong> بدون کدنویسی، سریع<br><strong>−</strong> داده به ثالث، وابستگی به پلتفرم</p></div>
+<div class="card"><h3>سرویس اینترنتی (Online Service)</h3><p>به‌سرعت در دسترس است و شاید چند زبان را خوب ترجمه کند؛ اما متن از راه اینترنت به سرویس می‌رسد.</p></div>
+<div class="card"><h3>برنامه‌ی نصب‌شده روی رایانه (Local Tool)</h3><p>ممکن است بدون فرستادن متن به سرویس بیرونی کار کند؛ کیفیت، به‌روزبودن و امنیت رایانه همچنان مهم‌اند.</p></div>
+<div class="card"><h3>ترکیب ابزار و کار انسانی</h3><p>یک ابزار پیش‌نویس می‌سازد و ویراستار با فرهنگ لغت، منبع خبر و بازخوانی انسانی آن را کامل می‌کند.</p></div>
+</div>
+<p class="question">برای این‌که سه ترجمه‌ی روان و درست داشته باشیم، فقط سرعت مهم است یا چیزهای دیگری هم باید بسنجیم؟</p>
+</section>
+<section class="slide" data-notes="نام دسته‌ها را ساده تعریف کنید. ممکن است یک محصول در بیش از یک دسته قرار گیرد. معماری واقعی، محل پردازش و سیاست جاری را از خود سرویس بررسی کنید.">
+<h2>ابزارها را از روی شیوه‌ی کارشان بشناسیم</h2>
+<div class="cols3">
+<div class="card"><div class="icon">☁️</div><h3>سرویس ابری (Cloud Service)</h3><p>از راه وب یا برنامه به آن دسترسی پیدا می‌کنید؛ متن برای پردازش به زیرساخت سرویس فرستاده می‌شود. مقررات و تنظیمات همان سرویس را بخوانید.</p></div>
+<div class="card"><div class="icon">💻</div><h3>ابزارِ نصب‌شده (Local Tool)</h3><p>روی رایانه یا شبکه‌ی خودتان اجرا می‌شود. «نصب‌شده» به‌تنهایی نمی‌گوید فایل‌ها کجا ذخیره می‌شوند یا چه اتصال‌هایی فعال‌اند.</p></div>
+<div class="card"><div class="icon">🧩</div><h3>سازنده‌ی ایجنت (Agent Builder)</h3><p>سرویسی که کمک می‌کند مدل را به فایل یا ابزار دیگری وصل کنید. هر اتصال ممکن است داده و دسترسی تازه‌ای درگیر کند.</p></div>
+</div>
+<p class="warning">متن‌باز (Open Source) یعنی کد برنامه برای دیدن یا تغییرکردن در دسترس است؛ خودمیزبان (Self-hosted) یعنی خودتان مسئول نصب و نگهداری آن هستید. هیچ‌کدام به‌تنهایی امنیت را تضمین نمی‌کند.</p>
+</section>
+<section class="slide" data-notes="از شرکت‌کنندگان بخواهید پاسخ‌ها را بر پایه‌ی سند یا آزمون بنویسند، نه شنیده‌ها. درباره‌ی سیاست روز، تاریخ بررسی را هم ثبت کنید.">
+<h2>پنج پرسش پیش از انتخاب</h2>
+<div class="prompt-parts">
+<div class="part"><span class="letter">۱</span><div><strong>آیا کار موردنظر را خوب انجام می‌دهد؟</strong><p>کیفیت زبان‌ها، محدودیت حجم و توانایی کار با فایل را با نمونه‌ی ساختگی بیازمایید.</p></div></div>
+<div class="part"><span class="letter">۲</span><div><strong>آیا می‌توانیم به آن دسترسی داشته باشیم؟</strong><p>اینترنت، دستگاه، حساب کاربری و محدودیت‌های مکانی یا ثبت‌نام را بررسی کنید.</p></div></div>
+<div class="part"><span class="letter">۳</span><div><strong>هزینه‌ی واقعی آن چیست؟</strong><p>سقف استفاده‌ی رایگان، هزینه‌ی ادامه، زمان نصب و هزینه‌ی نگهداری را حساب کنید.</p></div></div>
+<div class="part"><span class="letter">۴</span><div><strong>با متن و فایل ما چه می‌کند؟</strong><p>سیاست نگهداری، اشتراک‌گذاری، حذف و استفاده از داده را بخوانید.</p></div></div>
+<div class="part"><span class="letter">۵</span><div><strong>اگر دیگر در دسترس نبود چه می‌کنیم؟</strong><p>راه جایگزین و امکان بیرون‌بردن نوشته‌ها را از پیش پیدا کنید.</p></div></div>
 </div>
 </section>
-
-<!-- ===== slide 4: چک‌لیست ۵گانه ===== -->
-<section class="slide" data-notes="پنج معیار را با مثال مرور کنید. تمرین ذهنی: اگر ابزار فردا برود چه می‌شود؟">
-<h2>چک‌لیست ۵گانه انتخاب</h2>
-<ul class="big-list">
-<li><strong>۱. قابلیت:</strong> کار من را انجام می‌دهد؟</li>
-<li><strong>۲. دسترسی:</strong> از موقعیت من (کشور، دستگاه، اینترنت) کار می‌کند؟</li>
-<li><strong>۳. هزینه:</strong> رایگان تا کجا؟ پرداخت ارزی چطور؟</li>
-<li><strong>۴. امنیت و حریم خصوصی:</strong> داده ذخیره می‌شود؟ برای آموزش استفاده می‌شود؟</li>
-<li><strong>۵. پایداری:</strong> سال بعد هنوز هست؟</li>
-</ul>
-<p class="question">🧠 اگر این ابزار فردا از دسترس خارج شود چه؟ اگر جواب «فاجعه» است — وابستگی خطرناک.</p>
-</section>
-
-<!-- ===== slide 5: ملاحظات دسترسی از ایران ===== -->
-<section class="slide" data-notes="این اسلاید را با حساسیت ارائه کنید: واقعیت‌های عملیاتی، نه توصیه به نقض قوانین. هر بند را با مثال باز کنید. زمان بگذارید — شرکت‌کنندگان سوالات زیادی دارند.">
-<h2>واقعیت‌های دسترسی از ایران</h2>
-<div class="cols2">
-  <div class="card"><div class="icon">🌍</div><h3>تحریم و IP</h3><p>خیلی از سرویس‌ها IP ایران را می‌بندند. ابزار تغییر IP هم ریسک حساب دارد، هم واسطی که می‌تواند ببیند.</p></div>
-  <div class="card"><div class="icon">📵</div><h3>اختلال شبکه</h3><p>ابزاری که فقط با واسطه کار می‌کند، در روزهای اختلال به درد نمی‌خورد → راهکار آفلاین داشته باشید.</p></div>
-  <div class="card"><div class="icon">☎️</div><h3>شماره و هویت</h3><p>شماره خارجی می‌خواهد؟ تهیه‌اش ریسک دارد. هویت واقعی = گره‌خوردن داده؛ مستعار = احتمال مسدودی.</p></div>
-  <div class="card"><div class="icon">💳</div><h3>پرداخت</h3><p>پرداخت ارزی مشکل است؛ کارت واسط ریسک خودش را دارد. ابزار متن‌باز رایگان این مشکل را ندارد.</p></div>
-</div>
-</section>
-
-<!-- ===== slide 6: استراتژی ترکیبی ===== -->
-<section class="slide" data-notes="این جدول قلب عملی ماژول است: سیاست ابزار. از شرکت‌کنندگان بخواهید نسخه خودشان را بنویسند — تمرین ۲.">
-<h2>استراتژی ترکیبی — «سیاست ابزار»</h2>
+<section class="slide" data-notes="در این مثال اسم ابزار خاصی لازم نیست. سه گزینه را با جدول مقایسه کنید و نامعلوم‌ها را مشخص نگه دارید؛ حدس را به‌جای سیاست حریم خصوصی نگذارید.">
+<h2>نمونه‌ی ساده: ابزار ترجمه برای سارا</h2>
 <table class="compare">
-<thead><tr><th>نوع کار</th><th>ابزار</th></tr></thead>
+<thead><tr><th>چیزی که می‌سنجد</th><th>سؤال سارا</th><th>چه چیزی را باید پیدا کند؟</th></tr></thead>
 <tbody>
-<tr><td>عمومی و غیرحساس (پیش‌نویس، ترجمه‌ی متن عمومی)</td><td>ابری مشهور + تنظیمات حریم خصوصی سخت‌گیرانه</td></tr>
-<tr><td>نیمه‌حساس (داده‌ی بی‌نام‌شده‌ی کارزار)</td><td>محلی یا ابری با «عدم آموزش مدل»</td></tr>
-<tr><td>حساس (هویت افراد، اسناد داخلی)</td><td class="danger">فقط ابزار محلی (آفلاین)</td></tr>
+<tr><td>کیفیت</td><td>عربی و انگلیسی را طبیعی ترجمه می‌کند؟</td><td>آزمون با چند متن عمومی و بازبینی مترجم</td></tr>
+<tr><td>اطلاعات</td><td>خبرِ ارسالی کجا پردازش و نگهداری می‌شود؟</td><td>تنظیمات و سیاست به‌روز همان سرویس</td></tr>
+<tr><td>هزینه</td><td>پس از چند متن باید هزینه پرداخت؟</td><td>قیمت و سقف استفاده‌ی فعلی</td></tr>
+<tr><td>تداوم</td><td>اگر اینترنت قطع یا حساب بسته شد چه؟</td><td>روند دستی یا ابزار جایگزین</td></tr>
 </tbody>
 </table>
-<p class="small">هر گروه باید یک سیاست ابزار نوشته داشته باشد — حتی سه سطر.</p>
+<p class="small">اگر جواب پرسشی را پیدا نکرده، آن را «نامعلوم» بنویسد و پیش از فرستادن متن تصمیم بگیرد.</p>
 </section>
-
-<!-- ===== slide 7: تمرین ===== -->
-<section class="slide" data-notes="تمرین ۱ گروهی روی کاغذ بزرگ به دیوار بزنید. تمرین ۲ فردی سه سطر. تمرین ۳ بحث باز بدون پاسخ درست.">
-<h2>📝 تمرین</h2>
-<div class="exercise">
-  <h3>۱ — گروهی (۲۰ دقیقه)</h3>
-  <p>سه ابزار را با چک‌لیست ۵گانه مقایسه کنید — روی کاغذ بزرگ، به دیوار بزنید.</p>
-</div>
-<div class="exercise">
-  <h3>۲ — فردی (۱۵ دقیقه)</h3>
-  <p>سیاست ابزار خودتان در سه سطر: «عمومی ← ___ / نیمه‌حساس ← ___ / حساس ← ___»</p>
-</div>
-<div class="exercise">
-  <h3>۳ — کلاسی (۱۰ دقیقه)</h3>
-  <p>بحث: «آیا ارزشش را دارد برای یک ابزار شماره‌ی خارجی تهیه کنیم؟» — بدون پاسخ درست؛ هدف: آگاهی از تبادل.</p>
+<section class="slide" data-notes="به تجربه‌ی مخاطبان احترام بگذارید و نسخه‌ی واحد پیشنهاد ندهید. اینترنت ناپایدار، نیاز زبانی، توان دستگاه و هزینه همگی بخشی از تصمیم‌اند.">
+<h2>ابزاری که همیشه در دسترس نیست، برنامه‌ی کامل نیست</h2>
+<div class="cols2">
+<div class="card"><h3>راه ارتباطی</h3><p>بررسی کنید در محل و زمان استفاده، اینترنت و سایت واقعاً در دسترس هستند یا نه؛ دسترسی امروز، تضمین فردا نیست.</p></div>
+<div class="card"><h3>وابستگی به حساب</h3><p>ثبت‌نام، پرداخت، شماره‌ی تماس یا بازیابی حساب ممکن است دشوار باشد؛ پیش از تکیه بر ابزار، این گام‌ها را بسنجید.</p></div>
+<div class="card"><h3>کار بدون شبکه</h3><p>برای کار ضروری، نسخه‌ی دستی یا برنامه‌ی قابل استفاده‌ی بدون اینترنت را با متن عمومی امتحان کنید.</p></div>
+<div class="card"><h3>توان دستگاه</h3><p>برنامه‌ی محلی به فضای ذخیره‌سازی، توان رایانه و به‌روزرسانی نیاز دارد؛ کیفیت ممکن است با سرویس اینترنتی فرق کند.</p></div>
 </div>
 </section>
-
-<!-- ===== slide 8: جمع‌بندی ===== -->
-<section class="slide" data-notes="حلقه بازخورد. پل به ماژول ۴: ابزار انتخاب شد، حالا داده کجا میرود؟">
+<section class="slide" data-notes="راهکار محلی را امن‌تر به‌صورت پیش‌فرض معرفی نکنید. قرار است در نهایت یک سیاست کوتاه بسازند که واقعاً با توان نگهداری‌شان جور باشد.">
+<h2>برای هر نوع داده، یک تصمیم روشن بنویسید</h2>
+<div class="cols3">
+<div class="card"><h3>متن عمومی</h3><p>ابزاری را انتخاب کنید که برای این کار آزموده‌اید. منبع و ترجمه را پیش از انتشار بازبینی کنید.</p></div>
+<div class="card"><h3>متن داخلی</h3><p>پیش از فرستادن، ببینید آیا به همه‌ی متن نیاز دارید. بخش‌های غیرضروری را بردارید و سیاست سرویس را بخوانید.</p></div>
+<div class="card"><h3>اطلاعات خصوصی</h3><p>به ابزار عمومیِ بررسی‌نشده نسپارید. راه مجاز را همراه فرد آگاه به امنیت و مسئول داده مشخص کنید.</p></div>
+</div>
+<p class="warning">اجرای مدل روی دستگاه خودتان هم نیازمند مراقبت از فایل، رایانه، نسخه‌ی پشتیبان و دسترسی دیگران است.</p>
+</section>
+<section class="slide" data-notes="برای ابزارهای واقعی، آنچه یافته‌اند را با تاریخ یادداشت کنند. هیچ سرویس مشخصی را در این تمرین به‌عنوان توصیه‌ی قطعی معرفی نکنید.">
+<h2>یک انتخاب خوب، دلیل و تاریخ دارد</h2>
+<pre class="codebox">کار موردنظر: __________________________
+نام ابزار و راه دسترسی: ________________
+چه متنی به آن می‌دهم؟ __________________
+درباره‌ی نگهداری و حذف چه می‌دانم؟ ________
+چه چیزی هنوز برایم نامعلوم است؟ __________
+اگر از کار افتاد، راه جایگزین چیست؟ ________
+تاریخ بررسی و نامِ بازبین: ________________</pre>
+<p class="question">وقتی سرویس یا تنظیماتش تغییر کرد، یادداشت قدیمی را دوباره بررسی کنید.</p>
+</section>
+<section class="slide" data-notes="سه ابزار را با یک متن عمومی کوتاه مقایسه کنید. داده‌ی حساس جمع‌آوری نکنید و نتیجه را به ابزار یا نسخه‌ی آزمایش‌شده محدود کنید.">
+<h2>تمرین: سه گزینه را برای یک کار بسنجید</h2>
+<div class="exercise"><h3>۱ · کار را مشخص کنید</h3><p>برای سارا: ترجمه‌ی یک خبر عمومی به دو زبان و آماده‌کردن یک متن کوتاه برای شبکه‌ی اجتماعی.</p></div>
+<div class="exercise"><h3>۲ · شواهد را جمع کنید</h3><p>کیفیت، اینترنت، هزینه، سیاست داده و امکان خروج را برای سه گزینه بررسی کنید.</p></div>
+<div class="exercise"><h3>۳ · تصمیم بنویسید</h3><p>کدام گزینه برای این کار مناسب‌تر است؟ چه چیزی هنوز نامعلوم است؟ در نبود ابزار چه می‌کنید؟</p></div>
+</section>
+<section class="slide" data-notes="خروجی جلسه سه سطر سیاست و یک جایگزین است. از پاسخ کلی مثل «ابزار امن» بپرهیزید و بپرسید منظور دقیقاً کدام ابزار، داده و تنظیم است.">
 <h2>جمع‌بندی ماژول ۳</h2>
 <ul class="big-list">
-<li>سه دسته: ابری، محلی، پلتفرم ساخت ایجنت</li>
-<li>چک‌لیست ۵گانه: قابلیت، دسترسی، هزینه، امنیت، پایداری</li>
-<li>واقعیت‌های دسترسی: تحریم، فیلترینگ، پرداخت، هویت</li>
-<li>سیاست ابزار بنویسید — حتی سه سطر</li>
+<li>هیچ ابزاری برای هر کاری بهترین نیست.</li>
+<li>کیفیت، دسترسی، هزینه، سیاست داده و امکان جایگزینی را بررسی کنید.</li>
+<li>«محلی» بودن هم مراقبت از دستگاه و فایل‌ها را لازم دارد.</li>
+<li>اگر چیزی را نمی‌دانید، بررسی را پیش از فرستادن متن انجام دهید.</li>
 </ul>
-<p class="question">🎤 <strong>حلقه‌ی بازخورد:</strong> کدام گزینه را می‌خواهید امتحان کنید؟ کدام ریسک نگرانتان کرد؟</p>
-<p class="small">ماژول بعد (قلب دوره): حریم خصوصی و داده‌ها — داده‌ی شما کجا می‌رود؟</p>
+<p class="question">در ماژول بعد، دقیق‌تر می‌بینیم خبر و فایل ما پس از بارگذاری چه مسیری را طی می‌کند.</p>
 </section>
+</main>
 
-</div>
 <script>
 // موتور ساده اسلاید — ایجنت‌های هوش مصنوعی برای کنشگران
 // کنترل: فلش راست/چپ یا Space، F تمام‌صفحه، Esc فهرست، P حالت مدرس

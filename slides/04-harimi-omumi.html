@@ -3,21 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ماژول ۴ — حریم خصوصی و داده‌ها</title>
+<title>ماژول ۴ — حریم خصوصی و داده</title>
 <style>
 /* قالب مشترک اسلایدها — ایجنت‌های هوش مصنوعی برای کنشگران */
 
 :root {
-  --bg: #0f1420;
-  --bg2: #171f30;
-  --panel: #1c2740;
-  --ink: #e8eefc;
-  --muted: #9fb0d0;
-  --accent: #4da3ff;
-  --accent2: #7ee2b8;
-  --warn: #ffc46b;
-  --danger: #ff7a90;
-  --line: #2a3854;
+  --bg: #0a1117;
+  --bg2: #111c24;
+  --panel: #15232c;
+  --ink: #f0f4ed;
+  --muted: #adbdba;
+  --accent: #f2b35f;
+  --accent2: #81d6bd;
+  --warn: #ffd080;
+  --danger: #ff8791;
+  --line: #2b4147;
+  --shadow: 0 18px 50px rgba(0, 0, 0, .22);
 }
 
 * { box-sizing: border-box; }
@@ -26,7 +27,10 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  background: var(--bg);
+  background:
+    radial-gradient(ellipse at 10% 5%, rgba(129, 214, 189, .08), transparent 32rem),
+    radial-gradient(ellipse at 95% 95%, rgba(242, 179, 95, .07), transparent 35rem),
+    var(--bg);
   color: var(--ink);
   font-family: Vazirmatn, "Vazirmatn UI", "Segoe UI", Tahoma, Arial, sans-serif;
   direction: rtl;
@@ -36,11 +40,12 @@ html, body {
 #progress {
   position: fixed;
   top: 0; right: 0;
-  height: 4px;
+  height: 5px;
   width: 0%;
   background: linear-gradient(90deg, var(--accent2), var(--accent));
   z-index: 50;
-  transition: width .25s ease;
+  transition: width .3s ease;
+  box-shadow: 0 0 18px rgba(129, 214, 189, .35);
 }
 
 /* ===== دک اسلاید ===== */
@@ -49,40 +54,62 @@ html, body {
   display: none;
   position: absolute;
   inset: 0;
-  padding: 4rem 4.5rem 3.5rem;
+  padding: clamp(2.5rem, 6vh, 4.5rem) clamp(1.5rem, 7vw, 7rem) 4.5rem;
   overflow: auto;
+  scrollbar-color: var(--line) transparent;
+  animation: slide-in .35s ease both;
 }
 .slide.active { display: block; }
 
-.slide h1 { font-size: 2.6rem; line-height: 1.35; margin: .3rem 0; }
-.slide h2 { font-size: 2rem; color: var(--accent); margin: 0 0 1.2rem; }
+.slide h1 { max-width: 17ch; font-size: clamp(2.25rem, 5vw, 4.5rem); line-height: 1.3; margin: .3rem 0; letter-spacing: -.035em; }
+.slide h2 { max-width: 27ch; font-size: clamp(1.6rem, 3vw, 2.55rem); color: var(--accent); margin: 0 0 1.2rem; line-height: 1.45; letter-spacing: -.02em; }
 .slide h3 { font-size: 1.15rem; margin: .4rem 0; }
-.slide p, .slide li { font-size: 1.12rem; line-height: 1.9; }
-.subtitle { font-size: 1.35rem; color: var(--accent2); margin: 0 0 1rem; }
-.meta { color: var(--muted); font-size: 1rem; margin-bottom: 1rem; }
-.hero { font-size: 4.5rem; margin: 1.2rem 0; }
+.slide p, .slide li { font-size: clamp(1rem, 1.3vw, 1.2rem); line-height: 1.9; }
+.subtitle { font-size: clamp(1.1rem, 2vw, 1.5rem); color: var(--accent2); margin: 0 0 1rem; }
+.meta { color: var(--muted); font-size: .95rem; margin-bottom: 1rem; }
+.hero { font-size: 4.5rem; margin: 1.2rem 0; filter: drop-shadow(0 12px 25px rgba(242, 179, 95, .16)); }
 .small { color: var(--muted); font-size: .98rem; }
 .question {
   margin-top: 1.2rem;
   padding: .8rem 1.1rem;
-  background: rgba(126,226,184,.08);
+  background: linear-gradient(110deg, rgba(129,214,189,.13), rgba(129,214,189,.035));
   border-inline-start: 4px solid var(--accent2);
-  border-radius: 8px;
+  border-radius: 4px 14px 14px 4px;
 }
 .warning {
   margin-top: 1rem;
   padding: .7rem 1rem;
   background: rgba(255,196,107,.09);
   border-inline-start: 4px solid var(--warn);
-  border-radius: 8px;
+  border-radius: 4px 14px 14px 4px;
 }
 .story-slide blockquote.inject {
   background: rgba(255,122,144,.1);
   border: 1px dashed var(--danger);
   padding: .8rem 1.1rem;
-  border-radius: 8px;
+  border-radius: 4px 14px 14px 4px;
   font-size: 1.1rem;
 }
+
+.slide:first-of-type {
+  display: none;
+  align-content: center;
+  background:
+    radial-gradient(ellipse at 15% 48%, rgba(129,214,189,.13), transparent 35%),
+    radial-gradient(ellipse at 88% 20%, rgba(242,179,95,.12), transparent 28%),
+    linear-gradient(135deg, rgba(255,255,255,.018), transparent 55%);
+}
+.slide:first-of-type.active { display: grid; }
+.slide:first-of-type::after {
+  content: "";
+  position: absolute;
+  inset-block: 15%;
+  inset-inline-end: clamp(1.5rem, 5vw, 5rem);
+  width: 3px;
+  background: linear-gradient(transparent, var(--accent), var(--accent2), transparent);
+  opacity: .75;
+}
+.slide:first-of-type .hero { margin-block: .4rem 0; font-size: clamp(3rem, 7vw, 6rem); }
 
 /* ===== لیست‌ها ===== */
 .big-list li { margin-bottom: .7rem; }
@@ -92,21 +119,24 @@ html, body {
   margin-bottom: .5rem;
   background: var(--bg2);
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 10px;
 }
-.checklist li::before { content: "☐  "; color: var(--accent); }
+.checklist li::before { content: "□  "; color: var(--accent); }
 
 /* ===== کارت‌ها ===== */
 .cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 .cols3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
 .card {
-  background: var(--panel);
+  background: linear-gradient(145deg, rgba(255,255,255,.035), transparent 60%), var(--panel);
   border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 1rem 1.1rem;
+  border-radius: 16px;
+  padding: 1.1rem 1.2rem;
+  box-shadow: var(--shadow);
+  transition: transform .2s ease, border-color .2s ease;
 }
+.card:hover { transform: translateY(-3px); border-color: rgba(129,214,189,.55); }
 .card .icon { font-size: 2rem; }
-.card h3 { color: var(--accent2); }
+.card h3 { color: var(--accent2); line-height: 1.5; }
 .card p { font-size: 1rem; color: var(--ink); margin: .3rem 0 0; }
 
 /* ===== جدول مقایسه ===== */
@@ -117,19 +147,21 @@ table.compare {
 }
 table.compare th, table.compare td {
   border: 1px solid var(--line);
-  padding: .6rem .9rem;
+  padding: .7rem .9rem;
   text-align: right;
-  font-size: 1.05rem;
+  font-size: clamp(.92rem, 1.15vw, 1.08rem);
+  line-height: 1.75;
 }
 table.compare th { background: var(--panel); color: var(--accent2); }
+table.compare tr:nth-child(even) td { background: rgba(255,255,255,.018); }
 table.compare td.danger { color: var(--danger); font-weight: 700; }
 
 /* ===== قواعد کلاس ===== */
 .rule {
   display: flex; gap: 1rem; align-items: center;
-  background: var(--panel);
+  background: linear-gradient(110deg, rgba(255,255,255,.035), transparent 70%), var(--panel);
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: 14px;
   padding: .9rem 1.1rem;
   margin-bottom: .9rem;
 }
@@ -147,7 +179,7 @@ table.compare td.danger { color: var(--danger); font-weight: 700; }
 /* ===== حلقه / زنجیره ===== */
 .loop { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin: 1rem 0; }
 .loop .step {
-  background: var(--panel);
+  background: linear-gradient(135deg, rgba(242,179,95,.09), transparent 70%), var(--panel);
   border: 1px solid var(--accent);
   color: var(--ink);
   border-radius: 999px;
@@ -229,12 +261,12 @@ table.compare td.danger { color: var(--danger); font-weight: 700; }
 
 /* ===== کد ===== */
 pre.codebox {
-  background: #0b1020;
+  background: #080f14;
   border: 1px solid var(--line);
   border-radius: 10px;
   padding: 1rem 1.2rem;
   font-family: Vazirmatn, Tahoma, monospace;
-  font-size: 1.02rem;
+  font-size: clamp(.9rem, 1.15vw, 1.05rem);
   line-height: 1.9;
   white-space: pre-wrap;
   direction: rtl;
@@ -253,7 +285,7 @@ code { background: var(--bg2); padding: .1rem .4rem; border-radius: 6px; directi
   z-index: 40;
 }
 .nav button {
-  background: var(--panel);
+  background: rgba(21, 35, 44, .94);
   color: var(--ink);
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -263,6 +295,7 @@ code { background: var(--bg2); padding: .1rem .4rem; border-radius: 6px; directi
   cursor: pointer;
 }
 .nav button:hover { border-color: var(--accent); }
+.nav button:focus-visible { outline: 2px solid var(--accent2); outline-offset: 3px; }
 .counter {
   position: fixed;
   bottom: 1.15rem;
@@ -291,9 +324,36 @@ code { background: var(--bg2); padding: .1rem .4rem; border-radius: 6px; directi
 body.presenter .notes { display: block; }
 body.presenter .slide { padding-inline-end: 380px; }
 
+@keyframes slide-in {
+  from { opacity: .5; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 760px) {
+  .slide { padding: 2.6rem 1.2rem 4.5rem; }
+  .cols2, .cols3, .autonomy { grid-template-columns: 1fr; }
+  .balance { align-items: stretch; }
+  .balance .pan { flex-basis: 100%; }
+  .balance .fulcrum { text-align: center; }
+  .slide h1 { max-width: 100%; }
+  .nav { bottom: .55rem; inset-inline-start: .55rem; }
+  .nav button { padding: .35rem .6rem; font-size: .9rem; }
+  .counter { bottom: .75rem; inset-inline-end: .65rem; font-size: .8rem; }
+  body.presenter .slide { padding-inline-end: 1.2rem; }
+  .notes { width: min(88vw, 340px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
 /* ===== چاپ ===== */
 @media print {
-  .slide { display: block; position: relative; page-break-after: always; padding: 2rem; }
+  html, body { height: auto; background: #fff; color: #172126; }
+  .slide { display: block !important; position: relative; page-break-after: always; padding: 2rem; background: #fff; color: #172126; }
+  .slide h2, .card h3 { color: #286d5c; }
+  .card, .exercise, .rule, .checklist li { background: #fff; color: #172126; box-shadow: none; }
+  .card p, .slide p, .slide li { color: #172126; }
   #progress, .nav, .counter, .notes { display: none !important; }
 }
 
@@ -301,159 +361,109 @@ body.presenter .slide { padding-inline-end: 380px; }
 </head>
 <body>
 <div id="progress"></div>
-<div class="deck" id="deck">
-
-<!-- ===== slide 1: cover ===== -->
-<section class="slide" data-notes="این ماژول قلب دوره است. زمان بیشتری بگذارید. لحن: نه ترساندن، نه سادهسازی.">
-<h1>حریم خصوصی و داده‌ها</h1>
-<p class="subtitle">ماژول ۴ — قلب دوره</p>
-<div class="meta">پیش‌نیاز: ماژول ۳ · ۱۲۰ دقیقه</div>
+<main class="deck">
+<section class="slide" data-notes="این بخش را با آرامش و بدون ترساندن شروع کنید. هدف این نیست که هرگونه استفاده از ابزار را رد کنیم؛ هدف این است که پیش از فرستادن، درباره‌ی داده و ریسک آن تصمیم بگیریم.">
+<h1>حریم خصوصی (Privacy): پیش از فرستادن متن، مسیرش را بشناسیم</h1>
+<p class="subtitle">ماژول ۴ — حریم خصوصی، نگهداری و انتخاب آگاهانه</p>
+<div class="meta">پیش‌نیاز: ماژول ۳ · ۱۵۰ دقیقه</div>
 <div class="hero">🔐</div>
 </section>
-
-<!-- ===== slide 2: داستان ===== -->
-<section class="slide story-slide" data-notes="داستان را آرام تعریف کنید. بعد بپرسید: کجا اولین اشتباه اتفاق افتاد؟ پاسخ: نه در ابزار — در فرض گروه که داده در کنترلشان میماند.">
-<h2>🎬 داستان: گزارشی که نباید می‌رفت</h2>
-<p>گروهی برای گزارش حقوقی، فهرست شاهدان (نام، شهر، شماره) را به ایجنت ابری داد تا جدول‌بندی کند.</p>
-<ul>
-<li>کار ۲۰ دقیقه طول کشید و خوب شد ✅</li>
-<li>چند هفته بعد: سیاست داده نشان داد محتوا می‌تواند برای آموزش مدل استفاده شود</li>
-<li>یعنی نام شاهدان ممکن بود در پاسخ به کاربران دیگر ظاهر شود</li>
-<li>نتیجه: بازسازی کل گزارش + اطلاع به شاهدان</li>
-</ul>
-<p class="question">💡 <strong>داده‌ای که وارد ایجنت ابری می‌شود، از کنترل شما خارج می‌شود.</strong></p>
-</section>
-
-<!-- ===== slide 3: چرخه عمر داده ===== -->
-<section class="slide" data-notes="زنجیره را روی تخته بکشید. روی هر «احتمالی» توقف کنید: این تصمیم شما نبود. برای کاربران ایران: واسط (VPN/پروکسی) هم در زنجیره است.">
-<h2>چرخه‌ی عمر داده — داده‌ی شما کجا می‌رود؟</h2>
-<div class="chain">
-  <span>دستگاه شما</span> → <span>واسط‌های احتمالی</span> → <span>سرور ارائه‌دهنده</span> → <span>پردازش</span> → <span>ذخیره‌ی احتمالی</span> → <span>آموزش احتمالی</span> → <span>دسترسی احتمالی کارکنان / درخواست قانونی</span>
-</div>
-<p class="warning">⚠️ هر «احتمالی» یک تصمیم است که <strong>شما نگرفته‌اید</strong>.</p>
-<p class="small">استفاده از واسط (VPN/پروکسی)؟ واسط هم در زنجیره است و می‌تواند ببیند.</p>
-</section>
-
-<!-- ===== slide 4: داده حساس چیست ===== -->
-<section class="slide" data-notes="تعریف را باز کنید: حساس = افشایش به شما، همکاران، یا کسانی که به شما اعتماد کردهاند آسیب میزند. نکته ویژه: شما غالباً داده دیگران را دارید — رضایت و امنیتشان مسئولیت شماست.">
-<h2>داده‌ی حساس چیست؟</h2>
-<div class="cols3">
-  <div class="card"><div class="icon">👤</div><h3>هویت</h3><p>نام، تلفن، آدرس، عکس چهره، مدارک</p></div>
-  <div class="card"><div class="icon">🧵</div><h3>ارتباطات</h3><p>فهرست اعضا، گفت‌وگوها، ایمیل‌ها</p></div>
-  <div class="card"><div class="icon">🗺️</div><h3>برنامه</h3><p>برنامه عملیاتی، مکان و زمان جلسات</p></div>
-</div>
-<div class="cols2" style="margin-top:1rem">
-  <div class="card"><div class="icon">📂</div><h3>محتوا</h3><p>اسناد داخلی، فایل‌های شخصی</p></div>
-  <div class="card"><div class="icon">🛡️</div><h3>منابع</h3><p>منابع خبری، شاهدان — کسانی که «دیده نشدنشان» مهم است</p></div>
-</div>
-<p class="question">🧠 اگر این داده فردا در پاسخ ایجنتی به یک غریبه ظاهر شود، چه می‌شود؟</p>
-</section>
-
-<!-- ===== slide 5: شناسایی‌پذیری ترکیبی ===== -->
-<section class="slide" data-notes="مهمترین مفهوم غیرشهودی این ماژول. مثال: شهر + حرفه + تاریخ جلسه = یک فرد خاص. حذف اسم کافی نیست.">
-<h2>شناسایی‌پذیری ترکیبی</h2>
-<div class="balance">
-  <div class="pan">شهر: تهران</div>
-  <div class="pan">حرفه: پرستار</div>
-  <div class="pan">تاریخ: جلسه‌ی ۱۴ آبان</div>
-</div>
-<p>جدا بی‌خطر — ترکیب، شناساگر: «پرستاری در تهران که ۱۴ آبان در جلسه بود».</p>
-<p class="warning">⚠️ حذف اسم کافی نیست. مشخصه‌های ترکیبی هم شناساگرند.</p>
-</section>
-
-<!-- ===== slide 6: سه خطای رایج ===== -->
-<section class="slide" data-notes="سه خطا را با مثال. خطا ۲: حذف گفتوگو = حذف از نمایش، نه از سرور. خطا ۳: پل به ماژول ۵.">
-<h2>سه خطای رایج افشا</h2>
+<section class="slide story-slide" data-notes="این روایت را به‌عنوان سناریوی آموزشی معرفی کنید، نه حادثه‌ی واقعی. بپرسید چه کاری می‌شد پیش از بارگذاری انجام داد.">
+<h2>یک جدول را می‌شد با اطلاعات کمتری ساخت (Data Minimization)</h2>
+<p>کامران برای مرتب‌کردن گزارش‌ها، پرونده‌ای را به یک ابزار اینترنتی می‌دهد. در پرونده نام، شماره‌ی تماس و نشانی چند نفر هم هست؛ اما برای ساختن جدول، این جزئیات لازم نیست.</p>
 <ul class="big-list">
-<li><strong>۱. «فقط یک سری متن معمولی»:</strong> کم‌ارزیابی — ترکیب مشخصه‌ها شناساگر است.</li>
-<li><strong>۲. «خب، فراموشش می‌کنم»:</strong> حذف گفت‌وگو = حذف از نمایش، نه از سرور. لاگ و پشتیبان می‌ماند.</li>
-<li><strong>۳. «ایجنت من به همه‌چیز وصل است»:</strong> دسترسی گسترده = سطح حمله‌ی بزرگ. با یک دستور بد، همه را می‌خواند.</li>
+<li>کار سریع انجام می‌شود و جدول مرتب است.</li>
+<li>بعدتر، کامران می‌فهمد که پیش از بارگذاری، سیاست نگهداری و حذف فایل را نخوانده بوده.</li>
+<li>حالا باید مشخص کند چه داده‌ای فرستاده، کجا نگهداری می‌شود و آیا لازم است کسی را از این موضوع باخبر کند.</li>
 </ul>
+<p class="question"><strong>پرسش:</strong> چطور می‌توانست همان جدول را با اطلاعات کمتر بسازد؟</p>
 </section>
-
-<!-- ===== slide 7: چهار تکنیک ===== -->
-<section class="slide" data-notes="هر تکنیک را با یک مثال عملی. تکنیک ۲ مهمترین است: مستعار + جدول رمز محلی. تاکید: جدول رمز نه در همان فایل، نه در همان ابزار.">
-<h2>چهار تکنیک کاهش ریسک</h2>
+<section class="slide" data-notes="زنجیره را با مثال فایل خبر توضیح دهید. برای واسطه‌ی شبکه، میان فراداده و محتوای رمزگذاری‌شده فرق بگذارید. از ادعاهای یکسان برای همه‌ی سرویس‌ها بپرهیزید.">
+<h2>فایل چه مسیری را طی می‌کند؟</h2>
+<div class="chain"><span>رایانه یا تلفن</span> → <span>اتصال اینترنت</span> → <span>سرویس ابزار</span> → <span>پردازش فایل</span> → <span>احتمال نگهداری</span> → <span>تاریخچه یا خروجی</span></div>
 <div class="cols2">
-  <div class="card"><div class="icon">✂️</div><h3>۱. حداقل‌سازی</h3><p>فقط حداقلِ لازم. برای خلاصه‌سازی، آیا نام لازم است؟ بگذارید «شاهد ۱».</p></div>
-  <div class="card"><div class="icon">🎭</div><h3>۲. بی‌نام‌سازی و مستعار</h3><p>کد (مثل «م.ک») به‌جای نام. جدول رمز <strong>محلی</strong> — نه در همان فایل، نه در همان ابزار.</p></div>
-  <div class="card"><div class="icon">🚪</div><h3>۳. جداسازی</h3><p>دستگاه/حساب جدای حساس و عمومی. ایجنتِ حساس به ایمیل و تقویم شخصی وصل نباشد.</p></div>
-  <div class="card"><div class="icon">🧰</div><h3>۴. ابزار بر اساس داده</h3><p>عمومی ← ابری سخت‌گیرانه · حساس ← فقط محلی/آفلاین (ماژول ۳)</p></div>
+<div class="card"><h3>چیزی که باید بررسی کنیم</h3><p>چه فایلی فرستاده شده، سرویس چه مدت آن را نگه می‌دارد، چه کسانی دسترسی دارند و آیا برای بهبود خدمات استفاده می‌شود؟</p></div>
+<div class="card"><h3>چیزی که نباید فرض کنیم</h3><p>فقط از نام ابزار نمی‌توان فهمید داده ذخیره می‌شود یا نه. تنظیمات، قرارداد و سیاست جاری را پیدا کنید.</p></div>
+</div>
+<p class="small">فراداده (Metadata) یعنی اطلاعاتی درباره‌ی خود اتصال، مثل زمان و اندازه‌ی فایل. واسط اینترنتی ممکن است این‌ها را ببیند؛ رمزگذاری (Encryption) معمولاً محتوای پیام را از واسطه پنهان می‌کند.</p>
+</section>
+<section class="slide" data-notes="چراغ راهنما یک ابزار گفت‌وگوی گروهی است، نه گواه حقوقی. یک متن می‌تواند با کنار هم گذاشتن چند جزئیات هم فردی را شناسایی کند.">
+<h2>سه رنگ برای گفت‌وگو درباره‌ی داده (Data Classification)</h2>
+<div class="cols3">
+<div class="card"><div class="icon">🟢</div><h3>عمومی</h3><p>متنی که برای انتشار آماده شده و جزئیات شخصیِ ناخواسته ندارد. باز هم منبع و حق استفاده را بررسی کنید.</p></div>
+<div class="card"><div class="icon">🟡</div><h3>داخلی</h3><p>نوشته یا گزارشی که هنوز منتشر نشده است. اگر بیرون برود شاید برای نویسنده یا کارش پیامد داشته باشد.</p></div>
+<div class="card"><div class="icon">🔴</div><h3>اطلاعات شناسایی‌کننده (Personally Identifiable Information, PII)</h3><p>مثل نام و نشانی، سوابق فردی، اطلاعات تماس یا هر جزئیاتی که افشایش ممکن است به کسی آسیب بزند.</p></div>
+</div>
+<p class="question">وقتی مطمئن نیستیم، اطلاعات را عمومی فرض نکنیم؛ اول از مسئول آن بپرسیم.</p>
+</section>
+<section class="slide" data-notes="مثال را از یک خبر کوچک بسازید: اگر متن فقط می‌گوید «یک پزشک در شهر کوچک در روز خاص»، ممکن است اطرافیان حدس بزنند منظور کیست.">
+<h2>حذف نام، همیشه به معنی بی‌نام‌سازی (Anonymization) نیست</h2>
+<div class="balance">
+<div class="pan">شغل کم‌یاب</div><div class="pan">محله یا شهر کوچک</div><div class="pan">روز و رویداد مشخص</div>
+</div>
+<p>هر جزء به‌تنهایی شاید چیزی را آشکار نکند. کنار هم، ممکن است خواننده‌ای که محل را می‌شناسد فرد را حدس بزند.</p>
+<div class="cols2">
+<div class="card"><h3>پیش از فرستادن</h3><p>نام، تلفن، نشانی و شماره‌ی پرونده را بردارید. بعد سراغ جزئیات کم‌یاب و تاریخ‌های دقیق بروید.</p></div>
+<div class="card"><h3>پس از جایگزینی</h3><p>با یک همکار که ماجرا را از قبل می‌داند مرور کنید: آیا هنوز می‌شود حدس زد فرد کیست؟</p></div>
 </div>
 </section>
-
-<!-- ===== slide 8: تنظیمات ابری ===== -->
-<section class="slide" data-notes="عملی و فوری. یادآوری: جای تنظیمات عوض میشود — بگردید. حذف حساب ≠ حذف داده.">
-<h2>اگر ناچار از سرویس ابری هستید</h2>
-<ul class="big-list">
-<li><strong>خروج از آموزش:</strong> گزینه‌ی «استفاده از داده‌ی من برای آموزش» را خاموش کنید</li>
-<li><strong>گفت‌وگوی موقت:</strong> حالت‌هایی که ذخیره نمی‌شوند — برای نیمه‌حساس</li>
-<li><strong>حساب تیمی:</strong> معمولاً وعده‌ی عدم آموزش دارد — اما چک کنید</li>
-<li><strong>حذف حساب ≠ حذف داده:</strong> با سیاست حذف سرویس چک کنید</li>
-</ul>
+<section class="slide" data-notes="نمونه‌ها را همراه با راه جایگزین بگویید. از بیان «همه‌ی ابزارها داده را برای آموزش ذخیره می‌کنند» پرهیز کنید؛ نتیجه به محصول، حساب، تنظیمات و قرارداد بستگی دارد.">
+<h2>سه اشتباه رایج درباره‌ی فایل و گفت‌وگو</h2>
+<div class="cols3">
+<div class="card"><h3>«این فقط یک متن معمولی است»</h3><p>چند نشانه‌ی کوچک ممکن است کنار هم هویت یا برنامه‌ای را آشکار کنند.</p><p><strong>بهتر:</strong> پیش از بارگذاری، فقط بخش لازم را نگه دارید.</p></div>
+<div class="card"><h3>«گفت‌وگو را پاک کردم، پس همه‌چیز پاک شد»</h3><p>حذف از صفحه لزوماً به معنی حذف فوری همه‌ی نسخه‌ها نیست.</p><p><strong>بهتر:</strong> سیاست حذف و مدت نگهداری همان سرویس را بخوانید.</p></div>
+<div class="card"><h3>«هرچه بیشتر بداند بهتر جواب می‌دهد»</h3><p>فایل کامل شاید جزئیاتی داشته باشد که برای این کار لازم نیست.</p><p><strong>بهتر:</strong> با نمونه‌ی ساختگی یا خلاصه‌ی بی‌نام‌شده شروع کنید.</p></div>
+</div>
 </section>
-
-<!-- ===== slide 9: سه پرسش ===== -->
-<section class="slide" data-notes="این سه پرسش را کلاس با هم بلند تکرار کند. این خروجی ماندگار ماژول است.">
-<h2>سه پرسش پیش از هر ورود داده</h2>
+<section class="slide" data-notes="کمینه‌سازی را با پرونده‌ی دارای شماره‌ی تماس توضیح دهید. نام مستعار به تنهایی ناشناس‌سازی کامل نیست. کلید تبدیل کدها به هویت واقعی را کنار همان پرونده نگذارید.">
+<h2>پیش از بارگذاری، داده را کم کنید (Data Minimization)</h2>
+<div class="loop">
+<div class="step">آیا این بخش لازم است؟</div><div class="step">اگر نه، حذفش کن</div><div class="step">اگر بله، شناسه‌ها را بردار</div><div class="step">ترکیب جزئیات را دوباره ببین</div><div class="step loop-back">اگر شک داری، مکث کن</div>
+</div>
+<div class="cols2">
+<div class="card"><h3>مثال: ساخت جدول</h3><p>برای شمردن نظرها، معمولاً نام، شماره تماس و نشانی نویسنده لازم نیست؛ متن‌های ساختگی یا دسته‌بندی‌شده کافی‌اند.</p></div>
+<div class="card"><h3>جایگزینی نام با کد (Pseudonymization)</h3><p>«فرد الف» هنوز ممکن است از روی محل، تاریخ یا شغل شناخته شود. کلید تبدیل اسم به کد را جدا و در جای امن نگه دارید.</p></div>
+</div>
+</section>
+<section class="slide" data-notes="درباره‌ی تماس با سرویس، همگام‌سازی یا افزونه‌ها پرس‌وجو کنید. تنظیمات امروز و سیاست یک حساب خاص ممکن است با نسخه‌ای دیگر فرق کند.">
+<h2>تنظیمات سرویس را پیش از افزودن فایل ببینید</h2>
+<ul class="big-list">
+<li>آیا گفت‌وگوها یا فایل‌ها نگه داشته می‌شوند؟ برای چه مدتی؟</li>
+<li>آیا گزینه‌ای برای خاموش‌کردن استفاده از داده‌ها جهت بهبود سرویس وجود دارد؟ آیا این گزینه شامل فایل‌ها هم می‌شود؟</li>
+<li>«گفت‌وگوی موقت» دقیقاً چه چیزی را حذف می‌کند و چه چیزی ممکن است باقی بماند؟</li>
+<li>آیا فایل با فضای ابری، افزونه یا حساب دیگری همگام می‌شود؟</li>
+<li>اگر اشتباهی فایل فرستادیم، چه کسی می‌تواند درخواست حذف بدهد؟</li>
+</ul>
+<p class="warning">در صورت نامعلوم‌بودن پاسخ، فایل حساس را نفرستید تا اطلاعات کافی پیدا کنید.</p>
+</section>
+<section class="slide" data-notes="قرارداد را به زبان ساده بخوانید. قرارداد نباید وعده‌ی غیرواقعی بدهد. فرد مسئول، راه گزارش خطا و تاریخ بازبینی را مشخص کنند.">
+<h2>توافق کار با داده (Data Handling Agreement)</h2>
+<pre class="codebox">برای چه کاری از ابزار استفاده می‌کنیم؟ ___________
+چه اطلاعاتی را هرگز بارگذاری نمی‌کنیم؟ __________
+پیش از فرستادن، چه کسی فایل را بررسی می‌کند؟ ____
+چه ابزارها و حساب‌هایی بررسی شده‌اند؟ __________
+فایل کجا می‌ماند و چه کسی می‌تواند حذفش کند؟ _____
+اگر اشتباهی فایلی فرستادیم، به چه کسی می‌گوییم؟ __
+مسئول بازبینی و تاریخ بعدی: __________________</pre>
+<p class="small">این توافق را با اعضای مربوط مرور کنید؛ هر سه ماه یا با تغییر ابزار دوباره بخوانید.</p>
+</section>
+<section class="slide" data-notes="تمرین را با متن ساختگی و بی‌خطر انجام دهید. اگر ابزار در دسترس است، تنظیمات را فقط مشاهده کنید و فایلی بارگذاری نکنید.">
+<h2>تمرین: آیا این فایل را باید بفرستیم؟</h2>
+<div class="exercise"><h3>مرحله‌ی اول</h3><p>روی یک نمونه‌ی ساختگی نشانه بزنید: نام، شماره، مکان، تاریخ و جزئیات کم‌یاب.</p></div>
+<div class="exercise"><h3>مرحله‌ی دوم</h3><p>مشخص کنید برای ساخت یک جدول ساده کدام بخش‌ها لازم نیست و می‌توان حذف کرد.</p></div>
+<div class="exercise"><h3>مرحله‌ی سوم</h3><p>اگر هنوز درباره‌ی نگهداری فایل چیزی نمی‌دانید، بنویسید پیش از ادامه چه کسی باید چه چیزی را بررسی کند.</p></div>
+</section>
+<section class="slide" data-notes="سه پرسش پایانی را با هم مرور کنید: چه چیزی می‌فرستم، چه کسی به آن دسترسی دارد و اگر نخواهم بفرستم چه جایگزینی دارم؟">
+<h2>سه پرسش پیش از فشردن دکمه‌ی ارسال</h2>
 <div class="prompt-parts">
-  <div class="part"><span class="letter">۱</span><div><strong>چه کسی این را می‌بیند؟</strong><p>ایجنت؟ شرکت؟ واسط؟</p></div></div>
-  <div class="part"><span class="letter">۲</span><div><strong>اگر فردا عمومی شود، چه کسی آسیب می‌بیند؟</strong><p>شما؟ همکاران؟ منابع؟</p></div></div>
-  <div class="part"><span class="letter">۳</span><div><strong>با داده‌ی بی‌نام‌شده هم می‌شود؟</strong><p>بله ← بی‌نام‌سازی کن و ادامه بده. نه ← ابزار محلی.</p></div></div>
+<div class="part"><span class="letter">۱</span><div><strong>آیا برای انجام این کار به این داده نیاز است؟</strong><p>اگر نه، آن را نفرستید.</p></div></div>
+<div class="part"><span class="letter">۲</span><div><strong>فایل پس از ارسال کجا می‌رود؟</strong><p>سیاست، تنظیمات و اتصال‌های ابزار را بررسی کنید.</p></div></div>
+<div class="part"><span class="letter">۳</span><div><strong>آیا می‌توان کار را با نمونه یا نسخه‌ی کم‌جزئیات انجام داد؟</strong><p>اغلب می‌شود تمرین را با داده‌ی ساختگی پیش برد.</p></div></div>
 </div>
+<p class="question">این پرسش‌ها برای جلوگیری از کار نیستند؛ برای انتخاب آگاهانه‌اند.</p>
 </section>
+</main>
 
-<!-- ===== slide 10: قرارداد داده ===== -->
-<section class="slide" data-notes="قالب قرارداد را در متن ماژول است. از شرکت‌کنندگان بخواهید پیشنویس را در تمرین ۳ بنویسند.">
-<h2>قرارداد داده‌ی گروهی</h2>
-<p>یک صفحه‌ی ساده که همه امضا می‌کنند:</p>
-<ul class="big-list">
-<li>داده‌ی حساس ما عبارت است از: ___</li>
-<li>هرگز وارد این ابزارها نمی‌شود: ___</li>
-<li>فقط روی این دستگاه‌ها/ابزارها کار می‌شود: ___</li>
-<li>مراحل بی‌نام‌سازی پیش از ورود: ___</li>
-<li>جدول رمز اینجا نگهداری می‌شود: ___</li>
-<li>و اگر افشا شد، مراحل اطلاع‌رسانی: ___</li>
-</ul>
-<p class="small">بیشتر از هر ابزار امنیتی کارساز است — چون <strong>عادت جمعی</strong> می‌سازد.</p>
-</section>
-
-<!-- ===== slide 11: تمرین ===== -->
-<section class="slide" data-notes="چهار تمرین. سند نمونه بیحساس را مدرس آماده کرده. زمان: ۲۰ + ۲۰ + ۱۵ + ۱۰.">
-<h2>📝 تمرین</h2>
-<div class="exercise">
-  <h3>۱ — گروهی (۲۰ دقیقه): بسته‌های داده</h3>
-  <p>سه کارت سبز (راحت می‌دهم)، سه زرد (با احتیاط)، سه قرمز (هرگز). مقایسه‌ی بین گروهی.</p>
-</div>
-<div class="exercise">
-  <h3>۲ — زوجی (۲۰ دقیقه): بی‌نام‌سازی سند نمونه</h3>
-  <p>سند ساختگی مدرس را بی‌نام‌سازی کنید: چه چیزی حذف؟ چه چیزی مستعار؟ جدول رمز کجا؟</p>
-</div>
-<div class="exercise">
-  <h3>۳ — فردی (۱۵ دقیقه): پیش‌نویس قرارداد داده</h3>
-  <p>قالب ماژول را پر کنید — نقطه‌ی شروع کافی است.</p>
-</div>
-<div class="exercise">
-  <h3>۴ — کلاسی (۱۰ دقیقه): «چه کسی این را می‌بیند؟»</h3>
-  <p>مدرس موقعیت‌ها را می‌خواند؛ گروه حدس می‌زند چه کسانی به داده دسترسی دارند.</p>
-</div>
-</section>
-
-<!-- ===== slide 12: جمع‌بندی ===== -->
-<section class="slide" data-notes="جمعبندی. حلقه بازخورد. پل به ماژول ۵: ریسک فقط از سمت ما نیست — ایجنت خودش میتواند فریب بخورد.">
-<h2>جمع‌بندی ماژول ۴</h2>
-<ul class="big-list">
-<li>داده‌ای که وارد ابری می‌شود، از کنترل شما خارج می‌شود</li>
-<li>حذف اسم کافی نیست — شناسایی‌پذیری ترکیبی</li>
-<li>حداقل‌سازی، بی‌نام‌سازی، جداسازی، ابزار بر اساس داده</li>
-<li>سه پرسش پیش از هر ورود داده</li>
-<li>قرارداد داده‌ی گروهی بنویسید</li>
-</ul>
-<p class="question">🎤 <strong>حلقه‌ی بازخورد:</strong> کدام عادت را از فردا شروع می‌کنید؟</p>
-<p class="small">ماژول بعد: خطرات و حملات — وقتی ایجنت فریب می‌خورد</p>
-</section>
-
-</div>
 <script>
 // موتور ساده اسلاید — ایجنت‌های هوش مصنوعی برای کنشگران
 // کنترل: فلش راست/چپ یا Space، F تمام‌صفحه، Esc فهرست، P حالت مدرس

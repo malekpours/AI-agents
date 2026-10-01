@@ -3,21 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ماژول ۸ — جمع‌بندی و چک‌لیست‌ها</title>
+<title>ماژول ۸ — مرور و برنامه‌ی ادامه</title>
 <style>
 /* قالب مشترک اسلایدها — ایجنت‌های هوش مصنوعی برای کنشگران */
 
 :root {
-  --bg: #0f1420;
-  --bg2: #171f30;
-  --panel: #1c2740;
-  --ink: #e8eefc;
-  --muted: #9fb0d0;
-  --accent: #4da3ff;
-  --accent2: #7ee2b8;
-  --warn: #ffc46b;
-  --danger: #ff7a90;
-  --line: #2a3854;
+  --bg: #0a1117;
+  --bg2: #111c24;
+  --panel: #15232c;
+  --ink: #f0f4ed;
+  --muted: #adbdba;
+  --accent: #f2b35f;
+  --accent2: #81d6bd;
+  --warn: #ffd080;
+  --danger: #ff8791;
+  --line: #2b4147;
+  --shadow: 0 18px 50px rgba(0, 0, 0, .22);
 }
 
 * { box-sizing: border-box; }
@@ -26,7 +27,10 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  background: var(--bg);
+  background:
+    radial-gradient(ellipse at 10% 5%, rgba(129, 214, 189, .08), transparent 32rem),
+    radial-gradient(ellipse at 95% 95%, rgba(242, 179, 95, .07), transparent 35rem),
+    var(--bg);
   color: var(--ink);
   font-family: Vazirmatn, "Vazirmatn UI", "Segoe UI", Tahoma, Arial, sans-serif;
   direction: rtl;
@@ -36,11 +40,12 @@ html, body {
 #progress {
   position: fixed;
   top: 0; right: 0;
-  height: 4px;
+  height: 5px;
   width: 0%;
   background: linear-gradient(90deg, var(--accent2), var(--accent));
   z-index: 50;
-  transition: width .25s ease;
+  transition: width .3s ease;
+  box-shadow: 0 0 18px rgba(129, 214, 189, .35);
 }
 
 /* ===== دک اسلاید ===== */
@@ -49,40 +54,62 @@ html, body {
   display: none;
   position: absolute;
   inset: 0;
-  padding: 4rem 4.5rem 3.5rem;
+  padding: clamp(2.5rem, 6vh, 4.5rem) clamp(1.5rem, 7vw, 7rem) 4.5rem;
   overflow: auto;
+  scrollbar-color: var(--line) transparent;
+  animation: slide-in .35s ease both;
 }
 .slide.active { display: block; }
 
-.slide h1 { font-size: 2.6rem; line-height: 1.35; margin: .3rem 0; }
-.slide h2 { font-size: 2rem; color: var(--accent); margin: 0 0 1.2rem; }
+.slide h1 { max-width: 17ch; font-size: clamp(2.25rem, 5vw, 4.5rem); line-height: 1.3; margin: .3rem 0; letter-spacing: -.035em; }
+.slide h2 { max-width: 27ch; font-size: clamp(1.6rem, 3vw, 2.55rem); color: var(--accent); margin: 0 0 1.2rem; line-height: 1.45; letter-spacing: -.02em; }
 .slide h3 { font-size: 1.15rem; margin: .4rem 0; }
-.slide p, .slide li { font-size: 1.12rem; line-height: 1.9; }
-.subtitle { font-size: 1.35rem; color: var(--accent2); margin: 0 0 1rem; }
-.meta { color: var(--muted); font-size: 1rem; margin-bottom: 1rem; }
-.hero { font-size: 4.5rem; margin: 1.2rem 0; }
+.slide p, .slide li { font-size: clamp(1rem, 1.3vw, 1.2rem); line-height: 1.9; }
+.subtitle { font-size: clamp(1.1rem, 2vw, 1.5rem); color: var(--accent2); margin: 0 0 1rem; }
+.meta { color: var(--muted); font-size: .95rem; margin-bottom: 1rem; }
+.hero { font-size: 4.5rem; margin: 1.2rem 0; filter: drop-shadow(0 12px 25px rgba(242, 179, 95, .16)); }
 .small { color: var(--muted); font-size: .98rem; }
 .question {
   margin-top: 1.2rem;
   padding: .8rem 1.1rem;
-  background: rgba(126,226,184,.08);
+  background: linear-gradient(110deg, rgba(129,214,189,.13), rgba(129,214,189,.035));
   border-inline-start: 4px solid var(--accent2);
-  border-radius: 8px;
+  border-radius: 4px 14px 14px 4px;
 }
 .warning {
   margin-top: 1rem;
   padding: .7rem 1rem;
   background: rgba(255,196,107,.09);
   border-inline-start: 4px solid var(--warn);
-  border-radius: 8px;
+  border-radius: 4px 14px 14px 4px;
 }
 .story-slide blockquote.inject {
   background: rgba(255,122,144,.1);
   border: 1px dashed var(--danger);
   padding: .8rem 1.1rem;
-  border-radius: 8px;
+  border-radius: 4px 14px 14px 4px;
   font-size: 1.1rem;
 }
+
+.slide:first-of-type {
+  display: none;
+  align-content: center;
+  background:
+    radial-gradient(ellipse at 15% 48%, rgba(129,214,189,.13), transparent 35%),
+    radial-gradient(ellipse at 88% 20%, rgba(242,179,95,.12), transparent 28%),
+    linear-gradient(135deg, rgba(255,255,255,.018), transparent 55%);
+}
+.slide:first-of-type.active { display: grid; }
+.slide:first-of-type::after {
+  content: "";
+  position: absolute;
+  inset-block: 15%;
+  inset-inline-end: clamp(1.5rem, 5vw, 5rem);
+  width: 3px;
+  background: linear-gradient(transparent, var(--accent), var(--accent2), transparent);
+  opacity: .75;
+}
+.slide:first-of-type .hero { margin-block: .4rem 0; font-size: clamp(3rem, 7vw, 6rem); }
 
 /* ===== لیست‌ها ===== */
 .big-list li { margin-bottom: .7rem; }
@@ -92,21 +119,24 @@ html, body {
   margin-bottom: .5rem;
   background: var(--bg2);
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 10px;
 }
-.checklist li::before { content: "☐  "; color: var(--accent); }
+.checklist li::before { content: "□  "; color: var(--accent); }
 
 /* ===== کارت‌ها ===== */
 .cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 .cols3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
 .card {
-  background: var(--panel);
+  background: linear-gradient(145deg, rgba(255,255,255,.035), transparent 60%), var(--panel);
   border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 1rem 1.1rem;
+  border-radius: 16px;
+  padding: 1.1rem 1.2rem;
+  box-shadow: var(--shadow);
+  transition: transform .2s ease, border-color .2s ease;
 }
+.card:hover { transform: translateY(-3px); border-color: rgba(129,214,189,.55); }
 .card .icon { font-size: 2rem; }
-.card h3 { color: var(--accent2); }
+.card h3 { color: var(--accent2); line-height: 1.5; }
 .card p { font-size: 1rem; color: var(--ink); margin: .3rem 0 0; }
 
 /* ===== جدول مقایسه ===== */
@@ -117,19 +147,21 @@ table.compare {
 }
 table.compare th, table.compare td {
   border: 1px solid var(--line);
-  padding: .6rem .9rem;
+  padding: .7rem .9rem;
   text-align: right;
-  font-size: 1.05rem;
+  font-size: clamp(.92rem, 1.15vw, 1.08rem);
+  line-height: 1.75;
 }
 table.compare th { background: var(--panel); color: var(--accent2); }
+table.compare tr:nth-child(even) td { background: rgba(255,255,255,.018); }
 table.compare td.danger { color: var(--danger); font-weight: 700; }
 
 /* ===== قواعد کلاس ===== */
 .rule {
   display: flex; gap: 1rem; align-items: center;
-  background: var(--panel);
+  background: linear-gradient(110deg, rgba(255,255,255,.035), transparent 70%), var(--panel);
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: 14px;
   padding: .9rem 1.1rem;
   margin-bottom: .9rem;
 }
@@ -147,7 +179,7 @@ table.compare td.danger { color: var(--danger); font-weight: 700; }
 /* ===== حلقه / زنجیره ===== */
 .loop { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin: 1rem 0; }
 .loop .step {
-  background: var(--panel);
+  background: linear-gradient(135deg, rgba(242,179,95,.09), transparent 70%), var(--panel);
   border: 1px solid var(--accent);
   color: var(--ink);
   border-radius: 999px;
@@ -229,12 +261,12 @@ table.compare td.danger { color: var(--danger); font-weight: 700; }
 
 /* ===== کد ===== */
 pre.codebox {
-  background: #0b1020;
+  background: #080f14;
   border: 1px solid var(--line);
   border-radius: 10px;
   padding: 1rem 1.2rem;
   font-family: Vazirmatn, Tahoma, monospace;
-  font-size: 1.02rem;
+  font-size: clamp(.9rem, 1.15vw, 1.05rem);
   line-height: 1.9;
   white-space: pre-wrap;
   direction: rtl;
@@ -253,7 +285,7 @@ code { background: var(--bg2); padding: .1rem .4rem; border-radius: 6px; directi
   z-index: 40;
 }
 .nav button {
-  background: var(--panel);
+  background: rgba(21, 35, 44, .94);
   color: var(--ink);
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -263,6 +295,7 @@ code { background: var(--bg2); padding: .1rem .4rem; border-radius: 6px; directi
   cursor: pointer;
 }
 .nav button:hover { border-color: var(--accent); }
+.nav button:focus-visible { outline: 2px solid var(--accent2); outline-offset: 3px; }
 .counter {
   position: fixed;
   bottom: 1.15rem;
@@ -291,98 +324,378 @@ code { background: var(--bg2); padding: .1rem .4rem; border-radius: 6px; directi
 body.presenter .notes { display: block; }
 body.presenter .slide { padding-inline-end: 380px; }
 
+@keyframes slide-in {
+  from { opacity: .5; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 760px) {
+  .slide { padding: 2.6rem 1.2rem 4.5rem; }
+  .cols2, .cols3, .autonomy { grid-template-columns: 1fr; }
+  .balance { align-items: stretch; }
+  .balance .pan { flex-basis: 100%; }
+  .balance .fulcrum { text-align: center; }
+  .slide h1 { max-width: 100%; }
+  .nav { bottom: .55rem; inset-inline-start: .55rem; }
+  .nav button { padding: .35rem .6rem; font-size: .9rem; }
+  .counter { bottom: .75rem; inset-inline-end: .65rem; font-size: .8rem; }
+  body.presenter .slide { padding-inline-end: 1.2rem; }
+  .notes { width: min(88vw, 340px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
 /* ===== چاپ ===== */
 @media print {
-  .slide { display: block; position: relative; page-break-after: always; padding: 2rem; }
+  html, body { height: auto; background: #fff; color: #172126; }
+  .slide { display: block !important; position: relative; page-break-after: always; padding: 2rem; background: #fff; color: #172126; }
+  .slide h2, .card h3 { color: #286d5c; }
+  .card, .exercise, .rule, .checklist li { background: #fff; color: #172126; box-shadow: none; }
+  .card p, .slide p, .slide li { color: #172126; }
   #progress, .nav, .counter, .notes { display: none !important; }
 }
 
 </style>
+<style>
+.muse-demo {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(300px, 1.15fr);
+  gap: 1rem;
+  align-items: stretch;
+  margin-top: 1rem;
+}
+.muse-screen {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+.muse-screen-head {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  padding: .75rem 1rem;
+  border-bottom: 1px solid var(--line);
+}
+.muse-mark {
+  display: grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  background: var(--accent2);
+  color: #0b1020;
+  font-weight: 800;
+}
+.muse-screen-head p, .muse-chat p { margin: 0; font-size: .95rem; }
+.muse-chat { padding: .8rem; }
+.muse-chat p { margin-bottom: .55rem; }
+.muse-upload {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #dfe9df;
+}
+.muse-upload svg { display: block; width: 100%; height: auto; }
+.muse-response {
+  margin-top: .65rem;
+  padding: .7rem .8rem;
+  border-radius: 12px;
+  background: rgba(129,214,189,.1);
+  border-inline-start: 3px solid var(--accent2);
+}
+.muse-response p { margin: 0; font-size: .9rem; line-height: 1.7; }
+.muse-prompt {
+  padding: .8rem 1rem;
+  margin: .7rem 0;
+  border-radius: 12px;
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+.muse-demo a { color: var(--accent2); }
+.muse-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; margin: 1rem 0; }
+.muse-step { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: .85rem 1rem; }
+.muse-step h3 { color: var(--accent2); margin: .25rem 0; }
+.muse-step p { font-size: .96rem; margin: .25rem 0; }
+.muse-step .step-num { color: var(--accent); font-size: 1.35rem; font-weight: 800; }
+.settings-mock { display: grid; grid-template-columns: 1fr 1fr; gap: .55rem; margin: .7rem 0; }
+.setting-row { display: flex; justify-content: space-between; gap: .5rem; align-items: center; padding: .55rem .7rem; border-radius: 9px; background: var(--bg2); font-size: .9rem; }
+.setting-state { color: var(--accent2); white-space: nowrap; }
+.task-prompt { margin: .7rem 0; padding: .75rem .9rem; border: 1px solid var(--line); border-radius: 12px; background: var(--bg2); font-size: .98rem; line-height: 1.8; }
+.muse-demo table.compare { margin: .75rem 0; }
+.muse-demo table.compare th, .muse-demo table.compare td { font-size: .9rem; padding: .5rem .6rem; }
+.tool-card h3 { direction: ltr; text-align: right; }
+.tool-card p { margin-bottom: .65rem; }
+.source-links { display: flex; flex-wrap: wrap; gap: .35rem 1rem; }
+.source-links a { color: var(--accent2); }
+@media (max-width: 760px) {
+  .muse-demo, .muse-steps, .settings-mock { grid-template-columns: 1fr; }
+}
+</style>
 </head>
 <body>
 <div id="progress"></div>
-<div class="deck" id="deck">
-
-<!-- ===== slide 1: cover ===== -->
-<section class="slide" data-notes="آخرین جلسه. نسخه چاپی چکلیست را توزیع کنید.">
-<h1>جمع‌بندی و چک‌لیست‌ها</h1>
-<p class="subtitle">ماژول ۸ — پایان دوره، شروع عادت‌ها</p>
-<div class="meta">پیش‌نیاز: همه‌ی ماژول‌ها</div>
-<div class="hero">🏁</div>
+<main class="deck">
+<section class="slide" data-notes="از شرکت‌کنندگان بخواهید به جای تکرار فهرست ابزارها، یک کار مشخص را که حالا بهتر می‌توانند ارزیابی کنند نام ببرند.">
+<h1>دوره تمام می‌شود؛ تصمیم‌های آگاهانه ادامه دارد</h1>
+<p class="subtitle">ماژول ۸ — مرور، سنجش آمادگی و قدم بعدی</p>
+<div class="meta">پیش‌نیاز: همه‌ی ماژول‌ها · ۱۰۵ دقیقه</div>
+<div class="hero">🌱</div>
 </section>
-
-<!-- ===== slide 2: داستان پایانی ===== -->
-<section class="slide story-slide" data-notes="داستان را تعریف کنید و پیام را برجسته کنید: دوره با حفظ کردن تمام نمیشود، با سه عادت تمام میشود.">
-<h2>🎬 داستان پایانی: سه ماه بعد</h2>
-<ul>
-<li><strong>گروه اول:</strong> همه‌چیز رها شد — «امکانش نبود»</li>
-<li><strong>گروه دوم:</strong> فقط سه چیز: قرارداد داده، رمزگذار، کارت مشخصات</li>
-<li>سه ماه بعد: پاسخ‌گوی سؤالات + خلاصه‌ساز جلسات + پیش‌نویس‌ساز بیانیه — همه با داده‌ی بی‌نام</li>
-<li>در یک حادثه‌ی کوچک، تأیید انسانی جلوی انتشار داده را گرفت</li>
-</ul>
-<p class="question">💡 لازم نیست همه‌چیز را امروز کامل کنید — <strong>سه چیز را شروع کنید</strong>.</p>
-</section>
-
-<!-- ===== slide 3: چکلیست نهایی ===== -->
-<section class="slide" data-notes="چهار دسته چکلیست را مرور کنید (جزئیات در متن ماژول). راهنما: هر بند = انجام شد / تا یک ماه / نمیکنم با دلیل. نمیکنم هم تصمیم آگاهانه است.">
-<h2>چک‌لیست نهایی — چهار دسته</h2>
+<section class="slide story-slide" data-notes="داستان را بدون قهرمان‌سازی تعریف کنید. یک گروه از آغاز کار را بزرگ انتخاب کرد و کنار گذاشت؛ گروه دیگر تنها یک کار کوچک را آزمود و هر ماه نتیجه را بازبینی کرد.">
+<h2>دو ماه بعد، کدام گروه هنوز از ابزار استفاده می‌کند؟</h2>
 <div class="cols2">
-  <div class="card"><div class="icon">🔐</div><h3>داده</h3><p>فهرست داده‌ی حساس · قرارداد داده · روش بی‌نام‌سازی · سه پرسش · ابزار محلی برای حساس</p></div>
-  <div class="card"><div class="icon">🤖</div><h3>ایجنت‌ها</h3><p>کارت مشخصات · تأیید انسانی · حداقل دسترسی · قیدها · آزمون تله‌ای</p></div>
-  <div class="card"><div class="icon">🧼</div><h3>بهداشت امنیتی</h3><p>رمزگذار · 2FA · جداسازی هویت‌ها · کد تأیید · پروتکل دستگاه · کانال دوم</p></div>
-  <div class="card"><div class="icon">👁️</div><h3>آگاهی</h3><p>سیاست ابزار · گزینه‌ی آفلاین · نشانه‌های فیشینگ · برنامه‌ی پاسخ به جعل · پروتکل حادثه</p></div>
+<div class="card"><h3>گروه اول</h3><p>چند ابزار را یک‌باره به کار گرفت؛ معلوم نبود چه کسی پاسخ‌ها را بررسی می‌کند. پس از چند پاسخ نادرست، استفاده را کنار گذاشت.</p></div>
+<div class="card"><h3>گروه دوم</h3><p>یک کار کم‌خطر را انتخاب کرد، متن عمومی داد، نتیجه‌ها را آزمود و تصمیم گرفت کجا انسان باید مداخله کند.</p></div>
 </div>
+<p class="question">شروع کوچک و بازبینیِ منظم از برنامه‌ی بزرگِ بدون مسئول بهتر است.</p>
 </section>
-
-<!-- ===== slide 4: سه عادت ===== -->
-<section class="slide" data-notes="تاکید: فقط سه عادت — نه بیشتر. تغییر عادت جمعی تدریجی جواب میدهد.">
-<h2>سه عادت اول</h2>
-<div class="cols3">
-  <div class="card"><div class="icon">📜</div><h3>۱. قرارداد داده</h3><p>یک ساعت کار، بیشترین اثر</p></div>
-  <div class="card"><div class="icon">🔑</div><h3>۲. رمزگذار + 2FA ایمیل</h3><p>یک شب کار</p></div>
-  <div class="card"><div class="icon">🪪</div><h3>۳. کارت مشخصات ایجنت</h3><p>هر بار که ایجنت می‌سازید</p></div>
-</div>
-<p class="small">ماه دوم: سه عادت دیگر. ماه سوم: سه عادت دیگر. تدریجی، نه یک‌شبه.</p>
-</section>
-
-<!-- ===== slide 5: ادامه راه ===== -->
-<section class="slide" data-notes="سه مسیر ادامه. سرپرست امنیت داوطلب: نه متخصص، فقط مسئول مرور ماهانه.">
-<h2>ادامه‌ی راه</h2>
-<ul class="big-list">
-<li><strong>یادگیری مستمر:</strong> جلسه‌ی ماهانه‌ی مرور ابزار + پیگیری راهنماهای امنیت جامعه‌ی مدنی (EFF SSD، Access Now)</li>
-<li><strong>شبکه‌ی همتایان:</strong> مبادله‌ی تجربه‌ی ابزار و سیاست‌ها (بدون داده‌ی حساس!)</li>
-<li><strong>آموزش دیگران:</strong> هر شرکت‌کننده یک ماژول را برای گروه دیگر ارائه کند — چرخه کامل شود</li>
+<section class="slide" data-notes="چک‌لیست را برای مرور و گفت‌وگو استفاده کنید، نه برای نمره‌دادن به افراد. خانه‌ی «نامعلوم» را از پاسخ‌ها حذف نکنید؛ همان می‌تواند موضوع کار بعدی باشد.">
+<h2>فهرست بررسی (Checklist): پیش از استفاده چه چیزهایی باید روشن باشد؟</h2>
+<ul class="checklist">
+<li>می‌دانیم ایجنت دقیقاً برای چه کاری استفاده می‌شود.</li>
+<li>می‌دانیم چه متن یا فایلی به آن می‌دهیم و چه چیزهایی را حذف می‌کنیم.</li>
+<li>می‌دانیم کدام ابزارها یا حساب‌ها به آن وصل‌اند.</li>
+<li>می‌دانیم چه کسی خروجی را می‌خواند و تأیید می‌کند.</li>
+<li>می‌دانیم کجا باید کار را متوقف کنیم و از چه کسی کمک بگیریم.</li>
+<li>برای زمانی که ابزار در دسترس نیست، راه دیگری داریم.</li>
 </ul>
-<p class="small">یک «سرپرست امنیت» داوطلب: مسئول مرور ماهانه‌ی چک‌لیست — نه متخصص، فقط مسئول.</p>
 </section>
-
-<!-- ===== slide 6: پنج اصل ===== -->
-<section class="slide" data-notes="این اسلاید را بیشتر از بقیه باز بگذارید. پنج اصل ثابت، مستقل از ابزار.">
-<h2>پنج اصل ثابت</h2>
+<section class="slide" data-notes="پیشنهادها نمونه‌اند. هر فرد یا گروه باید مطابق نیاز و توانش اقدام انتخاب کند. برای هر کار، مسئول و تاریخ قابل پیگیری بگذارید.">
+<h2>برنامه‌ی یک‌ماهه: کوچک، روشن، شدنی</h2>
+<table class="compare">
+<thead><tr><th>زمان</th><th>یک کار پیشنهادی</th><th>از کجا می‌فهمیم انجام شده؟</th></tr></thead>
+<tbody>
+<tr><td>این هفته</td><td>فهرست کنید چه نوع اطلاعاتی نباید به ابزار عمومی فرستاده شود.</td><td>قانون کوتاهی که همه‌ی اعضای مربوط خوانده‌اند.</td></tr>
+<tr><td>هفته‌ی دوم</td><td>یک کار عمومی را با دو ابزار یا روش دستی مقایسه کنید.</td><td>نتیجه‌ی آزمون و زمان لازم برای بازبینی ثبت شده است.</td></tr>
+<tr><td>تا پایان ماه</td><td>تصمیم بگیرید کار را ادامه دهید، تغییر دهید یا کنار بگذارید.</td><td>تصمیم، دلیل، مسئول و تاریخ بازبینی مشخص‌اند.</td></tr>
+</tbody>
+</table>
+<p class="question">هر گروه فقط به اندازه‌ی توانش کار انتخاب کند؛ تمام‌نکردن برنامه‌ی بزرگ شکست نیست.</p>
+</section>
+<section class="slide" data-notes="این پنج اصل را در زبان ساده بازگو کنید. بپرسید کدام‌شان در محیط خودشان عملی‌تر است و کدام هنوز نیازمند تصمیم است.">
+<h2>پنج یادآوری ساده برای هر ابزار تازه</h2>
 <div class="cols3">
-  <div class="card"><div class="icon">✂️</div><h3>حداقل داده</h3><p>فقط آنچه لازم است</p></div>
-  <div class="card"><div class="icon">🔑</div><h3>حداقل دسترسی</h3><p>فقط‌خواندن پیش‌فرض</p></div>
-  <div class="card"><div class="icon">👤</div><h3>تأیید انسانی</h3><p>ارسال/حذف/انتشار</p></div>
+<div class="card"><div class="icon">✂️</div><h3>فقط داده‌ی لازم</h3><p>اگر بخشی از متن به کار نمی‌آید، نفرستید.</p></div>
+<div class="card"><div class="icon">🔑</div><h3>فقط دسترسی لازم</h3><p>برای نوشتن پیش‌نویس، دسترسی انتشار لازم نیست.</p></div>
+<div class="card"><div class="icon">👀</div><h3>بازبینی پیش از انتشار</h3><p>متن، منبع، عدد، نام و ترجمه را بررسی کنید.</p></div>
+<div class="card"><div class="icon">📖</div><h3>سیاست را بخوانید</h3><p>نگهداری و حذف داده از ابزاری به ابزار دیگر فرق می‌کند.</p></div>
+<div class="card"><div class="icon">⏸️</div><h3>راه توقف داشته باشید</h3><p>اگر رفتار نامنتظر دیدید، بدانید چگونه دسترسی را ببندید.</p></div>
+<div class="card"><div class="icon">🔄</div><h3>دوباره بررسی کنید</h3><p>تغییر سرویس یا نیاز، بازبینی تازه می‌خواهد.</p></div>
 </div>
-<div class="cols2" style="margin-top:1rem">
-  <div class="card"><div class="icon">🚪</div><h3>جداسازی هویت‌ها</h3><p>شخصی / عمومی / حساس</p></div>
-  <div class="card"><div class="icon">🤝</div><h3>عادت جمعی</h3><p>قرارداد گروهی، نه تصمیم فردی</p></div>
-</div>
-<p class="question">💡 هر ابزار جدیدی که آمد — این پنج را روز اول اجرا کنید.</p>
 </section>
-
-<!-- ===== slide 7: دو پرسش پایانی ===== -->
-<section class="slide" data-notes="تعهد عمومی کوچک اثر بزرگی دارد. پرسش دوم معمولاً این سه پاسخ را دارد — هر سه درست.">
-<h2>دو پرسش پایانی</h2>
+<section class="slide" data-notes="این تصویر بازسازی آموزشی است، نه اسکرین‌شات رسمی Muse. مثال را با یک پوستر ساختگی و بدون چهره یا اطلاعات تماس اجرا کنید. قابلیت دریافت تصویر، زبان‌ها، دسترسی و شرایط سرویس را پیش از کلاس در صفحه رسمی بررسی کنید. Meta در معرفی Muse گفته است این سرویس در حال عرضه در آمریکا است؛ دسترسی را برای کشور و حساب کاربر جداگانه بررسی کنید.">
+<h2>نمونه: از عکس یک پوستر تا پیش‌نویس چندزبانه با Muse</h2>
+<p>فرض کنید عکسی از پوستر عمومی یک برنامه دارید. اگر نسخه‌ی در دسترس شما دریافت تصویر را پشتیبانی می‌کند، می‌توانید از Muse بخواهید متن را بخواند و برای وب‌سایت و شبکه‌های اجتماعی پیش‌نویس بسازد.</p>
+<div class="muse-demo">
+<div class="muse-screen" role="img" aria-label="بازسازی آموزشی از گفت‌وگو با Muse؛ تصویری از پوستر ساختگی یک برنامه عمومی بارگذاری شده و متن آن خوانده می‌شود">
+<div class="muse-screen-head"><span class="muse-mark">M</span><div><strong>Muse</strong><p class="small">نمونه‌ی آموزشی از یک دستیار تصویری</p></div></div>
+<div class="muse-chat">
+<p>این تصویر را بررسی کن و فقط متن‌هایی را که با اطمینان می‌خوانی بنویس.</p>
+<div class="muse-upload">
+<svg viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="poster-title poster-desc">
+<title id="poster-title">تصویر ساختگی یک پوستر عمومی</title>
+<desc id="poster-desc">پوستری روی دیوار با عنوان نشست کتاب‌خوانی عمومی، جمعه ساعت ده، کتابخانه نمونه</desc>
+<defs>
+<linearGradient id="wall" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#b6c7bc"/><stop offset="1" stop-color="#e4d8be"/></linearGradient>
+<linearGradient id="paper" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#fffdf4"/><stop offset="1" stop-color="#f4ebd6"/></linearGradient>
+</defs>
+<rect width="640" height="360" fill="url(#wall)"/>
+<path d="M0 285 Q150 250 310 286 T640 275 V360 H0Z" fill="#668678" opacity=".55"/>
+<path d="M53 360 Q91 258 145 207 M588 360 Q542 260 503 204" fill="none" stroke="#385e4b" stroke-width="12" stroke-linecap="round"/>
+<g fill="#638c70">
+<ellipse cx="91" cy="272" rx="36" ry="15" transform="rotate(-35 91 272)"/><ellipse cx="126" cy="235" rx="37" ry="15" transform="rotate(25 126 235)"/>
+<ellipse cx="549" cy="272" rx="36" ry="15" transform="rotate(35 549 272)"/><ellipse cx="514" cy="235" rx="37" ry="15" transform="rotate(-25 514 235)"/>
+</g>
+<rect x="204" y="24" width="232" height="315" rx="5" fill="#17302c" opacity=".2"/>
+<rect x="194" y="15" width="232" height="315" rx="5" fill="url(#paper)" stroke="#d2c6ac" stroke-width="3"/>
+<rect x="212" y="35" width="196" height="13" rx="6" fill="#81b9a7"/>
+<text x="310" y="100" text-anchor="middle" fill="#203b34" font-size="24" font-family="sans-serif" font-weight="700">نشست کتاب‌خوانی</text>
+<text x="310" y="132" text-anchor="middle" fill="#203b34" font-size="24" font-family="sans-serif" font-weight="700">عمومی</text>
+<path d="M239 153 H381" stroke="#e3a854" stroke-width="4" stroke-linecap="round"/>
+<text x="310" y="190" text-anchor="middle" fill="#53645d" font-size="19" font-family="sans-serif">جمعه، ساعت ۱۰</text>
+<text x="310" y="220" text-anchor="middle" fill="#53645d" font-size="17" font-family="sans-serif">کتابخانه‌ی نمونه</text>
+<rect x="260" y="245" width="100" height="48" rx="8" fill="#dce9df"/>
+<path d="M278 282 V258 Q310 230 342 258 V282 M288 282 V260 M310 282 V253 M332 282 V260" fill="none" stroke="#50806b" stroke-width="5"/>
+</svg>
+</div>
+<div class="muse-response"><p><strong>پاسخ نمونه:</strong> «نشست کتاب‌خوانی عمومی؛ جمعه، ساعت ۱۰؛ کتابخانه‌ی نمونه.»<br><span class="small">این متن ساختگی است و باید با تصویر اصلی سنجیده شود.</span></p></div>
+</div>
+</div>
+<div class="card">
+<h3>درخواست پیشنهادی (Prompt)</h3>
+<div class="muse-prompt">متن این پوستر را بخوان. آن را به انگلیسی و عربی ترجمه کن. برای وب‌سایت یک خبر کوتاه و برای شبکه‌ی اجتماعی یک کپشن آماده کن. هیچ تاریخ، نام یا جزئیاتی را که در تصویر نیست اضافه نکن؛ اگر بخشی خوانا نیست، همان را مشخص کن.</div>
+<h3>پیش از استفاده از متن</h3>
+<p>تاریخ، نام مکان و ترجمه‌ها را با پوستر مقایسه کنید. مطمئن شوید اجازه‌ی انتشار خود عکس را دارید. تصویرِ افراد، شماره‌ی تماس یا اطلاعات خصوصی را بی‌دلیل بارگذاری نکنید.</p>
+<p class="small">رابط داخل تصویر بازسازی آموزشی است، نه اسکرین‌شات واقعی. طبق معرفی Meta، عرضه‌ی Muse از آمریکا آغاز شده است؛ امکانات و دسترسی با کشور، حساب و نسخه‌ی سرویس فرق می‌کند. <a href="https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/" target="_blank" rel="noopener noreferrer">معرفی رسمی Meta Muse</a></p>
+</div>
+</div>
+</section>
+<section class="slide" data-notes="این اسلاید مسیر کلی را بر اساس صفحه رسمی Muse در ۲۵ سپتامبر ۲۰۲۶ می‌گوید؛ متن دکمه‌ها و امکانات ممکن است عوض شوند. در صفحه رسمی muse.ai فیلد شماره موبایل یا ایمیل و دکمه Continue دیده می‌شود. ثبت‌نام را فقط از برنامه یا وب‌سایت رسمی انجام دهید. اگر کشور یا حساب شما دسترسی ندارد، از روش‌های دور زدن محدودیت یا واردکردن نشانی نادرست استفاده نکنید؛ زمان عرضه را بعداً از منبع رسمی بررسی کنید. تصویر تنظیمات شماتیک آموزشی است، نه تصویر واقعی رابط Muse.">
+<h2>راه‌اندازی ایجنت شخصی در Muse</h2>
+<p>در Muse لازم نیست از صفر ایجنت برنامه‌نویسی کنید؛ دستیار آماده را با تعریف هدف و وصل‌کردن ابزارهای موردنیازتان برای یک کار مشخص به کار می‌گیرید. این کار با ساخت یک ایجنت اختصاصی از صفر فرق دارد.</p>
+<div class="muse-steps">
+<div class="muse-step"><span class="step-num">۱</span><h3>دسترسی را بررسی کنید</h3><p>به <a href="https://muse.ai" target="_blank" rel="noopener noreferrer">muse.ai</a> یا پیوند برنامه از وب‌سایت رسمی Meta بروید. عرضه‌ی سرویس ممکن است در کشور شما هنوز فعال نباشد؛ این موضوع را پیش از ثبت‌نام بررسی کنید.</p></div>
+<div class="muse-step"><span class="step-num">۲</span><h3>حساب بسازید یا وارد شوید</h3><p>در صفحه‌ی رسمی، شماره‌ی موبایل یا ایمیل را وارد کنید و «Continue» را بزنید. سپس مراحل تأیید هویت را که خود سرویس نشان می‌دهد دنبال کنید. کد ورود را برای هیچ‌کس نفرستید.</p></div>
+<div class="muse-step"><span class="step-num">۳</span><h3>با یک کار کم‌خطر شروع کنید</h3><p>ابتدا یک درخواست آزمایشی با متن ساختگی یا عمومی انجام دهید. پیش از وصل‌کردن ایمیل یا تقویم، تنظیمات حریم خصوصی، دسترسی‌ها و راه قطع اتصال را پیدا کنید.</p></div>
+</div>
+<div class="cols2">
+<div class="card">
+<h3>تنظیمات پیشنهادی برای شروع</h3>
+<div class="settings-mock" role="img" aria-label="نمونه‌ی شماتیک تنظیم دسترسی‌های ایجنت، نه تصویر واقعی از برنامه">
+<div class="setting-row"><span>خواندن ایمیل</span><span class="setting-state">فقط در صورت نیاز</span></div>
+<div class="setting-row"><span>فرستادن ایمیل</span><span class="setting-state">خاموش در شروع</span></div>
+<div class="setting-row"><span>حذف یا بایگانی</span><span class="setting-state">خاموش در شروع</span></div>
+<div class="setting-row"><span>تأیید کارهای حساس</span><span class="setting-state">روشن</span></div>
+<div class="setting-row"><span>گزارش کارهای انجام‌شده</span><span class="setting-state">بازبینی شود</span></div>
+<div class="setting-row"><span>حافظه و داده‌های ذخیره‌شده</span><span class="setting-state">مرور و پاک‌سازی</span></div>
+</div>
+<p class="small">نمونه‌ی آموزشی است؛ نام گزینه‌ها و امکان کنترل آن‌ها در برنامه ممکن است متفاوت باشد.</p>
+</div>
+<div class="card">
+<h3>پیش از وصل‌کردن یک برنامه</h3>
+<p>در بخش اتصال برنامه‌ها (Connected Apps)، فقط سرویسی را وصل کنید که برای کارتان لازم است. سطح دسترسی (Permissions) را بخوانید؛ اگر می‌شود، ابتدا دسترسی محدود و فقط‌خواندنی انتخاب کنید.</p>
+<p>حساب مشترک کاری را بدون اجازه‌ی صاحب یا مدیر آن وصل نکنید. پیام‌ها و فایل‌های محرمانه را وارد تمرین نکنید. امکان قطع اتصال، بررسی گزارش کارها و پاک‌کردن حافظه را هم پیدا کنید.</p>
+</div>
+</div>
+<p class="small">راهنما بر پایه‌ی صفحه‌ی رسمی Muse و معرفی Meta تنظیم شده است؛ منوها و دسترسی منطقه‌ای ممکن است تغییر کنند. <a href="https://muse.ai" target="_blank" rel="noopener noreferrer">صفحه‌ی Muse</a> · <a href="https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/" target="_blank" rel="noopener noreferrer">اطلاعیه‌ی Meta</a></p>
+</section>
+<section class="slide" data-notes="تأکید کنید این یک نمونه‌ی آموزشی است و متن واقعی ایمیل نباید در صفحه‌نمایش کلاس نمایش داده شود. ابتدا از حساب آزمایشی یا صندوقی با پیام‌های ساختگی استفاده کنید. بازبینی تنظیمات دقیق دسترسی و سازوکار تأیید پیش از اقدام به‌عهده‌ی کاربر است.">
+<h2>تمرین با ایمیل کاری: مرتب‌سازی، نه ارسال خودکار</h2>
+<p>پس از وصل‌کردن ایمیل با دسترسی محدود، از Muse بخواهید اول فقط پیام‌ها را مرور و پیش‌نویس تهیه کند. کار را مرحله‌به‌مرحله انجام دهید و تا وقتی خروجی را ندیده‌اید، اجازه‌ی ارسال یا حذف ندهید.</p>
+<div class="cols2">
+<div class="card">
+<h3>درخواست نمونه (Prompt)</h3>
+<div class="task-prompt">ایمیل‌های کاریِ خوانده‌نشده‌ی امروز را فقط بخوان. آن‌ها را در سه گروه «نیازمند پاسخ امروز»، «برای پیگیری بعدی» و «اطلاع‌رسانی» خلاصه کن. برای هر پیام، فرستنده، موضوع و دلیل اولویت را بنویس. اگر مطمئن نیستی، بگو نامشخص است. هیچ ایمیلی را نفرست، حذف یا بایگانی نکن و به پیوندهای داخل پیام‌ها دست نزن. در پایان، برای پاسخ‌های فوری پیش‌نویس بنویس و پیش از هر اقدام از من اجازه بگیر.</div>
+</div>
+<div class="card">
+<h3>خروجی را چگونه بررسی کنیم؟</h3>
 <ul class="big-list">
-<li><strong>«سه عادت من چیست؟»</strong> — بنویسید و به همکارتان بگویید</li>
-<li><strong>«اگر فقط یک اسلاید یادم بماند؟»</strong></li>
+<li>آیا فرستنده و موضوع را درست شناخته است؟</li>
+<li>آیا فوریت واقعی را از زبان فوری یا فریبنده جدا کرده است؟</li>
+<li>آیا خلاصه، نکته‌ی مهم یا موعدی را جا انداخته است؟</li>
+<li>آیا پاسخ پیشنهادی با لحن و اطلاعات درست نوشته شده است؟</li>
+<li>پیش‌نویس را خودتان ویرایش و تأیید کنید؛ ارسال فقط پس از تأیید نهایی.</li>
 </ul>
-<p class="small">معمولاً: «داده‌ای که وارد ابری می‌شود از کنترل من خارج می‌شود» / «تأیید انسانی» / «حداقل دسترسی» — هر سه درست است.</p>
-<p class="question">🌱 موفق باشید!</p>
-</section>
-
 </div>
+</div>
+<p class="warning"><strong>نکته‌ی حریم خصوصی:</strong> صندوق کاری ممکن است اطلاعات دیگران یا اطلاعات محرمانه‌ی سازمان را دربرگیرد. دسترسی را به اندازه‌ی همان کار محدود کنید و مقررات محل کار را پیش از اتصال بررسی کنید.</p>
+</section>
+<section class="slide" data-notes="برای تمرین زنده، از شهر/تاریخ فرضی یا مقصدی که شرکت‌کننده انتخاب می‌کند استفاده کنید اما اطلاعات مسافر و کارت بانکی واقعی وارد نکنید. قیمت زنده را فقط در صورت دسترسی سرویس بررسی کنید. برنده‌ی «ارزان‌ترین» را بر پایه‌ی جمع کل و شرایط سفر مشخص کنید، نه قیمت پایه. اگر Muse یا Link در منطقه در دسترس نیست، تمرین را به مقایسه‌ی فرضی یا دستی تبدیل کنید. هیچ خریدی را در کلاس نهایی نکنید.">
+<h2>نمونه‌ی خرید بلیت: ارزان‌ترین گزینه با شرایط روشن</h2>
+<p>به‌جای گفتن «ارزان‌ترین بلیت را بخر»، از Muse بخواهید گزینه‌ها را جست‌وجو و مقایسه کند. قیمت و موجودی پرواز تغییر می‌کند؛ «ارزان‌ترین» یعنی ارزان‌ترین گزینه‌ای که با شرایط شما جور است، نه لزوماً کمترین عددی که ابتدا نمایش داده می‌شود.</p>
+<div class="cols2">
+<div class="card">
+<h3>۱ · درخواست دقیق بنویسید</h3>
+<div class="task-prompt">برای مسیر [مبدأ] به [مقصد] در تاریخ [رفت] و در صورت نیاز [برگشت]، برای [تعداد] مسافر، پروازها را جست‌وجو کن. حداکثر [تعداد] توقف، زمان‌های قابل‌قبول [بازه] و نیاز من به [بار دستی/بار تحویلی] را در نظر بگیر. گزینه‌ها را بر اساس هزینه‌ی نهایی مرتب کن؛ هزینه‌ی بار، انتخاب صندلی و کارمزدها را جداگانه بنویس. شرایط تغییر یا استرداد و مدت توقف را هم مقایسه کن. فعلاً هیچ اطلاعات مسافر یا پرداختی وارد نکن و هیچ بلیتی نخر.</div>
+<p class="small">جای خالی‌ها را با اطلاعات سفر پر کنید؛ برای تمرین، نام و اطلاعات هویتی واقعی لازم نیست.</p>
+</div>
+<div class="card">
+<h3>۲ · مقایسه و تأیید پیش از پرداخت</h3>
+<table class="compare">
+<thead><tr><th>گزینه</th><th>هزینه‌ی نهایی</th><th>بار و توقف</th><th>تغییر/استرداد</th></tr></thead>
+<tbody>
+<tr><td>پرواز الف</td><td>پس از افزودن همه‌ی هزینه‌ها</td><td>مدت و بار مجاز</td><td>جریمه یا امکان تغییر</td></tr>
+<tr><td>پرواز ب</td><td>پس از افزودن همه‌ی هزینه‌ها</td><td>مدت و بار مجاز</td><td>جریمه یا امکان تغییر</td></tr>
+</tbody>
+</table>
+<p>از ایجنت بخواهید پیوند رسمی فروشنده و زمان بررسی قیمت را نشان دهد. خودتان نام مسافر، فرودگاه، تاریخ، مجموع نهایی و شرایط را دوباره بخوانید.</p>
+</div>
+</div>
+<div class="warning"><strong>۳ · خرید فقط با اجازه‌ی روشن:</strong> اگر تصمیم به خرید دارید، بعد از دیدن گزینه‌ی دقیق و مبلغ نهایی، خودتان صریحاً تأیید کنید. هرگز کد ورود یا اطلاعات کارت را در گفت‌وگو ننویسید. Muse گفته است برای خرید از Link و کارت یک‌بارمصرف استفاده می‌کند؛ این امکان و پوشش خرید در همه‌ی کشورها و فروشندگان یکسان نیست. قیمت نهایی هم تضمین نمی‌شود.</div>
+<p class="small">این تمرین جست‌وجو و تصمیم‌گیری است، نه تضمین ارزان‌ترین بلیت بازار. موجودی و قیمت را پیش از پرداخت در وب‌سایت فروشنده دوباره بررسی کنید.</p>
+</section>
+<section class="slide" data-notes="OpenClaw و Hermes پروژه‌هایی با قابلیت‌های متغیرند؛ توضیح این اسلاید معرفی کلی بر پایه‌ی مستندات رسمی است، نه توصیه‌ی امنیتی یا تضمین حریم خصوصی. نگذارید عبارت‌هایی مثل self-hosted یا open source جای بررسیِ محل پردازش مدل، تنظیمات Gateway، سطح دسترسی، لاگ‌ها و سیاست سرویس را بگیرند. ابزارهای سازنده‌ی گردش کار مانند n8n و Dify را با دستیار شخصی آماده یکی ندانید؛ هرکدام برای نوعی کار مناسب‌اند. تاریخ بررسی پیوندها: ۲۵ سپتامبر ۲۰۲۶.">
+<h2>برای کارهای تکراری: OpenClaw، Hermes یا گزینه‌های دیگر؟</h2>
+<p>Muse نمونه‌ای از دستیار شخصیِ آماده است؛ OpenClaw و Hermes برای ساخت دستیارهای کاریِ قابل‌تنظیم و پیوند دادن آن‌ها به ابزارها گزینه‌هایی هستند، اما به تنظیم و مراقبت بیشتری نیاز دارند.</p>
+<div class="cols2">
+<div class="card tool-card">
+<div class="icon">🦞</div><h3>OpenClaw</h3>
+<p><strong>کاربرد مناسب:</strong> ساخت دستیار شخصی یا گروهی که از راه پیام‌رسان‌ها به ابزارهای مختلف وصل شود و کارهای سفارشی انجام دهد.</p>
+<p><strong>مزیت‌ها:</strong> متن‌باز است، اتصال‌های زیادی دارد و می‌توان آن را روی رایانه یا سرور خود اجرا کرد. تنظیم‌پذیر است و می‌تواند از مدل‌های مختلف استفاده کند.</p>
+<p><strong>محدودیت‌ها:</strong> نصب، به‌روزرسانی و ایمن‌سازی‌اش دانش فنی می‌خواهد. «روی دستگاه خودم اجرا می‌شود» به معنی محلی‌ماندن همه‌ی داده‌ها نیست؛ متن ممکن است به مدل یا پیام‌رسانِ وصل‌شده فرستاده شود. دسترسی ابزارها باید محدود و درست تنظیم شود.</p>
+</div>
+<div class="card tool-card">
+<div class="icon">🧭</div><h3>Hermes Agent</h3>
+<p><strong>کاربرد مناسب:</strong> کارهای چندمرحله‌ای و تکراری که حافظه، ساخت مهارت، زمان‌بندی یا اجرای هم‌زمان چند کار به آن‌ها کمک می‌کند.</p>
+<p><strong>مزیت‌ها:</strong> حافظه‌ی ماندگار و مهارت‌های قابل‌گسترش دارد؛ به پیام‌رسان‌ها وصل می‌شود، کارها را زمان‌بندی می‌کند و از چند مدل و محیط اجرایی پشتیبانی می‌کند.</p>
+<p><strong>محدودیت‌ها:</strong> راه‌اندازی و نگهداری آن ساده و بی‌نیاز از نظارت نیست. حافظه و مهارت‌های ساخته‌شده باید بازبینی شوند و دسترسی به ترمینال، فایل‌ها یا حساب‌ها می‌تواند پیامد جدی داشته باشد. محل اجرای مدل و داده را جداگانه بررسی کنید.</p>
+</div>
+</div>
+<div class="warning"><strong>گزینه‌های دیگر:</strong> ابزارهایی مثل <b>n8n</b> و <b>Dify</b> برای ساخت گردش‌کارها (Workflows) و وصل‌کردن سرویس‌ها مناسب‌اند؛ لزوماً همان نوع دستیار شخصیِ OpenClaw یا Hermes نیستند. هر روز ابزارها و قابلیت‌های تازه‌ای در وب ظاهر می‌شوند. پیش از انتخاب، کاربرد، هزینه، داده‌ی ارسالی، مجوزها، امکان توقف و تأیید انسانی را بررسی کنید؛ «متن‌باز» به‌تنهایی به معنی امن یا خصوصی‌بودن نیست.</div>
+<p class="small source-links"><span>منابع رسمی:</span><a href="https://github.com/openclaw/openclaw" target="_blank" rel="noopener noreferrer">OpenClaw</a><a href="https://docs.openclaw.ai/gateway/security" target="_blank" rel="noopener noreferrer">راهنمای امنیت OpenClaw</a><a href="https://github.com/NousResearch/hermes-agent" target="_blank" rel="noopener noreferrer">Hermes Agent</a><a href="https://hermes-agent.nousresearch.com/docs/user-guide/security" target="_blank" rel="noopener noreferrer">راهنمای امنیت Hermes</a></p>
+</section>
+<section class="slide" data-notes="Cron مخفف نام سازوکار زمان‌بندیِ کارهاست و لازم نیست شرکت‌کنندگان دستور فنی بنویسند. فرق «هر روز ساعت ۹» با «به محض رسیدن ایمیل» را توضیح دهید: اولی زمان‌بندی است و دومی رویدادمحور است. پشتیبانی، منطقه‌ی زمانی و رفتار هنگام خاموشی برای هر ابزار فرق دارد.">
+<h2>کار زمان‌بندی‌شده (Cron Job) چیست و چه وقت به کار می‌آید؟</h2>
+<p>کار زمان‌بندی‌شده یعنی از ایجنت بخواهیم یک کار مشخص را در زمان یا فاصله‌ی مشخص، خودکار اجرا کند؛ مثلاً هر روز، هر هفته یا یک‌بار در تاریخی معین.</p>
+<div class="cols2">
+<div class="card">
+<div class="icon">🗓️</div><h3>مناسب کارهای تکراری و قابل‌پیش‌بینی</h3>
+<ul class="big-list">
+<li>هر صبح، خلاصه‌ی خبرهای تازه را از چند منبع عمومیِ مشخص آماده کند.</li>
+<li>هر هفته، فهرست کارهای موعددار را از تقویم بخواند و یادآوری بفرستد.</li>
+<li>در پایان هفته، گزارش کارهای انجام‌شده را از داده‌های مجاز جمع‌بندی کند.</li>
+<li>یک‌بار در تاریخ معین، یادآوری یا گزارش درخواستی را ارسال کند.</li>
+</ul>
+</div>
+<div class="card">
+<div class="icon">⏱️</div><h3>چه وقت زمان‌بندی مناسب نیست؟</h3>
+<ul class="big-list">
+<li>وقتی کار فقط یک‌بار لازم است و یک یادآور ساده کافی است.</li>
+<li>وقتی باید همان لحظه‌ی وقوع رویداد واکنش نشان داد؛ برای نمونه، رسیدن ایمیل تازه نیازمند محرک رویدادی (Event Trigger) است، نه بررسی هر دقیقه.</li>
+<li>وقتی نتیجه باید حتماً همان لحظه درست باشد یا خطا پیامد جدی دارد.</li>
+<li>برای انتشار عمومی، ارسال پیام، حذف فایل یا پرداخت خودکار بدون بازبینی و تأیید انسان.</li>
+</ul>
+</div>
+</div>
+<p class="question">زمان‌بندی برای «کارهای تکراریِ کم‌خطر» مفید است؛ خودکارشدن، مسئولیت بررسی را از بین نمی‌برد.</p>
+</section>
+<section class="slide" data-notes="نمونه‌ی درخواست را با منطقه‌ی زمانی مشخص بخوانید. «جمعه» و «۹ صبح» بدون منطقه‌ی زمانی ممکن است در سرور دیگری تعبیر متفاوتی داشته باشد. برای اجرای آزمایشی یک مقصد امن انتخاب کنید و ابتدا یک بار اجرا کنید. به شرکت‌کنندگان یادآوری کنید رابط ایجاد کار زمان‌بندی‌شده در هر محصول فرق دارد و بعضی ابزارها اصلاً این امکان را ندارند.">
+<h2>چطور یک Cron Job روشن و امن تعریف کنیم؟</h2>
+<p>پیش از ساخت، هفت چیز را مشخص کنید: <strong>هدف، زمان و منطقه‌ی زمانی، منبع داده، کار مجاز، محل دریافت نتیجه، رفتار هنگام خطا و روش توقف.</strong></p>
+<div class="cols2">
+<div class="card">
+<h3>نمونه‌ی درخواست برای ایجنت</h3>
+<div class="task-prompt">هر روز کاری ساعت ۹ صبح به وقت تهران، تیترهای تازه‌ی سه وب‌سایت خبری عمومیِ [نام منابع] را بررسی کن. حداکثر پنج مورد مرتبط با [موضوع] را با عنوان، پیوند و زمان انتشار در یک خلاصه‌ی کوتاه آماده کن و فقط به گفت‌وگوی خصوصی من بفرست. اگر منبع در دسترس نبود یا زمان انتشار روشن نبود، آن را حدس نزن و جداگانه اعلام کن. چیزی را بازنشر، منتشر یا برای کسی ارسال نکن. این کار را ابتدا برای سه روز آزمایش کن و پس از هر اجرا گزارش کوتاهی بده.</div>
+<p class="small">به‌جای «هر روز کاری»، روزها، ساعت و منطقه‌ی زمانی را دقیق بنویسید؛ مثلاً دوشنبه تا جمعه، ۹:۰۰، Asia/Tehran.</p>
+</div>
+<div class="card">
+<h3>چرخه‌ی راه‌اندازی</h3>
+<ol class="big-list">
+<li><strong>آزمون دستی (Test Run):</strong> همان کار را یک‌بار اجرا و نتیجه را بخوانید.</li>
+<li><strong>زمان‌بندی (Schedule):</strong> ساعت، روزها و منطقه‌ی زمانی را ثبت کنید.</li>
+<li><strong>اجرای آزمایشی:</strong> برای چند نوبت، نتیجه و خطاها را بررسی کنید.</li>
+<li><strong>پایش (Monitoring):</strong> سابقه‌ی اجرا، منبع‌های ازدست‌رفته و پیام‌های تکراری را ببینید.</li>
+<li><strong>توقف یا اصلاح:</strong> اگر کار دیگر لازم نیست یا نتیجه نامطمئن است، زمان‌بندی را غیرفعال کنید.</li>
+</ol>
+</div>
+</div>
+<div class="warning"><strong>پیش از فعال‌سازی:</strong> بررسی کنید ابزار در زمان اجرا در دسترس می‌ماند، دسترسی‌ها محدودند و خطا به شما گزارش می‌شود. تعداد اجرا و هزینه را سقف‌گذاری کنید؛ اگر ایجنت باید اقدام بیرونی کند، تأیید انسانی را نگه دارید. رفتار هنگام قطعی یا خاموشی در هر سرویس فرق می‌کند.</div>
+<p class="small source-links"><span>نمونه‌های مستندات رسمی:</span><a href="https://docs.openclaw.ai/automation/cron-jobs" target="_blank" rel="noopener noreferrer">زمان‌بندی در OpenClaw</a><a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/cron" target="_blank" rel="noopener noreferrer">زمان‌بندی در Hermes Agent</a></p>
+</section>
+<section class="slide" data-notes="از داوطلب بخواهید به جای نام سازمان یا فرد، فقط یک مفهوم یا پرسش دوره را انتخاب کند.">
+<h2>دو سؤال برای پایان</h2>
+<div class="exercise"><h3>۱ · از فردا چه کار کوچکی را عوض می‌کنم؟</h3><p>مثلاً پیش از بارگذاری فایل، نام و شماره‌هایی را که لازم نیست حذف می‌کنم.</p></div>
+<div class="exercise"><h3>۲ · پیش از انتشار چه چیزی را دوباره می‌خوانم؟</h3><p>مثلاً ترجمه‌ی نام‌ها و عددها را با متن اصلی مقایسه می‌کنم.</p></div>
+<p class="question">یک نکته‌ی دوره را انتخاب کنید که می‌خواهید ماه آینده به خودتان یادآوری کنید.</p>
+</section>
+<section class="slide" data-notes="از همه تشکر کنید. سه عادت قابل اجرا را بنویسند؛ اگر یکی هنوز ممکن نیست، قدم بعدی و فردی را که می‌توانند از او کمک بگیرند مشخص کنند.">
+<h2>یک قول کوچک به خودمان</h2>
+<pre class="codebox">تا یک هفته‌ی آینده:
+کار مشخص: _________________________________
+چه کسی انجامش می‌دهد؟ ______________________
+چه روزی پیگیری می‌کنیم؟ ____________________
+چه چیزی نشان می‌دهد انجام شده؟ ______________</pre>
+<p class="small">لازم نیست پاسخ یا تجربه‌ی شخصی خود را با دیگران در میان بگذارید.</p>
+<p class="question">از شما برای پرسش‌ها، توجه و همراهی در این دوره سپاسگزاریم.</p>
+</section>
+</main>
+
 <script>
 // موتور ساده اسلاید — ایجنت‌های هوش مصنوعی برای کنشگران
 // کنترل: فلش راست/چپ یا Space، F تمام‌صفحه، Esc فهرست، P حالت مدرس
