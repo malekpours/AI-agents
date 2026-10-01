@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>دوره آموزشی ایجنت‌های هوش مصنوعی (AI Agents) برای کاربران فارسی‌زبان</title>
+<style>
+:root {
+  --bg: #0a1117;
+  --bg2: #111c24;
+  --panel: #15232c;
+  --ink: #f0f4ed;
+  --muted: #adbdba;
+  --accent: #f2b35f;
+  --accent2: #81d6bd;
+  --warn: #ffd080;
+  --danger: #ff8791;
+  --line: #2b4147;
+  --shadow: 0 18px 50px rgba(0, 0, 0, .22);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background:
+    radial-gradient(ellipse at 10% 5%, rgba(129, 214, 189, .08), transparent 32rem),
+    radial-gradient(ellipse at 95% 95%, rgba(242, 179, 95, .07), transparent 35rem),
+    var(--bg);
+  color: var(--ink);
+  font-family: Vazirmatn, "Vazirmatn UI", "Segoe UI", Tahoma, Arial, sans-serif;
+  direction: rtl;
+  line-height: 1.8;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 3.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--line);
+}
+
+header h1 {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  color: var(--ink);
+  margin: 0 0 1rem;
+  line-height: 1.3;
+}
+
+header p {
+  font-size: 1.25rem;
+  color: var(--accent2);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3.5rem;
+}
+
+.card {
+  background: linear-gradient(145deg, rgba(255,255,255,.035), transparent 60%), var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform .25 ease, border-color .25s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent2);
+}
+
+.card-num {
+  font-size: .85rem;
+  font-weight: bold;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: .5rem;
+}
+
+.card h2 {
+  font-size: 1.35rem;
+  color: var(--ink);
+  margin: 0 0 .8rem;
+}
+
+.card p {
+  color: var(--muted);
+  font-size: .98rem;
+  margin: 0 0 1.5rem;
+  flex-grow: 1;
+}
+
+.card a {
+  display: inline-block;
+  text-align: center;
+  background: var(--bg2);
+  color: var(--accent2);
+  border: 1px solid var(--line);
+  padding: .65rem 1.2rem;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: all .2s ease;
+}
+
+.card a:hover {
+  background: var(--accent2);
+  color: #0b1020;
+}
+
+.section-title {
+  font-size: 1.8rem;
+  color: var(--accent);
+  margin: 2.5rem 0 1.2rem;
+  border-inline-start: 4px solid var(--accent);
+  padding-inline-start: .8rem;
+}
+
+table.glossary {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0 3rem;
+  background: var(--panel);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+
+table.glossary th, table.glossary td {
+  padding: 1rem 1.2rem;
+  text-align: right;
+  border-bottom: 1px solid var(--line);
+}
+
+table.glossary th {
+  background: rgba(255,255,255,.04);
+  color: var(--accent2);
+  font-size: 1.05rem;
+}
+
+table.glossary tr:last-child td { border-bottom: none; }
+
+.en-term {
+  font-family: inherit;
+  direction: ltr;
+  display: inline-block;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+footer {
+  text-align: center;
+  padding: 2rem 0;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+  font-size: .9rem;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>راهنمای ایجنت‌های هوش مصنوعی (AI Agents)</h1>
+    <p>مجموعه ماژول‌های آموزشی خودآموز و کارگاهی ویژه کاربران فارسی‌زبان</p>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <div>
+        <div class="card-num">ماژول ۱</div>
+        <h2>مبانی و مفاهیم ایجنت‌ها</h2>
+        <p>آشنایی با تفاوت چت‌بات و ایجنت، مدل زبانی بزرگ (LLM)، ابزارها (Tools)، حافظه (Memory) و سطوح خودمختاری (Autonomy).</p>
+      </div>
+      <a href="01-mabani.html">ورود به ماژول ۱ ←</a>
+    </div>
+
+    <div class="card">
+      <div>
+        <div class="card-num">ماژول ۲</div>
+        <h2>کاربردها و سناریوهای واقعی</h2>
+        <p>کاربرد ایجنت‌ها در تولید محتوا، خلاصه‌سازی، ترجمه، کارهای اداری و روزمره به‌همراه شیوه‌ی نوشتن دستور یا پرامپت (Prompt).</p>
+      </div>
+      <a href="02-karborda.html">ورود به ماژول ۲ ←</a>
+    </div>
+
+    <div class="card">
+      <div>
+        <div class="card-num">ماژول ۳</div>
+        <h2>ارزیابی و انتخاب ابزارها</h2>
+        <p>مقایسه ابزارهای ابری (Cloud) و محلی (Local)، هزینه‌ها، نرخ توکن‌ها و بررسی معیارها برای کاربران فارسی‌زبان.</p>
+      </div>
+      <a href="03-abzar.html">ورود به ماژول ۳ ←</a>
+    </div>
+
+    <div class="card">
+      <div>
+        <div class="card-num">ماژول ۴</div>
+        <h2>حریم خصوصی و امنیت داده</h2>
+        <p>حفاظت از اطلاعات شخصی، جلوگیری از نشت داده، آشنایی با حملات تزریق پرامپت (Prompt Injection) و اصول اخلاقی.</p>
+      </div>
+      <a href="04-harimi-omumi.html">ورود به ماژول ۴ ←</a>
+    </div>
+  </div>
+
+  <h2 class="section-title">واژه‌نامه تخصصی اصطلاحات کلیدی (Glossary)</h2>
+  <table class="glossary">
+    <thead>
+      <tr>
+        <th>عنوان فارسی</th>
+        <th>اصطلاح انگلیسی (English Term)</th>
+        <th>توضیحات مختصر</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>ایجنت هوش مصنوعی</td>
+        <td><span class="en-term">AI Agent</span></td>
+        <td>سیستمی هوشمند که توانایی هدف‌گذاری، برنامه‌ریزی چندمرحله‌ای و استفاده از ابزارها برای انجام کارها را دارد.</td>
+      </tr>
+      <tr>
+        <td>مدل زبانی بزرگ</td>
+        <td><span class="en-term">Large Language Model (LLM)</span></td>
+        <td>مغز پردازشی ایجنت که بر پایه الگوهای متنی آموزش دیده و پاسخ‌ها را تولید می‌کند.</td>
+      </tr>
+      <tr>
+        <td>وظیفه / کار</td>
+        <td><span class="en-term">Task</span></td>
+        <td>هدف یا فرآیندی مشخص که کاربر از ایجنت می‌خواهد آن را به سرانجام برساند.</td>
+      </tr>
+      <tr>
+        <td>درخواست / پرامپت</td>
+        <td><span class="en-term">Prompt</span></td>
+        <td>ورودی متنی، دستورالعمل یا چارچوبی که کاربر به مدل یا ایجنت می‌دهد.</td>
+      </tr>
+      <tr>
+        <td>ابزار</td>
+        <td><span class="en-term">Tool</span></td>
+        <td>قابلیت‌های جانبی متصل به ایجنت مانند مرورگر وب، ماشین‌حساب، خواندن فایل یا ارسال ایمیل.</td>
+      </tr>
+      <tr>
+        <td>حافظه و زمینه</td>
+        <td><span class="en-term">Memory & Context</span></td>
+        <td>اطلاعات نگهداری‌شده از گفت‌وگوها و سابقه کارها جهت حفظ انسجام در مراحل بعدی.</td>
+      </tr>
+      <tr>
+        <td>خودمختاری</td>
+        <td><span class="en-term">Autonomy</span></td>
+        <td>میزان اختیاراتی که به ایجنت داده می‌شود تا بدون تایید مستقیم انسان اقدام کند.</td>
+      </tr>
+      <tr>
+        <td>نظارت انسانی</td>
+        <td><span class="en-term">Human-in-the-Loop (HITL)</span></td>
+        <td>الگویی که در آن انسان در مراحل کلیدی، خروجی ایجنت را بررسی و تایید یا رد می‌کند.</td>
+      </tr>
+      <tr>
+        <td>رابط برنامه‌نویسی</td>
+        <td><span class="en-term">API (Application Programming Interface)</span></td>
+        <td>پل ارتباطی میان ایجنت و سرویس‌های بیرونی جهت تبادل داده.</td>
+      </tr>
+      <tr>
+        <td>تزریق پرامپت</td>
+        <td><span class="en-term">Prompt Injection</span></td>
+        <td>نوعی آسیب‌پذیری امنیتی که در آن ورودی‌های خبیثانه کنترل ایجنت را منحرف می‌کنند.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <footer>
+    <p>طراحی‌شده برای ارتقای دانش کاربردی هوش مصنوعی در بین فارسی‌زبانان</p>
+  </footer>
+</div>
+
+</body>
+</html>

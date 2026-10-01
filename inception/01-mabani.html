@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ماژول ۱ — ایجنت هوش مصنوعی چیست؟ (AI Agents)</title>
+<style>
+:root {
+  --bg: #0a1117;
+  --bg2: #111c24;
+  --panel: #15232c;
+  --ink: #f0f4ed;
+  --muted: #adbdba;
+  --accent: #f2b35f;
+  --accent2: #81d6bd;
+  --warn: #ffd080;
+  --danger: #ff8791;
+  --line: #2b4147;
+  --shadow: 0 18px 50px rgba(0, 0, 0, .22);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background:
+    radial-gradient(ellipse at 10% 5%, rgba(129, 214, 189, .08), transparent 32rem),
+    radial-gradient(ellipse at 95% 95%, rgba(242, 179, 95, .07), transparent 35rem),
+    var(--bg);
+  color: var(--ink);
+  font-family: Vazirmatn, "Vazirmatn UI", "Segoe UI", Tahoma, Arial, sans-serif;
+  direction: rtl;
+}
+
+#progress {
+  position: fixed;
+  top: 0; right: 0;
+  height: 5px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent2), var(--accent));
+  z-index: 50;
+  transition: width .3s ease;
+  box-shadow: 0 0 18px rgba(129, 214, 189, .35);
+}
+
+.deck { height: 100%; }
+.slide {
+  display: none;
+  position: absolute;
+  inset: 0;
+  padding: clamp(2.5rem, 6vh, 4.5rem) clamp(1.5rem, 7vw, 7rem) 4.5rem;
+  overflow: auto;
+  scrollbar-color: var(--line) transparent;
+  animation: slide-in .35s ease both;
+}
+.slide.active { display: block; }
+
+.slide h1 { max-width: 17ch; font-size: clamp(2.25rem, 5vw, 4.5rem); line-height: 1.3; margin: .3rem 0; letter-spacing: -.035em; }
+.slide h2 { max-width: 27ch; font-size: clamp(1.6rem, 3vw, 2.55rem); color: var(--accent); margin: 0 0 1.2rem; line-height: 1.45; letter-spacing: -.02em; }
+.slide h3 { font-size: 1.15rem; margin: .4rem 0; }
+.slide p, .slide li { font-size: clamp(1rem, 1.3vw, 1.2rem); line-height: 1.9; }
+.subtitle { font-size: clamp(1.1rem, 2vw, 1.5rem); color: var(--accent2); margin: 0 0 1rem; }
+.meta { color: var(--muted); font-size: .95rem; margin-bottom: 1rem; }
+.hero { font-size: 4.5rem; margin: 1.2rem 0; filter: drop-shadow(0 12px 25px rgba(242, 179, 95, .16)); }
+.small { color: var(--muted); font-size: .98rem; }
+.question {
+  margin-top: 1.2rem;
+  padding: .8rem 1.1rem;
+  background: linear-gradient(110deg, rgba(129,214,189,.13), rgba(129,214,189,.035));
+  border-inline-start: 4px solid var(--accent2);
+  border-radius: 4px 14px 14px 4px;
+}
+.warning {
+  margin-top: 1rem;
+  padding: .7rem 1rem;
+  background: rgba(255,196,107,.09);
+  border-inline-start: 4px solid var(--warn);
+  border-radius: 4px 14px 14px 4px;
+}
+
+.slide:first-of-type {
+  display: none;
+  align-content: center;
+  background:
+    radial-gradient(ellipse at 15% 48%, rgba(129,214,189,.13), transparent 35%),
+    radial-gradient(ellipse at 88% 20%, rgba(242,179,95,.12), transparent 28%),
+    linear-gradient(135deg, rgba(255,255,255,.018), transparent 55%);
+}
+.slide:first-of-type.active { display: grid; }
+.slide:first-of-type::after {
+  content: "";
+  position: absolute;
+  inset-block: 15%;
+  inset-inline-end: clamp(1.5rem, 5vw, 5rem);
+  width: 3px;
+  background: linear-gradient(transparent, var(--accent), var(--accent2), transparent);
+  opacity: .75;
+}
+.slide:first-of-type .hero { margin-block: .4rem 0; font-size: clamp(3rem, 7vw, 6rem); }
+
+.big-list li { margin-bottom: .7rem; }
+
+.cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.cols3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.card {
+  background: linear-gradient(145deg, rgba(255,255,255,.035), transparent 60%), var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 1.1rem 1.2rem;
+  box-shadow: var(--shadow);
+  transition: transform .2s ease, border-color .2s ease;
+}
+.card:hover { transform: translateY(-3px); border-color: rgba(129,214,189,.55); }
+.card .icon { font-size: 2rem; }
+.card h3 { color: var(--accent2); line-height: 1.5; }
+.card p { font-size: 1rem; color: var(--ink); margin: .3rem 0 0; }
+
+table.compare {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+table.compare th, table.compare td {
+  border: 1px solid var(--line);
+  padding: .7rem .9rem;
+  text-align: right;
+  font-size: clamp(.92rem, 1.15vw, 1.08rem);
+  line-height: 1.75;
+}
+table.compare th { background: var(--panel); color: var(--accent2); }
+table.compare tr:nth-child(even) td { background: rgba(255,255,255,.018); }
+
+.rule {
+  display: flex; gap: 1rem; align-items: center;
+  background: linear-gradient(110deg, rgba(255,255,255,.035), transparent 70%), var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: .9rem 1.1rem;
+  margin-bottom: .9rem;
+}
+.rule-num {
+  min-width: 2.4rem; height: 2.4rem;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent);
+  color: #0b1020;
+  font-weight: 800;
+  border-radius: 50%;
+  font-size: 1.2rem;
+}
+.rule-body { font-size: 1.15rem; }
+
+.loop { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin: 1rem 0; }
+.loop .step {
+  background: linear-gradient(135deg, rgba(242,179,95,.09), transparent 70%), var(--panel);
+  border: 1px solid var(--accent);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: .5rem 1.1rem;
+  font-size: 1.05rem;
+}
+.loop .step.loop-back { border-color: var(--accent2); color: var(--accent2); }
+.loop .arrow { color: var(--muted); }
+
+.autonomy { display: grid; grid-template-columns: repeat(4, 1fr); gap: .8rem; margin: 1rem 0; }
+.aut-level { border-radius: 12px; padding: .9rem; border: 1px solid var(--line); }
+.aut-level h3 { margin: 0 0 .3rem; }
+.aut-level p { font-size: .95rem; margin: 0; color: var(--muted); }
+.aut-level.l1 { background: rgba(126,226,184,.12); }
+.aut-level.l2 { background: rgba(77,163,255,.12); }
+.aut-level.l3 { background: rgba(255,196,107,.12); }
+.aut-level.l4 { background: rgba(255,122,144,.12); }
+.aut-level.l4 h3 { color: var(--danger); }
+
+.exercise {
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-inline-start: 4px solid var(--accent2);
+  border-radius: 10px;
+  padding: .8rem 1.1rem;
+  margin-bottom: .9rem;
+}
+.exercise h3 { margin: 0 0 .3rem; color: var(--accent2); }
+
+.nav {
+  position: fixed;
+  bottom: 1rem;
+  inset-inline-start: 1rem;
+  display: flex;
+  gap: .5rem;
+  z-index: 40;
+}
+.nav button, .nav a {
+  background: rgba(21, 35, 44, .94);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: .4rem .8rem;
+  font-family: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+.nav button:hover, .nav a:hover { border-color: var(--accent); color: var(--accent); }
+
+.counter {
+  position: fixed;
+  bottom: 1.15rem;
+  inset-inline-end: 1.2rem;
+  color: var(--muted);
+  font-size: .95rem;
+  z-index: 40;
+}
+
+.notes {
+  display: none;
+  position: fixed;
+  inset-block-start: 0; inset-inline-end: 0;
+  width: 340px;
+  max-height: 100%;
+  overflow: auto;
+  background: #0b1020;
+  border-inline-start: 1px solid var(--line);
+  padding: 1rem 1.1rem;
+  font-size: .95rem;
+  color: var(--muted);
+  z-index: 60;
+  line-height: 1.8;
+}
+body.presenter .notes { display: block; }
+body.presenter .slide { padding-inline-end: 380px; }
+
+@keyframes slide-in {
+  from { opacity: .5; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 760px) {
+  .slide { padding: 2.6rem 1.2rem 4.5rem; }
+  .cols2, .cols3, .autonomy { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<main class="deck">
+
+<section class="slide" data-notes="به شرکت‌کنندگان خوش‌آمد بگویید. در این دوره می‌خواهیم بفهمیم ایجنت هوش مصنوعی چیست و چطور کار می‌کند.">
+<h1>ایجنت‌های هوش مصنوعی (AI Agents): از گفت‌وگو تا انجام کار</h1>
+<p class="subtitle">ماژول ۱ — آشنایی با مفهوم، توانایی‌ها و مرزها</p>
+<div class="meta">مبانی کامل برای تمامی کاربران · ویژه زبان فارسی</div>
+<div class="hero">🧭</div>
+<p class="small">یک کارگاه گفت‌وگومحور؛ آشنایی با زیرساخت، مفاهیم و زبان مشترک</p>
+</section>
+
+<section class="slide" data-notes="واژه‌ها و اصطلاحات انگلیسی معادل را به روشنی مرور کنید.">
+<h2>اصطلاحات ضروری: فارسی و انگلیسی</h2>
+<table class="compare">
+<thead><tr><th>واژه فارسی</th><th>اصطلاح انگلیسی (English Term)</th><th>به زبان ساده</th></tr></thead>
+<tbody>
+<tr><td>هوش مصنوعی</td><td><span dir="ltr">Artificial Intelligence (AI)</span></td><td>برنامه‌هایی که کارهایی مثل فهم متن، پاسخ‌دادن یا ساخت تصویر انجام می‌دهند.</td></tr>
+<tr><td>مدل زبانی بزرگ</td><td><span dir="ltr">Large Language Model (LLM)</span></td><td>مغز الگوریتمی که الگوهای زبان را یاد گرفته و متن را درک و تولید می‌کند.</td></tr>
+<tr><td>چت‌بات</td><td><span dir="ltr">Chatbot</span></td><td>برنامه‌ای که با آن پیام ردوبدل می‌کنیم و معمولاً پاسخ یک‌مرحله‌ای می‌دهد.</td></tr>
+<tr><td>ایجنت هوش مصنوعی</td><td><span dir="ltr">AI Agent</span></td><td>برنامه‌ای که می‌تواند چند گام را برای رسیدن به یک هدف (Task) دنبال کند.</td></tr>
+<tr><td>پرامپت / دستور</td><td><span dir="ltr">Prompt</span></td><td>متن یا دستورالعملی که به ایجنت می‌دهیم تا هدف را بفهمد.</td></tr>
+<tr><td>ابزار</td><td><span dir="ltr">Tool</span></td><td>قابلیتی مثل جست‌وجوی وب، خواندن فایل یا اجرای کد که ایجنت از آن استفاده می‌کند.</td></tr>
+<tr><td>حافظه و زمینه</td><td><span dir="ltr">Memory & Context</span></td><td>اطلاعاتی که برنامه برای ادامه‌ی کار یا یادآوری در گفت‌وگو نگه می‌دارد.</td></tr>
+<tr><td>نظارت انسانی</td><td><span dir="ltr">Human-in-the-Loop (HITL)</span></td><td>حضورسنجی و تایید انسان در نقاط تصمیم‌گیری حساس کار.</td></tr>
+</tbody>
+</table>
+</section>
+
+<section class="slide" data-notes="این نمونه‌های کاربردی روزمره را با مخاطبان مرور کنید.">
+<h2>نمونه‌های روزمره از هوش مصنوعی در زندگی ما</h2>
+<div class="cols3">
+<div class="card"><div class="icon">🗣️</div><h3>دستیار صوتی (Voice Assistant)</h3><p>وقتی از گوشی می‌پرسید «هوا چطور است؟» یا زنگ ساعت می‌گذارید.</p></div>
+<div class="card"><div class="icon">✍️</div><h3>تایپ هوشمند (Autocomplete)</h3><p>پیشنهاد کلمه‌ی بعدی یا اصلاح غلط املایی در نرم‌افزارهای نوشتن.</p></div>
+<div class="card"><div class="icon">🌐</div><h3>ترجمه ماشینی (Machine Translation)</h3><p>ترجمه‌ی آنی صفحات وب انگلیسی و سایر زبان‌ها به فارسی.</p></div>
+<div class="card"><div class="icon">💬</div><h3>پشتیبانی تلفنی/چت (Support Bot)</h3><p>پاسخ‌گویی به پرسش‌های متداول مشتریان در وب‌سایت‌ها.</p></div>
+<div class="card"><div class="icon">📸</div><h3>تشخیص متن (OCR)</h3><p>خوانش متن از روی عکس اسناد یا کتاب‌ها و تبدیل آن به متن قابل ویرایش.</p></div>
+<div class="card"><div class="icon">📬</div><h3>فیلتر اسپم (Spam Filter)</h3><p>تشخیص و جداسازی ایمیل‌ها و پیام‌های مشکوک یا تبلیغاتی.</p></div>
+</div>
+</section>
+
+<section class="slide" data-notes="تفاوت اصلی بین چت‌بات و ایجنت را پررنگ کنید.">
+<h2>تفاوت چت‌بات (Chatbot) و ایجنت هوش مصنوعی (AI Agent)</h2>
+<div class="cols2">
+<div class="card"><div class="icon">💬</div><h3>چت‌بات (Chatbot)</h3><p>شما می‌پرسید، او پاسخ می‌دهد. کار در یک مرحله (Single-step) تمام می‌شود. اگر نیاز به جست‌وجو یا پردازش بعدی باشد، باید خودتان آن را انجام دهید.</p></div>
+<div class="card"><div class="icon">🧩</div><h3>ایجنت (AI Agent)</h3><p>شما یک هدف (Goal/Task) تعریف می‌کنید. ایجنت آن را به چند گام تقسیم کرده، ابزار مناسب (مثل مرورگر یا فایل) را فرا می‌خواند و کار را پیش می‌برد.</p></div>
+</div>
+<p class="warning">نکته برای کاربران فارسی‌زبان: مدل‌های زبانی فارسی در ایجنت‌ها نیازمند دستورالعمل‌های دقیق‌تر (Clear Prompts) برای جلوگیری از سوءتعبیر هستند.</p>
+</section>
+
+<section class="slide" data-notes="معماری ایجنت را توضیح دهید.">
+<h2>اجزای اصلی یک ایجنت هوش مصنوعی چیست؟</h2>
+<div class="cols3">
+<div class="card"><div class="icon">🧠</div><h3>مدل پایه (LLM Brain)</h3><p>مغز متفکر ایجنت که بر پایه مدل‌های بزرگ زبانی (مثل GPT یا Claude) کار می‌کند و استدلال (Reasoning) ارائه می‌دهد.</p></div>
+<div class="card"><div class="icon">🛠️</div><h3>ابزارها (Tools)</h3><p>ماشین‌حساب، جست‌وجوی وب، اجرای کد، فایل‌خوان یا APIها که دسترسی ایجنت به جهان بیرون را ممکن می‌سازند.</p></div>
+<div class="card"><div class="icon">📚</div><h3>حافظه (Memory)</h3><p>حافظه کوتاه‌مدت (Context Window) برای ادامه گفت‌وگو و حافظه بلندمدت (Vector Store / RAG) برای بازیابی اسناد.</p></div>
+</div>
+</section>
+
+<section class="slide" data-notes="چرخه کار ایجنت را گام به گام بگویید.">
+<h2>چرخه اقدام ایجنت: از پرامپت (Prompt) تا خروجی</h2>
+<div class="loop">
+<div class="step">۱. دریافت کار (Task)</div><div class="arrow">←</div>
+<div class="step">۲. استدلال و برنامه‌ریزی (Planning)</div><div class="arrow">←</div>
+<div class="step">۳. فراخوانی ابزار (Tool Use)</div><div class="arrow">←</div>
+<div class="step">۴. ارزیابی پاسخ</div><div class="arrow">←</div>
+<div class="step loop-back">۵. اصلاح یا ارائه خروجی</div>
+</div>
+<p>در تمام این مسیر، باید مشخص شود آیا انسان نقش ناظر را دارد یا ایجنت کاملاً مستقل عمل می‌کند.</p>
+</section>
+
+<section class="slide" data-notes="سطوح خودمختاری را باز کنید.">
+<h2>سطوح خودمختاری (Autonomy Levels) در ایجنت‌ها</h2>
+<div class="autonomy">
+<div class="aut-level l1"><h3>۱. فقط پیشنهاد</h3><p>ایجنت پیش‌نویس می‌سازد، تمام اقدام‌ها توسط انسان انجام می‌شود.</p></div>
+<div class="aut-level l2"><h3>۲. تایید گام‌به‌گام</h3><p>ایجنت پیش می‌رود اما قبل از هر ابزار، از انسان اجازه می‌گیرد.</p></div>
+<div class="aut-level l3"><h3>۳. توقف در نقاط حساس</h3><p>کارهای عادی را خودکار انجام می‌دهد اما برای تغییرات مهم متوقف می‌شود.</p></div>
+<div class="aut-level l4"><h3>۴. خودمختاری کامل</h3><p>ایجنت بدون دخالت انسان تمام کار را تا انتها اجرا می‌کند.</p></div>
+</div>
+<p class="warning">توصیه مهم: برای کاربران تازه‌کار و فرایندهای فارسی، همواره از سطح ۱ یا ۲ استفاده کنید.</p>
+</section>
+
+<section class="slide" data-notes="جمع‌بندی ماژول ۱">
+<h2>جمع‌بندی ماژول ۱</h2>
+<ul class="big-list">
+<li>ایجنت (AI Agent) فراتر از چت‌بات است و توانایی برنامه‌ریزی و استفاده از ابزارها را دارد.</li>
+<li>مدل زبانی (LLM)، ابزارها (Tools)، و حافظه (Memory) ارکان اصلی ایجنت هستند.</li>
+<li>برای جلوگیری از خطای توهم مدل (Hallucination)، نظارت انسانی (HITL) ضروری است.</li>
+</ul>
+</section>
+
+</main>
+
+<div class="nav">
+  <a href="index.html">🏠 فهرست اصلی</a>
+  <button type="button" data-act="prev">→ قبلی</button>
+  <button type="button" data-act="next">بعدی ←</button>
+</div>
+<div class="counter"></div>
+
+<script>
+(function () {
+  "use strict";
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var current = 0;
+  if (slides.length === 0) return;
+
+  var h = parseInt((location.hash || "").replace("#", ""), 10);
+  if (!isNaN(h) && h >= 1 && h <= slides.length) current = h - 1;
+
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+
+  function show(i) {
+    current = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach(function (s, idx) { s.classList.toggle("active", idx === current); });
+    document.querySelector(".counter").textContent = pad(current + 1) + " / " + pad(slides.length);
+    document.getElementById("progress").style.width = ((current + 1) / slides.length) * 100 + "%";
+    location.hash = "#" + (current + 1);
+  }
+
+  function next() { show(current + 1); }
+  function prev() { show(current - 1); }
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowLeft" || e.key === " ") { e.preventDefault(); next(); }
+    else if (e.key === "ArrowRight") { e.preventDefault(); prev(); }
+  });
+
+  document.querySelector('.nav').addEventListener("click", function (e) {
+    var act = e.target && e.target.getAttribute("data-act");
+    if (act === "next") next();
+    if (act === "prev") prev();
+  });
+
+  show(current);
+})();
+</script>
+</body>
+</html>

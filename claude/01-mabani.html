@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ماژول ۱ — ایجنت هوش مصنوعی چیست؟</title>
+<style>
+/* قالب مشترک اسلایدها — ایجنت‌های هوش مصنوعی برای کنشگران */
+
+:root {
+  --bg: #0a1117;
+  --bg2: #111c24;
+  --panel: #15232c;
+  --ink: #f0f4ed;
+  --muted: #adbdba;
+  --accent: #f2b35f;
+  --accent2: #81d6bd;
+  --warn: #ffd080;
+  --danger: #ff8791;
+  --line: #2b4147;
+  --shadow: 0 18px 50px rgba(0, 0, 0, .22);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background:
+    radial-gradient(ellipse at 10% 5%, rgba(129, 214, 189, .08), transparent 32rem),
+    radial-gradient(ellipse at 95% 95%, rgba(242, 179, 95, .07), transparent 35rem),
+    var(--bg);
+  color: var(--ink);
+  font-family: Vazirmatn, "Vazirmatn UI", "Segoe UI", Tahoma, Arial, sans-serif;
+  direction: rtl;
+}
+
+/* ===== نوار پیشرفت ===== */
+#progress {
+  position: fixed;
+  top: 0; right: 0;
+  height: 5px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent2), var(--accent));
+  z-index: 50;
+  transition: width .3s ease;
+  box-shadow: 0 0 18px rgba(129, 214, 189, .35);
+}
+
+/* ===== دک اسلاید ===== */
+.deck { height: 100%; }
+.slide {
+  display: none;
+  position: absolute;
+  inset: 0;
+  padding: clamp(2.5rem, 6vh, 4.5rem) clamp(1.5rem, 7vw, 7rem) 4.5rem;
+  overflow: auto;
+  scrollbar-color: var(--line) transparent;
+  animation: slide-in .35s ease both;
+}
+.slide.active { display: block; }
+
+.slide h1 { max-width: 17ch; font-size: clamp(2.25rem, 5vw, 4.5rem); line-height: 1.3; margin: .3rem 0; letter-spacing: -.035em; }
+.slide h2 { max-width: 27ch; font-size: clamp(1.6rem, 3vw, 2.55rem); color: var(--accent); margin: 0 0 1.2rem; line-height: 1.45; letter-spacing: -.02em; }
+.slide h3 { font-size: 1.15rem; margin: .4rem 0; }
+.slide p, .slide li { font-size: clamp(1rem, 1.3vw, 1.2rem); line-height: 1.9; }
+.subtitle { font-size: clamp(1.1rem, 2vw, 1.5rem); color: var(--accent2); margin: 0 0 1rem; }
+.meta { color: var(--muted); font-size: .95rem; margin-bottom: 1rem; }
+.hero { font-size: 4.5rem; margin: 1.2rem 0; filter: drop-shadow(0 12px 25px rgba(242, 179, 95, .16)); }
+.small { color: var(--muted); font-size: .98rem; }
+.question {
+  margin-top: 1.2rem;
+  padding: .8rem 1.1rem;
+  background: linear-gradient(110deg, rgba(129,214,189,.13), rgba(129,214,189,.035));
+  border-inline-start: 4px solid var(--accent2);
+  border-radius: 4px 14px 14px 4px;
+}
+.warning {
+  margin-top: 1rem;
+  padding: .7rem 1rem;
+  background: rgba(255,196,107,.09);
+  border-inline-start: 4px solid var(--warn);
+  border-radius: 4px 14px 14px 4px;
+}
+.story-slide blockquote.inject {
+  background: rgba(255,122,144,.1);
+  border: 1px dashed var(--danger);
+  padding: .8rem 1.1rem;
+  border-radius: 4px 14px 14px 4px;
+  font-size: 1.1rem;
+}
+
+.slide:first-of-type {
+  display: none;
+  align-content: center;
+  background:
+    radial-gradient(ellipse at 15% 48%, rgba(129,214,189,.13), transparent 35%),
+    radial-gradient(ellipse at 88% 20%, rgba(242,179,95,.12), transparent 28%),
+    linear-gradient(135deg, rgba(255,255,255,.018), transparent 55%);
+}
+.slide:first-of-type.active { display: grid; }
+.slide:first-of-type::after {
+  content: "";
+  position: absolute;
+  inset-block: 15%;
+  inset-inline-end: clamp(1.5rem, 5vw, 5rem);
+  width: 3px;
+  background: linear-gradient(transparent, var(--accent), var(--accent2), transparent);
+  opacity: .75;
+}
+.slide:first-of-type .hero { margin-block: .4rem 0; font-size: clamp(3rem, 7vw, 6rem); }
+
+/* ===== لیست‌ها ===== */
+.big-list li { margin-bottom: .7rem; }
+.checklist { list-style: none; padding: 0; }
+.checklist li {
+  padding: .55rem .9rem;
+  margin-bottom: .5rem;
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.checklist li::before { content: "□  "; color: var(--accent); }
+
+/* ===== کارت‌ها ===== */
+.cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.cols3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.card {
+  background: linear-gradient(145deg, rgba(255,255,255,.035), transparent 60%), var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 1.1rem 1.2rem;
+  box-shadow: var(--shadow);
+  transition: transform .2s ease, border-color .2s ease;
+}
+.card:hover { transform: translateY(-3px); border-color: rgba(129,214,189,.55); }
+.card .icon { font-size: 2rem; }
+.card h3 { color: var(--accent2); line-height: 1.5; }
+.card p { font-size: 1rem; color: var(--ink); margin: .3rem 0 0; }
+
+/* ===== جدول مقایسه ===== */
+table.compare {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+table.compare th, table.compare td {
+  border: 1px solid var(--line);
+  padding: .7rem .9rem;
+  text-align: right;
+  font-size: clamp(.92rem, 1.15vw, 1.08rem);
+  line-height: 1.75;
+}
+table.compare th { background: var(--panel); color: var(--accent2); }
+table.compare tr:nth-child(even) td { background: rgba(255,255,255,.018); }
+table.compare td.danger { color: var(--danger); font-weight: 700; }
+
+/* ===== قواعد کلاس ===== */
+.rule {
+  display: flex; gap: 1rem; align-items: center;
+  background: linear-gradient(110deg, rgba(255,255,255,.035), transparent 70%), var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: .9rem 1.1rem;
+  margin-bottom: .9rem;
+}
+.rule-num {
+  min-width: 2.4rem; height: 2.4rem;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent);
+  color: #0b1020;
+  font-weight: 800;
+  border-radius: 50%;
+  font-size: 1.2rem;
+}
+.rule-body { font-size: 1.15rem; }
+
+/* ===== حلقه / زنجیره ===== */
+.loop { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin: 1rem 0; }
+.loop .step {
+  background: linear-gradient(135deg, rgba(242,179,95,.09), transparent 70%), var(--panel);
+  border: 1px solid var(--accent);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: .5rem 1.1rem;
+  font-size: 1.05rem;
+}
+.loop .step.loop-back { border-color: var(--accent2); color: var(--accent2); }
+.loop .arrow { color: var(--muted); }
+.chain { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin: 1rem 0; }
+.chain span {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: .5rem .9rem;
+  font-size: 1rem;
+}
+
+/* ===== سطوح خودمختاری ===== */
+.autonomy { display: grid; grid-template-columns: repeat(4, 1fr); gap: .8rem; margin: 1rem 0; }
+.aut-level { border-radius: 12px; padding: .9rem; border: 1px solid var(--line); }
+.aut-level h3 { margin: 0 0 .3rem; }
+.aut-level p { font-size: .95rem; margin: 0; color: var(--muted); }
+.aut-level.l1 { background: rgba(126,226,184,.12); }
+.aut-level.l2 { background: rgba(77,163,255,.12); }
+.aut-level.l3 { background: rgba(255,196,107,.12); }
+.aut-level.l4 { background: rgba(255,122,144,.12); }
+.aut-level.l4 h3 { color: var(--danger); }
+.rule-of-thumb {
+  margin-top: 1rem;
+  padding: .7rem 1rem;
+  background: rgba(77,163,255,.1);
+  border-inline-start: 4px solid var(--accent);
+  border-radius: 8px;
+}
+
+/* ===== ترازو ===== */
+.balance { display: flex; align-items: center; gap: 1rem; margin: 1.2rem 0; flex-wrap: wrap; }
+.balance .pan {
+  flex: 1 1 260px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: .9rem 1rem;
+  font-size: 1.05rem;
+}
+.balance .fulcrum { font-size: 2rem; }
+
+/* ===== پرامپت / اجزا ===== */
+.prompt-parts { display: flex; flex-direction: column; gap: .7rem; margin: 1rem 0; }
+.prompt-parts .part {
+  display: flex; gap: .9rem; align-items: flex-start;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: .7rem .9rem;
+}
+.prompt-parts .letter {
+  min-width: 2.2rem; height: 2.2rem;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent2);
+  color: #0b1020;
+  font-weight: 800;
+  border-radius: 8px;
+  font-size: 1.1rem;
+}
+.prompt-parts .part p { margin: .2rem 0 0; font-size: 1rem; color: var(--muted); }
+
+/* ===== تمرین‌ها ===== */
+.exercise {
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-inline-start: 4px solid var(--accent2);
+  border-radius: 10px;
+  padding: .8rem 1.1rem;
+  margin-bottom: .9rem;
+}
+.exercise h3 { margin: 0 0 .3rem; color: var(--accent2); }
+.exercise p { margin: .2rem 0; font-size: 1.05rem; }
+
+/* ===== کد ===== */
+pre.codebox {
+  background: #080f14;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  font-family: Vazirmatn, Tahoma, monospace;
+  font-size: clamp(.9rem, 1.15vw, 1.05rem);
+  line-height: 1.9;
+  white-space: pre-wrap;
+  direction: rtl;
+  text-align: right;
+}
+
+code { background: var(--bg2); padding: .1rem .4rem; border-radius: 6px; direction: ltr; unicode-bidi: embed; }
+
+/* ===== ناوبری ===== */
+.nav {
+  position: fixed;
+  bottom: 1rem;
+  inset-inline-start: 1rem;
+  display: flex;
+  gap: .5rem;
+  z-index: 40;
+}
+.nav button {
+  background: rgba(21, 35, 44, .94);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: .4rem .8rem;
+  font-family: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.nav button:hover { border-color: var(--accent); }
+.nav button:focus-visible { outline: 2px solid var(--accent2); outline-offset: 3px; }
+.counter {
+  position: fixed;
+  bottom: 1.15rem;
+  inset-inline-end: 1.2rem;
+  color: var(--muted);
+  font-size: .95rem;
+  z-index: 40;
+}
+
+/* ===== حالت مدرس ===== */
+.notes {
+  display: none;
+  position: fixed;
+  inset-block-start: 0; inset-inline-end: 0;
+  width: 340px;
+  max-height: 100%;
+  overflow: auto;
+  background: #0b1020;
+  border-inline-start: 1px solid var(--line);
+  padding: 1rem 1.1rem;
+  font-size: .95rem;
+  color: var(--muted);
+  z-index: 60;
+  line-height: 1.8;
+}
+body.presenter .notes { display: block; }
+body.presenter .slide { padding-inline-end: 380px; }
+
+@keyframes slide-in {
+  from { opacity: .5; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 760px) {
+  .slide { padding: 2.6rem 1.2rem 4.5rem; }
+  .cols2, .cols3, .autonomy { grid-template-columns: 1fr; }
+  .balance { align-items: stretch; }
+  .balance .pan { flex-basis: 100%; }
+  .balance .fulcrum { text-align: center; }
+  .slide h1 { max-width: 100%; }
+  .nav { bottom: .55rem; inset-inline-start: .55rem; }
+  .nav button { padding: .35rem .6rem; font-size: .9rem; }
+  .counter { bottom: .75rem; inset-inline-end: .65rem; font-size: .8rem; }
+  body.presenter .slide { padding-inline-end: 1.2rem; }
+  .notes { width: min(88vw, 340px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+/* ===== چاپ ===== */
+@media print {
+  html, body { height: auto; background: #fff; color: #172126; }
+  .slide { display: block !important; position: relative; page-break-after: always; padding: 2rem; background: #fff; color: #172126; }
+  .slide h2, .card h3 { color: #286d5c; }
+  .card, .exercise, .rule, .checklist li { background: #fff; color: #172126; box-shadow: none; }
+  .card p, .slide p, .slide li { color: #172126; }
+  #progress, .nav, .counter, .notes { display: none !important; }
+}
+
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<main class="deck">
+<section class="slide" data-notes="به شرکت‌کنندگان خوش‌آمد بگویید. بگویید در این دوره قرار نیست ابزار خاصی را تبلیغ کنیم یا کسی را از استفاده بترسانیم؛ می‌خواهیم بفهمیم این ابزارها چه می‌کنند و کجا باید خودمان تصمیم بگیریم.">
+<h1>ایجنت‌های هوش مصنوعی: از گفت‌وگو تا انجام کار</h1>
+<p class="subtitle">ماژول ۱ — آشنایی با مفهوم، توانایی‌ها و مرزها</p>
+<div class="meta">برای همه، حتی بدون پیش‌زمینه‌ی فنی · ۱۱۵ دقیقه</div>
+<div class="hero">🧭</div>
+<p class="small">یک کارگاه گفت‌وگومحور؛ با مثال‌های ساختگی و قابل‌آزمودن</p>
+</section>
+<section class="slide" data-notes="این واژه‌ها را با زبان ساده مرور کنید. لازم نیست همه را حفظ کنند؛ هدف این است که وقتی در دوره یا متن انگلیسی می‌بینند، معنی کلی را بشناسند. درباره‌ی هوش مصنوعی تأکید کنید که ابزارها توانایی‌ها و محدودیت‌های متفاوتی دارند.">
+<h2>اصطلاحات ضروری: فارسی و انگلیسی</h2>
+<table class="compare">
+<thead><tr><th>واژه</th><th>اصطلاح انگلیسی</th><th>به زبان ساده</th></tr></thead>
+<tbody>
+<tr><td>هوش مصنوعی</td><td><span dir="ltr">Artificial Intelligence (AI)</span></td><td>برنامه‌هایی که کارهایی مثل فهم متن، پاسخ‌دادن یا ساختن تصویر انجام می‌دهند.</td></tr>
+<tr><td>مدل زبانی بزرگ</td><td><span dir="ltr">Large Language Model (LLM)</span></td><td>برنامه‌ای که از نمونه‌های بسیار متن، الگوهای زبان را یاد گرفته و بر پایه‌ی آن‌ها پاسخ می‌سازد.</td></tr>
+<tr><td>چت‌بات</td><td><span dir="ltr">Chatbot</span></td><td>برنامه‌ای که با آن پیام ردوبدل می‌کنیم و معمولاً به پرسش‌ها پاسخ می‌دهد.</td></tr>
+<tr><td>ایجنت هوش مصنوعی</td><td><span dir="ltr">AI Agent</span></td><td>برنامه‌ای که می‌تواند چند گام را برای رسیدن به یک هدف دنبال کند و گاهی از ابزارها کمک بگیرد.</td></tr>
+<tr><td>درخواست یا دستور</td><td><span dir="ltr">Prompt</span></td><td>متنی که به هوش مصنوعی می‌گوییم تا بداند چه کاری انجام دهد.</td></tr>
+<tr><td>ابزار</td><td><span dir="ltr">Tool</span></td><td>قابلیتی مثل جست‌وجوی وب، خواندن فایل یا فرستادن پیام که ایجنت ممکن است به آن دسترسی داشته باشد.</td></tr>
+<tr><td>حافظه</td><td><span dir="ltr">Memory</span></td><td>اطلاعاتی که برنامه برای ادامه‌ی کار یا یادآوری در گفت‌وگو نگه می‌دارد؛ شیوه‌ی نگهداری در هر سرویس فرق دارد.</td></tr>
+<tr><td>رابط برنامه‌نویسی</td><td><span dir="ltr">Application Programming Interface (API)</span></td><td>راهی که دو برنامه با آن اطلاعات ردوبدل می‌کنند.</td></tr>
+<tr><td>نظارت انسانی</td><td><span dir="ltr">Human-in-the-Loop (HITL)</span></td><td>یعنی انسان در بخش‌های مهم کار را بررسی یا تأیید می‌کند.</td></tr>
+</tbody>
+</table>
+<p class="small">در متن‌های انگلیسی ممکن است به‌جای «هوش مصنوعی» از <span dir="ltr">AI</span> و به‌جای «مدل زبانی بزرگ» از <span dir="ltr">LLM</span> استفاده شود.</p>
+</section>
+<section class="slide" data-notes="این اسلاید عمداً پیش از قاعده‌ها آمده تا مخاطبی که هرگز از این ابزارها استفاده نکرده، اول آن‌ها را در زندگی روزمره‌ی خودش پیدا کند. از هرکس بپرسید کدام مورد را قبلاً دیده یا استفاده کرده است؛ لازم نیست جزئیات شخصی بگویند.">
+<h2>این ابزارها را شاید بدون اسم «هوش مصنوعی» هم دیده باشیم</h2>
+<div class="cols3">
+<div class="card"><div class="icon">🗣️</div><h3>دستیار صوتی گوشی</h3><p>وقتی از گوشی می‌پرسید «هوا فردا چطور است؟» یا از آن می‌خواهید زنگ ساعت بگذارد، بخشی از همین فناوری در حال کار است.</p></div>
+<div class="card"><div class="icon">✍️</div><h3>پیشنهاد تایپ و اصلاح خط</h3><p>وقتی موبایل یا نرم‌افزار ویرایش متن، کلمه‌ی بعدی را حدس می‌زند یا غلط املایی را نشان می‌دهد، مدل زبانی ساده‌ای پشت آن است.</p></div>
+<div class="card"><div class="icon">🌐</div><h3>ترجمه‌ی آنی صفحه‌ی وب</h3><p>وقتی مرورگر خودش یک صفحه‌ی خارجی را به فارسی برمی‌گرداند، همان کاری را می‌کند که در این دوره درباره‌اش گفت‌وگو می‌کنیم.</p></div>
+<div class="card"><div class="icon">💬</div><h3>پشتیبانی آنلاین فروشگاه</h3><p>پنجره‌ی گفت‌وگوی «چطور می‌توانم کمکتان کنم؟» در بسیاری از وب‌سایت‌ها معمولاً یک چت‌بات است، نه لزوماً یک انسان.</p></div>
+<div class="card"><div class="icon">📸</div><h3>تشخیص متن از عکس</h3><p>برنامه‌هایی که از روی عکسِ یک برگه یا تابلو، متن را می‌خوانند و قابل کپی می‌کنند، از همین خانواده‌ی ابزارها هستند.</p></div>
+<div class="card"><div class="icon">📬</div><h3>دسته‌بندی ایمیل و پیام مزاحم</h3><p>وقتی سرویس ایمیل خودش تبلیغات یا پیام‌های مشکوک را جدا می‌کند، از یادگیری ماشین برای تشخیص الگو استفاده کرده است.</p></div>
+</div>
+<p class="small">هدف این ماژول این است که از این ابزارهای آشنا، به سمت ایجنت‌هایی برویم که می‌توانند چند کار پشت‌سرهم را برای ما انجام دهند — نه فقط یک پاسخ کوتاه بدهند.</p>
+</section>
+<section class="slide" data-notes="توافق را با گروه بخوانید. تأکید کنید هیچ‌کس مجبور نیست تجربه‌ی شخصی یا اطلاعات مربوط به کار و زندگی خود را تعریف کند.">
+<h2>پیش از شروع، بر سر سه چیز توافق کنیم</h2>
+<div class="rule"><div class="rule-num">۱</div><div class="rule-body"><strong>مثال‌ها ساختگی یا عمومی‌اند.</strong> در تمرین‌ها اطلاعات شخصی یا محرمانه وارد نمی‌کنیم.</div></div>
+<div class="rule"><div class="rule-num">۲</div><div class="rule-body"><strong>هرکس خودش انتخاب می‌کند چه بگوید.</strong> نام، تجربه یا جزئیات خصوصی لازم نیست.</div></div>
+<div class="rule"><div class="rule-num">۳</div><div class="rule-body"><strong>سؤال‌پرسیدن آزاد است.</strong> اگر پاسخ به دانسته‌های مدرس وابسته نیست، می‌گوییم چه چیزی را نمی‌دانیم و کجا باید بررسی کنیم.</div></div>
+</section>
+<section class="slide story-slide" data-notes="داستان را شمرده بخوانید. از مخاطبان بخواهید پیش از دیدن پاسخ، کارهایی را که باید انجام شود به ترتیب نام ببرند. روشن کنید انتشار نهایی در اختیار انسان است.">
+<h2>یک خبر، سه زبان، چند شکل انتشار</h2>
+<p>سارا ویراستار یک وب‌سایت خبری است. خبری عمومی را برای انتشار آماده می‌کند و می‌خواهد تا عصر نسخه‌های فارسی، انگلیسی و عربی آن آماده باشد.</p>
+<ul class="big-list">
+<li>اول باید متن را بفهمد و نکته‌های اصلی را جدا کند.</li>
+<li>بعد، خبر را به سه زبان برگرداند و اصطلاح‌ها و نام‌ها را دوباره بررسی کند.</li>
+<li>برای وب‌سایت نسخه‌ی کامل و برای شبکه‌ی اجتماعی نسخه‌ی کوتاه‌تری بنویسد.</li>
+<li>در پایان، متن‌ها را با منبع خبر مقایسه کند و خودش تصمیم بگیرد چه چیزی منتشر شود.</li>
+</ul>
+<p class="question"><strong>پرسش:</strong> کدام بخش را می‌توان به نرم‌افزار سپرد و کدام بخش هنوز به داوری سارا نیاز دارد؟</p>
+</section>
+<section class="slide" data-notes="فرق را به صورت پیوستار توضیح دهید. بعضی محصول‌ها ترکیبی هستند: متن می‌نویسند و چند ابزار محدود دارند. معیار، اختیار واقعی و تنظیمات است، نه نام روی محصول.">
+<h2>چت‌بات پاسخ می‌دهد؛ ایجنت می‌تواند کار را دنبال کند</h2>
+<div class="cols2">
+<div class="card"><div class="icon">💬</div><h3>گفت‌وگوی ساده</h3><p>سارا متن خبر را می‌دهد و می‌پرسد: «این را به انگلیسی ترجمه کن.» ابزار یک پاسخ می‌سازد؛ سارا مرحله‌ی بعد را خودش آغاز می‌کند.</p></div>
+<div class="card"><div class="icon">🧩</div><h3>ایجنت چندمرحله‌ای</h3><p>سارا هدف و محدودیت‌ها را توضیح می‌دهد. ابزار ممکن است متن را خلاصه کند، ترجمه‌ها را آماده کند و نسخه‌های کوتاه‌تر پیشنهاد دهد؛ برخی ایجنت‌ها می‌توانند از ابزارهای دیگر هم کمک بگیرند.</p></div>
+</div>
+<p class="warning">«ایجنت» همیشه به معنی نرم‌افزاری با اختیار کامل نیست. ببینید واقعاً به چه ابزارهایی وصل است و چه کارهایی اجازه‌ی اجرا دارد.</p>
+</section>
+<section class="slide" data-notes="هر واژه را با مثال خبر توضیح دهید. در صورت نیاز بگویید «مدل» بخش تولیدکننده‌ی پاسخ است؛ به‌تنهایی نمی‌داند کدام خبر درست است.">
+<h2>یک ایجنت از چه چیزهایی ساخته می‌شود؟</h2>
+<div class="cols3">
+<div class="card"><div class="icon">🧠</div><h3>مدل</h3><p>متن را می‌خواند و بر اساس آنچه آموخته، پاسخ یا پیشنهاد می‌سازد. ممکن است اشتباه کند یا بخشی از متن را بد بفهمد.</p></div>
+<div class="card"><div class="icon">🛠️</div><h3>ابزار</h3><p>مرورگر، فایل، فرهنگ لغت یا سامانه‌ی انتشار می‌تواند در انجام کار به ایجنت کمک کند. هر اتصال، توانایی و مسئولیت تازه‌ای می‌آورد.</p></div>
+<div class="card"><div class="icon">📚</div><h3>زمینه و حافظه</h3><p>دستورها، متن‌های ورودی و گاهی تاریخچه یا فایل‌های مرجع به پاسخ شکل می‌دهند. باید بدانیم چه چیزهایی ذخیره می‌شوند.</p></div>
+</div>
+<p class="small">کاربر هم بخشی از این چرخه است: او هدف را تعیین می‌کند، دسترسی می‌دهد و تصمیم می‌گیرد چه چیزی را بپذیرد.</p>
+</section>
+<section class="slide" data-notes="داستان را روی تخته به پنج مرحله تقسیم کنید. در هر مرحله بپرسید خطا چه شکلی دارد و آیا انسان پیش از مرحله‌ی بعد می‌تواند آن را ببیند.">
+<h2>ایجنت چگونه از درخواست به نتیجه می‌رسد؟</h2>
+<div class="loop">
+<div class="step">هدف: سه نسخه‌ی خبری</div><div class="arrow">←</div>
+<div class="step">برنامه: خلاصه، ترجمه، ویرایش</div><div class="arrow">←</div>
+<div class="step">اقدام: خواندن یا نوشتن</div><div class="arrow">←</div>
+<div class="step">بازبینی نتیجه</div><div class="arrow">←</div>
+<div class="step loop-back">اصلاح یا پایان</div>
+</div>
+<p>اگر نام یک خیابان در ترجمه اشتباه شود، همان اشتباه ممکن است در نسخه‌ی کوتاه شبکه‌ی اجتماعی هم تکرار شود. دیدن نتیجه‌ی هر مرحله فرصت اصلاح می‌دهد.</p>
+<p class="question"><strong>مکث کن:</strong> پیش از انتشار، در کدام مرحله باید سارا متن را دوباره با منبع مقایسه کند؟</p>
+</section>
+<section class="slide" data-notes="مثال‌ها را از کم‌خطر به پرپیامد بخوانید. این سطح‌بندی آموزشی است، نه دسته‌بندی رسمی یا تضمین ایمنی.">
+<h2>چه‌قدر اختیار (Autonomy) به ایجنت بدهیم؟</h2>
+<div class="autonomy">
+<div class="aut-level l1"><h3>۱ · پیشنهاد بدهد</h3><p>پیش‌نویس را سارا می‌گیرد، بررسی و خودش اجرا می‌کند.</p></div>
+<div class="aut-level l2"><h3>۲ · با اجازه پیش برود</h3><p>ایجنت هر مرحله را نشان می‌دهد و برای ادامه اجازه می‌گیرد.</p></div>
+<div class="aut-level l3"><h3>۳ · در نقاط مشخص مکث کند</h3><p>چند کار کم‌خطر را انجام می‌دهد، اما پیش از انتشار متوقف می‌شود.</p></div>
+<div class="aut-level l4"><h3>۴ · خودش اقدام کند</h3><p>می‌تواند تا پایان کار برود؛ خطا هم ممکن است به بیرون برسد.</p></div>
+</div>
+<p class="rule-of-thumb"><strong>برای شروع:</strong> از پیشنهاد و پیش‌نویس آغاز کنید. انتشار، حذف یا ارسال را فقط با بررسی و اجازه‌ی روشن انجام دهید.</p>
+</section>
+<section class="slide" data-notes="روان‌بودن پاسخ را با درست‌بودن اشتباه نگیرید. از شرکت‌کنندگان بخواهید نمونه‌ای بی‌خطر از اطمینان کاذب یا ترجمه‌ی دوپهلو تصور کنند.">
+<h2>پاسخ روان، لزوماً پاسخ درست نیست</h2>
+<div class="cols3">
+<div class="card"><h3>ممکن است چیزی بسازد</h3><p>نام منبع یا عددی را که در متن نیامده با لحنی مطمئن اضافه کند.</p></div>
+<div class="card"><h3>ممکن است نکته‌ای را جا بیندازد</h3><p>واژه‌ی «هنوز» یا «گزارش‌شده» را در ترجمه حذف کند و معنی خبر را عوض کند.</p></div>
+<div class="card"><h3>ممکن است لحن را بد منتقل کند</h3><p>عبارت محترمانه یا طنز را در زبان دیگر تند یا گمراه‌کننده ترجمه کند.</p></div>
+</div>
+<p class="warning">از ایجنت بخواهید بگوید به کدام بخش منبع تکیه کرده؛ بعد، همان بخش را خودتان بخوانید.</p>
+</section>
+<section class="slide" data-notes="تمرین کاغذی است. از افراد بخواهید سه نقطه‌ی نیازمند نظارت را مشخص کنند؛ هیچ متن شخصی یا خبری حساس لازم نیست.">
+<h2>تمرین: نقشه‌ی کار سارا</h2>
+<div class="exercise"><h3>گام اول · کارها را مرتب کنید</h3><p>خلاصه‌کردن، ترجمه‌ی سه زبان، نوشتن کپشن و انتشار را به ترتیب روی کاغذ بنویسید.</p></div>
+<div class="exercise"><h3>گام دوم · نقطه‌های بررسی را علامت بزنید</h3><p>کجا باید متن اصلی، اسم‌ها، تاریخ و عددها با نسخه‌های ترجمه‌شده مقایسه شوند؟</p></div>
+<div class="exercise"><h3>گام سوم · اختیار انتشار را روشن کنید</h3><p>چه کسی نسخه‌ی وب‌سایت یا شبکه‌ی اجتماعی را تأیید می‌کند؟ آیا ایجنت اجازه‌ی انتشار دارد؟ چرا؟</p></div>
+</section>
+<section class="slide" data-notes="این فهرست را با صدای بلند بخوانید و از هر نفر بخواهید یک مورد را به کار روزمره‌ی خودش (کار، خانه یا تحصیل) ربط بدهد. تأکید کنید فهرست دوم به‌معنی «ممنوع» نیست، بلکه به‌معنی «با دقت بیشتر و بازبینی انسانی» است.">
+<h2>برای شروع، از چه کارهای روزمره‌ای کمک بگیریم؟</h2>
+<div class="cols2">
+<div class="card"><div class="icon">✅</div><h3>نقطه‌ی خوب برای شروع</h3><p>خلاصه‌کردن یک متن بلند، پیش‌نویس اولیه‌ی ایمیل یا پیام، ترجمه‌ی آزمایشی، تمیزکردن نوشته از غلط املایی، تبدیل یادداشت پراکنده به فهرست کارها، توضیح یک واژه یا سند اداری، و پیشنهاد چند عنوان یا ایده برای یک متن.</p></div>
+<div class="card"><div class="icon">⚠️</div><h3>نیاز به دقت و بازبینی بیشتر</h3><p>هر متنی که قرار است به‌جای ما یا با نام ما منتشر شود، هر تصمیمی درباره‌ی پول یا قرارداد، هر چیزی که شامل اطلاعات شخصی دیگران است، و هر پاسخی که مبنای یک تصمیم مهم قرار می‌گیرد.</p></div>
+</div>
+<p class="small">قاعده‌ی ساده: هرچه اشتباه در آن کار «دیرتر دیده می‌شود» یا «دامنه‌ی بیشتری» دارد، بیشتر باید آن را با چشم خودمان بررسی کنیم — نه اینکه اصلاً از ابزار استفاده نکنیم.</p>
+</section>
+<section class="slide" data-notes="جمع‌بندی را به داستان آغازین وصل کنید. از داوطلبان بخواهید یک جمله بگویند که تفاوت «پیشنهاد» و «اقدام» را بیان کند.">
+<h2>آنچه در این ماژول یاد گرفتیم</h2>
+<ul class="big-list">
+<li>ایجنت می‌تواند چند مرحله را دنبال کند؛ میزان اختیارش به ابزار و تنظیمات بستگی دارد.</li>
+<li>مدل، ابزار، زمینه و حافظه هرکدام در نتیجه نقش دارند.</li>
+<li>هرچه اقدام پرپیامدتر باشد، باید روشن‌تر و زودتر آن را انسان بررسی کند.</li>
+<li>پاسخ خوش‌خوان به‌تنهایی مدرک درستی نیست؛ منبع را ببینیم.</li>
+</ul>
+<p class="question">برای ماژول بعد، سارا چه کارهای دیگری می‌تواند انجام دهد و چه چیزهایی را نباید بی‌بررسی بسپارد؟</p>
+</section>
+</main>
+
+<script>
+// موتور ساده اسلاید — ایجنت‌های هوش مصنوعی برای کنشگران
+// کنترل: فلش راست/چپ یا Space، F تمام‌صفحه، Esc فهرست، P حالت مدرس
+
+(function () {
+  "use strict";
+
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var current = 0;
+  var presenter = false;
+  var notesBox = null;
+
+  if (slides.length === 0) return;
+
+  // شماره اولیه از هش (#3)
+  var h = parseInt((location.hash || "").replace("#", ""), 10);
+  if (!isNaN(h) && h >= 1 && h <= slides.length) current = h - 1;
+
+  // ناوبری پایین صفحه
+  var nav = document.createElement("div");
+  nav.className = "nav";
+  nav.innerHTML =
+    '<button type="button" data-act="next" title="بعدی (فلش چپ)">بعدی ←</button>' +
+    '<button type="button" data-act="prev" title="قبلی (فلش راست)">→ قبلی</button>';
+  document.body.appendChild(nav);
+
+  var counter = document.createElement("div");
+  counter.className = "counter";
+  document.body.appendChild(counter);
+
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+
+  function show(i) {
+    current = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach(function (s, idx) {
+      s.classList.toggle("active", idx === current);
+    });
+    counter.textContent = pad(current + 1) + " / " + pad(slides.length);
+    document.getElementById("progress").style.width =
+      ((current + 1) / slides.length) * 100 + "%";
+    location.hash = "#" + (current + 1);
+    if (presenter && notesBox) {
+      var n = slides[current].getAttribute("data-notes") || "—";
+      notesBox.textContent = n;
+    }
+  }
+
+  // جعبه یادداشت مدرس
+  function togglePresenter() {
+    presenter = !presenter;
+    document.body.classList.toggle("presenter", presenter);
+    if (presenter) {
+      notesBox = document.createElement("div");
+      notesBox.className = "notes";
+      notesBox.title = "یادداشت‌های مدرس — با P ببندید";
+      document.body.appendChild(notesBox);
+    } else if (notesBox) {
+      notesBox.remove();
+      notesBox = null;
+    }
+    show(current);
+  }
+
+  // نمای فهرست
+  function toggleOverview() {
+    var any = document.body.classList.toggle("overview");
+    if (any) {
+      slides.forEach(function (s, idx) {
+        s.classList.add("active");
+        s.style.display = "block";
+        s.style.position = "relative";
+        s.style.minHeight = "140px";
+        s.style.padding = "1rem 2rem";
+        s.style.borderBottom = "1px solid #2a3854";
+        s.style.cursor = "pointer";
+        s.onclick = function () {
+          clearOverview();
+          show(idx);
+        };
+      });
+      counter.textContent = "فهرست — برای انتخاب کلیک کنید";
+    } else {
+      clearOverview();
+      show(current);
+    }
+  }
+
+  function clearOverview() {
+    document.body.classList.remove("overview");
+    slides.forEach(function (s) {
+      s.style.display = "";
+      s.style.position = "";
+      s.style.minHeight = "";
+      s.style.padding = "";
+      s.style.borderBottom = "";
+      s.style.cursor = "";
+      s.onclick = null;
+    });
+  }
+
+  function next() { show(current + 1); }
+  function prev() { show(current - 1); }
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowLeft" || e.key === " " || e.key === "PageDown") {
+      e.preventDefault(); next();
+    } else if (e.key === "ArrowRight" || e.key === "PageUp") {
+      e.preventDefault(); prev();
+    } else if (e.key === "ArrowDown") { e.preventDefault(); next(); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); prev(); }
+    else if (e.key === "Home") { e.preventDefault(); show(0); }
+    else if (e.key === "End") { e.preventDefault(); show(slides.length - 1); }
+    else if (e.key === "f" || e.key === "F") {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    } else if (e.key === "p" || e.key === "P") {
+      togglePresenter();
+    } else if (e.key === "Escape") {
+      toggleOverview();
+    }
+  });
+
+  // کلیک روی دکمه‌های ناوبری
+  nav.addEventListener("click", function (e) {
+    var act = e.target && e.target.getAttribute("data-act");
+    if (act === "next") next();
+    if (act === "prev") prev();
+  });
+
+  // لمس (اسوایپ) برای تبلت
+  var touchX = null;
+  document.addEventListener("touchstart", function (e) {
+    touchX = e.touches[0].clientX;
+  }, { passive: true });
+  document.addEventListener("touchend", function (e) {
+    if (touchX === null) return;
+    var dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 50) { dx > 0 ? prev() : next(); }
+    touchX = null;
+  }, { passive: true });
+
+  window.addEventListener("hashchange", function () {
+    var h = parseInt((location.hash || "").replace("#", ""), 10);
+    if (!isNaN(h) && h >= 1 && h <= slides.length && h - 1 !== current) show(h - 1);
+  });
+
+  show(current);
+})();
+
+</script>
+</body>
+</html>

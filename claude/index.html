@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>فهرست اسلایدها — ایجنت‌های هوش مصنوعی</title>
+<style>
+/* قالب مشترک اسلایدها — ایجنت‌های هوش مصنوعی برای کنشگران */
+
+:root {
+  --bg: #0f1420;
+  --bg2: #171f30;
+  --panel: #1c2740;
+  --ink: #e8eefc;
+  --muted: #9fb0d0;
+  --accent: #4da3ff;
+  --accent2: #7ee2b8;
+  --warn: #ffc46b;
+  --danger: #ff7a90;
+  --line: #2a3854;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Vazirmatn, "Vazirmatn UI", "Segoe UI", Tahoma, Arial, sans-serif;
+  direction: rtl;
+}
+
+/* ===== نوار پیشرفت ===== */
+#progress {
+  position: fixed;
+  top: 0; right: 0;
+  height: 4px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent2), var(--accent));
+  z-index: 50;
+  transition: width .25s ease;
+}
+
+/* ===== دک اسلاید ===== */
+.deck { height: 100%; }
+.slide {
+  display: none;
+  position: absolute;
+  inset: 0;
+  padding: 4rem 4.5rem 3.5rem;
+  overflow: auto;
+}
+.slide.active { display: block; }
+
+.slide h1 { font-size: 2.6rem; line-height: 1.35; margin: .3rem 0; }
+.slide h2 { font-size: 2rem; color: var(--accent); margin: 0 0 1.2rem; }
+.slide h3 { font-size: 1.15rem; margin: .4rem 0; }
+.slide p, .slide li { font-size: 1.12rem; line-height: 1.9; }
+.subtitle { font-size: 1.35rem; color: var(--accent2); margin: 0 0 1rem; }
+.meta { color: var(--muted); font-size: 1rem; margin-bottom: 1rem; }
+.hero { font-size: 4.5rem; margin: 1.2rem 0; }
+.small { color: var(--muted); font-size: .98rem; }
+.question {
+  margin-top: 1.2rem;
+  padding: .8rem 1.1rem;
+  background: rgba(126,226,184,.08);
+  border-inline-start: 4px solid var(--accent2);
+  border-radius: 8px;
+}
+.warning {
+  margin-top: 1rem;
+  padding: .7rem 1rem;
+  background: rgba(255,196,107,.09);
+  border-inline-start: 4px solid var(--warn);
+  border-radius: 8px;
+}
+.story-slide blockquote.inject {
+  background: rgba(255,122,144,.1);
+  border: 1px dashed var(--danger);
+  padding: .8rem 1.1rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+}
+
+/* ===== لیست‌ها ===== */
+.big-list li { margin-bottom: .7rem; }
+.checklist { list-style: none; padding: 0; }
+.checklist li {
+  padding: .55rem .9rem;
+  margin-bottom: .5rem;
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.checklist li::before { content: "☐  "; color: var(--accent); }
+
+/* ===== کارت‌ها ===== */
+.cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.cols3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+}
+.card .icon { font-size: 2rem; }
+.card h3 { color: var(--accent2); }
+.card p { font-size: 1rem; color: var(--ink); margin: .3rem 0 0; }
+
+/* ===== جدول مقایسه ===== */
+table.compare {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+table.compare th, table.compare td {
+  border: 1px solid var(--line);
+  padding: .6rem .9rem;
+  text-align: right;
+  font-size: 1.05rem;
+}
+table.compare th { background: var(--panel); color: var(--accent2); }
+table.compare td.danger { color: var(--danger); font-weight: 700; }
+
+/* ===== قواعد کلاس ===== */
+.rule {
+  display: flex; gap: 1rem; align-items: center;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: .9rem 1.1rem;
+  margin-bottom: .9rem;
+}
+.rule-num {
+  min-width: 2.4rem; height: 2.4rem;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent);
+  color: #0b1020;
+  font-weight: 800;
+  border-radius: 50%;
+  font-size: 1.2rem;
+}
+.rule-body { font-size: 1.15rem; }
+
+/* ===== حلقه / زنجیره ===== */
+.loop { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin: 1rem 0; }
+.loop .step {
+  background: var(--panel);
+  border: 1px solid var(--accent);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: .5rem 1.1rem;
+  font-size: 1.05rem;
+}
+.loop .step.loop-back { border-color: var(--accent2); color: var(--accent2); }
+.loop .arrow { color: var(--muted); }
+.chain { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin: 1rem 0; }
+.chain span {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: .5rem .9rem;
+  font-size: 1rem;
+}
+
+/* ===== سطوح خودمختاری ===== */
+.autonomy { display: grid; grid-template-columns: repeat(4, 1fr); gap: .8rem; margin: 1rem 0; }
+.aut-level { border-radius: 12px; padding: .9rem; border: 1px solid var(--line); }
+.aut-level h3 { margin: 0 0 .3rem; }
+.aut-level p { font-size: .95rem; margin: 0; color: var(--muted); }
+.aut-level.l1 { background: rgba(126,226,184,.12); }
+.aut-level.l2 { background: rgba(77,163,255,.12); }
+.aut-level.l3 { background: rgba(255,196,107,.12); }
+.aut-level.l4 { background: rgba(255,122,144,.12); }
+.aut-level.l4 h3 { color: var(--danger); }
+.rule-of-thumb {
+  margin-top: 1rem;
+  padding: .7rem 1rem;
+  background: rgba(77,163,255,.1);
+  border-inline-start: 4px solid var(--accent);
+  border-radius: 8px;
+}
+
+/* ===== ترازو ===== */
+.balance { display: flex; align-items: center; gap: 1rem; margin: 1.2rem 0; flex-wrap: wrap; }
+.balance .pan {
+  flex: 1 1 260px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: .9rem 1rem;
+  font-size: 1.05rem;
+}
+.balance .fulcrum { font-size: 2rem; }
+
+/* ===== پرامپت / اجزا ===== */
+.prompt-parts { display: flex; flex-direction: column; gap: .7rem; margin: 1rem 0; }
+.prompt-parts .part {
+  display: flex; gap: .9rem; align-items: flex-start;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: .7rem .9rem;
+}
+.prompt-parts .letter {
+  min-width: 2.2rem; height: 2.2rem;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent2);
+  color: #0b1020;
+  font-weight: 800;
+  border-radius: 8px;
+  font-size: 1.1rem;
+}
+.prompt-parts .part p { margin: .2rem 0 0; font-size: 1rem; color: var(--muted); }
+
+/* ===== تمرین‌ها ===== */
+.exercise {
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-inline-start: 4px solid var(--accent2);
+  border-radius: 10px;
+  padding: .8rem 1.1rem;
+  margin-bottom: .9rem;
+}
+.exercise h3 { margin: 0 0 .3rem; color: var(--accent2); }
+.exercise p { margin: .2rem 0; font-size: 1.05rem; }
+
+/* ===== کد ===== */
+pre.codebox {
+  background: #0b1020;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  font-family: Vazirmatn, Tahoma, monospace;
+  font-size: 1.02rem;
+  line-height: 1.9;
+  white-space: pre-wrap;
+  direction: rtl;
+  text-align: right;
+}
+
+code { background: var(--bg2); padding: .1rem .4rem; border-radius: 6px; direction: ltr; unicode-bidi: embed; }
+
+/* ===== ناوبری ===== */
+.nav {
+  position: fixed;
+  bottom: 1rem;
+  inset-inline-start: 1rem;
+  display: flex;
+  gap: .5rem;
+  z-index: 40;
+}
+.nav button {
+  background: var(--panel);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: .4rem .8rem;
+  font-family: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.nav button:hover { border-color: var(--accent); }
+.counter {
+  position: fixed;
+  bottom: 1.15rem;
+  inset-inline-end: 1.2rem;
+  color: var(--muted);
+  font-size: .95rem;
+  z-index: 40;
+}
+
+/* ===== حالت مدرس ===== */
+.notes {
+  display: none;
+  position: fixed;
+  inset-block-start: 0; inset-inline-end: 0;
+  width: 340px;
+  max-height: 100%;
+  overflow: auto;
+  background: #0b1020;
+  border-inline-start: 1px solid var(--line);
+  padding: 1rem 1.1rem;
+  font-size: .95rem;
+  color: var(--muted);
+  z-index: 60;
+  line-height: 1.8;
+}
+body.presenter .notes { display: block; }
+body.presenter .slide { padding-inline-end: 380px; }
+
+/* ===== چاپ ===== */
+@media print {
+  .slide { display: block; position: relative; page-break-after: always; padding: 2rem; }
+  #progress, .nav, .counter, .notes { display: none !important; }
+}
+
+</style>
+<style>
+  :root {
+    --bg: #0a1117;
+    --bg2: #111c24;
+    --panel: #15232c;
+    --ink: #f0f4ed;
+    --muted: #adbdba;
+    --accent: #f2b35f;
+    --accent2: #81d6bd;
+    --warn: #ffd080;
+    --danger: #ff8791;
+    --line: #2b4147;
+  }
+  * { box-sizing: border-box; }
+  html { min-height: 100%; }
+  body {
+    min-height: 100%;
+    background:
+      radial-gradient(ellipse at 10% 5%, rgba(129,214,189,.08), transparent 32rem),
+      radial-gradient(ellipse at 95% 95%, rgba(242,179,95,.07), transparent 35rem),
+      var(--bg);
+  }
+  .toc { max-width: 900px; margin: 0 auto; padding: 3rem 2rem; }
+  .toc h1 { color: var(--ink); font-size: clamp(2.3rem, 6vw, 4.2rem); line-height: 1.35; letter-spacing: -.04em; }
+  .toc > .subtitle { display: inline-block; padding: .45rem .85rem; border: 1px solid var(--line); border-radius: 999px; background: rgba(129,214,189,.07); }
+  .toc-list { list-style: none; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; }
+  .toc-list li {
+    background: linear-gradient(145deg, rgba(255,255,255,.035), transparent 60%), var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 1.1rem 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-height: 94px;
+    box-shadow: 0 18px 50px rgba(0,0,0,.18);
+    transition: transform .2s ease, border-color .2s ease;
+  }
+  .toc-list li:hover { transform: translateY(-3px); border-color: var(--accent2); }
+  .toc-list a { color: var(--ink); text-decoration: none; font-size: 1.08rem; font-weight: 700; }
+  .toc-list a:hover { color: var(--accent2); }
+  .toc-list .num {
+    min-width: 2.8rem; height: 2.8rem;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(242,179,95,.13);
+    color: var(--accent);
+    font-weight: 800;
+    border: 1px solid rgba(242,179,95,.38);
+    border-radius: 12px;
+    font-size: 1.2rem;
+  }
+  .toc-list .desc { color: var(--muted); font-size: .95rem; display: block; margin-top: .2rem; }
+  .toc-note { margin-top: 2rem; padding: 1rem 1.3rem; border: 1px solid var(--line); border-radius: 16px; background: rgba(17,28,36,.7); }
+  .toc-note p { line-height: 1.9; }
+  .toc-intro { max-width: 70ch; color: var(--muted); font-size: 1.08rem; line-height: 2; }
+  .toc-points { display: flex; flex-wrap: wrap; gap: .55rem; margin: 1.2rem 0 1.8rem; }
+  .toc-points span { border: 1px solid var(--line); border-radius: 999px; padding: .35rem .75rem; color: var(--accent2); background: rgba(129,214,189,.05); }
+  @media (max-width: 680px) {
+    .toc { padding: 2rem 1rem; }
+    .toc-list { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="toc">
+  <h1>ایجنت‌های هوش مصنوعی و روش کار با آن‌ها</h1>
+  <p class="subtitle">دوره‌ی کارگاهی در ۸ بخش · حدود ۱۶ ساعت یادگیری و تمرین</p>
+  <p class="toc-intro">در این دوره با ایجنت‌های هوش مصنوعی و روش کار با آن‌ها آشنا می‌شویم. مزایا و محدودیت‌ها، بایدها و نبایدهای استفاده از آن‌ها را با مثال یاد می‌گیریم. واژه‌های مهم فارسی و انگلیسی را هم می‌شناسیم تا بتوانیم نوشته‌های انگلیسی درباره‌ی هوش مصنوعی را بهتر بخوانیم. برای نمونه، تمرین می‌کنیم یک خبر را به سه زبان برای وب‌سایت یا شبکه‌های اجتماعی آماده کنیم.</p>
+  <div class="toc-points"><span>بدون نیاز به دانش فنی</span><span>به زبان فارسی و قابل اجرا بدون اینترنت</span><span>تمرین با نمونه‌های ساختگی</span><span>یادگیری همراه با توجه به خطرها</span></div>
+  <ul class="toc-list">
+    <li><span class="num">۱</span><div><a href="01-mabani.html">ایجنت چیست و چطور کار می‌کند؟</a><span class="desc">آشنایی با بخش‌های ایجنت، نمونه‌های آشنای روزمره و کارهایی که می‌تواند انجام دهد · ۱۱۵ دقیقه</span></div></li>
+    <li><span class="num">۲</span><div><a href="02-karborda.html">از ایجنت چه کمکی بگیریم؟</a><span class="desc">انتخاب کار، نوشتن درخواست، کاربردهای شخصی روزمره و بررسی پاسخ · ۱۱۵ دقیقه</span></div></li>
+    <li><span class="num">۳</span><div><a href="03-abzar.html">چطور ابزار مناسب را انتخاب کنیم؟</a><span class="desc">آشنایی با انواع رایج ابزار، بررسی امکانات، هزینه، اطلاعات شخصی و راه‌های دیگر · ۸۵ دقیقه</span></div></li>
+    <li><span class="num">۴</span><div><a href="04-harimi-omumi.html">چطور از اطلاعاتمان مراقبت کنیم؟</a><span class="desc">چه اطلاعاتی بدهیم، چه چیزهایی هرگز ندهیم و چه کسی آن‌ها را می‌بیند · ۱۶۰ دقیقه</span></div></li>
+    <li><span class="num">۵</span><div><a href="05-khatarat.html">چه وقت ایجنت ممکن است اشتباه کند؟</a><span class="desc">آشنایی با فریب‌ها، کلاه‌برداری‌های رایج روزمره و راه بررسی آن‌ها · ۱۱۵ دقیقه</span></div></li>
+    <li><span class="num">۶</span><div><a href="06-behdasht-amniati.html">چطور از حساب‌ها و دستگاه‌ها مراقبت کنیم؟</a><span class="desc">رمزها، ورود دومرحله‌ای گام‌به‌گام، پیام‌های مشکوک و کار وقت گم‌شدن دستگاه · ۱۱۵ دقیقه</span></div></li>
+    <li><span class="num">۷</span><div><a href="07-kargah-amali.html">با هم یک ایجنت ساده را می‌سازیم و امتحان می‌کنیم</a><span class="desc">ساخت یک راهنمای پرسش‌وپاسخ، نسخه‌ی روزمره‌ی بدون کدنویسی و پیدا کردن خطاها · ۱۵۵ دقیقه</span></div></li>
+    <li><span class="num">۸</span><div><a href="08-jam-bandi.html">مرور آموخته‌ها و انتخاب قدم بعدی</a><span class="desc">چه چیزهایی یاد گرفتیم، ده کار کوچک برای هفته‌ی اول و از این به بعد چه کنیم؟ · ۱۱۰ دقیقه</span></div></li>
+  </ul>
+  <div class="toc-note">
+    <p><strong>در پایان دوره:</strong> می‌دانیم چه کارهایی را می‌توان به ایجنت سپرد، چه اطلاعاتی نباید به آن داد و چطور جواب‌هایش را پیش از استفاده بررسی کنیم.</p>
+    <p class="small">کنترل‌ها در هر دک: <strong>← / →</strong> حرکت · <strong>F</strong> تمام‌صفحه · <strong>Esc</strong> فهرست · <strong>P</strong> حالت مدرس (یادداشت‌های سخنران)</p>
+    <p class="small">متن کامل ماژول‌ها در پوشه‌ی <code>modules/</code> و برگه‌های تمرین در <code>handouts/</code> است.</p>
+    <p class="small">فایل‌های اسلاید برای نمایش آفلاین آماده‌اند؛ استفاده از ابزارهای برخط در تمرین اختیاری است.</p>
+  </div>
+</div>
+</body>
+</html>

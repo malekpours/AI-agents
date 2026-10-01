@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ماژول ۴ — حریم خصوصی و داده</title>
+<style>
+/* قالب مشترک اسلایدها — ایجنت‌های هوش مصنوعی برای کنشگران */
+
+:root {
+  --bg: #0a1117;
+  --bg2: #111c24;
+  --panel: #15232c;
+  --ink: #f0f4ed;
+  --muted: #adbdba;
+  --accent: #f2b35f;
+  --accent2: #81d6bd;
+  --warn: #ffd080;
+  --danger: #ff8791;
+  --line: #2b4147;
+  --shadow: 0 18px 50px rgba(0, 0, 0, .22);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background:
+    radial-gradient(ellipse at 10% 5%, rgba(129, 214, 189, .08), transparent 32rem),
+    radial-gradient(ellipse at 95% 95%, rgba(242, 179, 95, .07), transparent 35rem),
+    var(--bg);
+  color: var(--ink);
+  font-family: Vazirmatn, "Vazirmatn UI", "Segoe UI", Tahoma, Arial, sans-serif;
+  direction: rtl;
+}
+
+/* ===== نوار پیشرفت ===== */
+#progress {
+  position: fixed;
+  top: 0; right: 0;
+  height: 5px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent2), var(--accent));
+  z-index: 50;
+  transition: width .3s ease;
+  box-shadow: 0 0 18px rgba(129, 214, 189, .35);
+}
+
+/* ===== دک اسلاید ===== */
+.deck { height: 100%; }
+.slide {
+  display: none;
+  position: absolute;
+  inset: 0;
+  padding: clamp(2.5rem, 6vh, 4.5rem) clamp(1.5rem, 7vw, 7rem) 4.5rem;
+  overflow: auto;
+  scrollbar-color: var(--line) transparent;
+  animation: slide-in .35s ease both;
+}
+.slide.active { display: block; }
+
+.slide h1 { max-width: 17ch; font-size: clamp(2.25rem, 5vw, 4.5rem); line-height: 1.3; margin: .3rem 0; letter-spacing: -.035em; }
+.slide h2 { max-width: 27ch; font-size: clamp(1.6rem, 3vw, 2.55rem); color: var(--accent); margin: 0 0 1.2rem; line-height: 1.45; letter-spacing: -.02em; }
+.slide h3 { font-size: 1.15rem; margin: .4rem 0; }
+.slide p, .slide li { font-size: clamp(1rem, 1.3vw, 1.2rem); line-height: 1.9; }
+.subtitle { font-size: clamp(1.1rem, 2vw, 1.5rem); color: var(--accent2); margin: 0 0 1rem; }
+.meta { color: var(--muted); font-size: .95rem; margin-bottom: 1rem; }
+.hero { font-size: 4.5rem; margin: 1.2rem 0; filter: drop-shadow(0 12px 25px rgba(242, 179, 95, .16)); }
+.small { color: var(--muted); font-size: .98rem; }
+.question {
+  margin-top: 1.2rem;
+  padding: .8rem 1.1rem;
+  background: linear-gradient(110deg, rgba(129,214,189,.13), rgba(129,214,189,.035));
+  border-inline-start: 4px solid var(--accent2);
+  border-radius: 4px 14px 14px 4px;
+}
+.warning {
+  margin-top: 1rem;
+  padding: .7rem 1rem;
+  background: rgba(255,196,107,.09);
+  border-inline-start: 4px solid var(--warn);
+  border-radius: 4px 14px 14px 4px;
+}
+.story-slide blockquote.inject {
+  background: rgba(255,122,144,.1);
+  border: 1px dashed var(--danger);
+  padding: .8rem 1.1rem;
+  border-radius: 4px 14px 14px 4px;
+  font-size: 1.1rem;
+}
+
+.slide:first-of-type {
+  display: none;
+  align-content: center;
+  background:
+    radial-gradient(ellipse at 15% 48%, rgba(129,214,189,.13), transparent 35%),
+    radial-gradient(ellipse at 88% 20%, rgba(242,179,95,.12), transparent 28%),
+    linear-gradient(135deg, rgba(255,255,255,.018), transparent 55%);
+}
+.slide:first-of-type.active { display: grid; }
+.slide:first-of-type::after {
+  content: "";
+  position: absolute;
+  inset-block: 15%;
+  inset-inline-end: clamp(1.5rem, 5vw, 5rem);
+  width: 3px;
+  background: linear-gradient(transparent, var(--accent), var(--accent2), transparent);
+  opacity: .75;
+}
+.slide:first-of-type .hero { margin-block: .4rem 0; font-size: clamp(3rem, 7vw, 6rem); }
+
+/* ===== لیست‌ها ===== */
+.big-list li { margin-bottom: .7rem; }
+.checklist { list-style: none; padding: 0; }
+.checklist li {
+  padding: .55rem .9rem;
+  margin-bottom: .5rem;
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.checklist li::before { content: "□  "; color: var(--accent); }
+
+/* ===== کارت‌ها ===== */
+.cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.cols3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.card {
+  background: linear-gradient(145deg, rgba(255,255,255,.035), transparent 60%), var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 1.1rem 1.2rem;
+  box-shadow: var(--shadow);
+  transition: transform .2s ease, border-color .2s ease;
+}
+.card:hover { transform: translateY(-3px); border-color: rgba(129,214,189,.55); }
+.card .icon { font-size: 2rem; }
+.card h3 { color: var(--accent2); line-height: 1.5; }
+.card p { font-size: 1rem; color: var(--ink); margin: .3rem 0 0; }
+
+/* ===== جدول مقایسه ===== */
+table.compare {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+table.compare th, table.compare td {
+  border: 1px solid var(--line);
+  padding: .7rem .9rem;
+  text-align: right;
+  font-size: clamp(.92rem, 1.15vw, 1.08rem);
+  line-height: 1.75;
+}
+table.compare th { background: var(--panel); color: var(--accent2); }
+table.compare tr:nth-child(even) td { background: rgba(255,255,255,.018); }
+table.compare td.danger { color: var(--danger); font-weight: 700; }
+
+/* ===== قواعد کلاس ===== */
+.rule {
+  display: flex; gap: 1rem; align-items: center;
+  background: linear-gradient(110deg, rgba(255,255,255,.035), transparent 70%), var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: .9rem 1.1rem;
+  margin-bottom: .9rem;
+}
+.rule-num {
+  min-width: 2.4rem; height: 2.4rem;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent);
+  color: #0b1020;
+  font-weight: 800;
+  border-radius: 50%;
+  font-size: 1.2rem;
+}
+.rule-body { font-size: 1.15rem; }
+
+/* ===== حلقه / زنجیره ===== */
+.loop { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin: 1rem 0; }
+.loop .step {
+  background: linear-gradient(135deg, rgba(242,179,95,.09), transparent 70%), var(--panel);
+  border: 1px solid var(--accent);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: .5rem 1.1rem;
+  font-size: 1.05rem;
+}
+.loop .step.loop-back { border-color: var(--accent2); color: var(--accent2); }
+.loop .arrow { color: var(--muted); }
+.chain { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin: 1rem 0; }
+.chain span {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: .5rem .9rem;
+  font-size: 1rem;
+}
+
+/* ===== سطوح خودمختاری ===== */
+.autonomy { display: grid; grid-template-columns: repeat(4, 1fr); gap: .8rem; margin: 1rem 0; }
+.aut-level { border-radius: 12px; padding: .9rem; border: 1px solid var(--line); }
+.aut-level h3 { margin: 0 0 .3rem; }
+.aut-level p { font-size: .95rem; margin: 0; color: var(--muted); }
+.aut-level.l1 { background: rgba(126,226,184,.12); }
+.aut-level.l2 { background: rgba(77,163,255,.12); }
+.aut-level.l3 { background: rgba(255,196,107,.12); }
+.aut-level.l4 { background: rgba(255,122,144,.12); }
+.aut-level.l4 h3 { color: var(--danger); }
+.rule-of-thumb {
+  margin-top: 1rem;
+  padding: .7rem 1rem;
+  background: rgba(77,163,255,.1);
+  border-inline-start: 4px solid var(--accent);
+  border-radius: 8px;
+}
+
+/* ===== ترازو ===== */
+.balance { display: flex; align-items: center; gap: 1rem; margin: 1.2rem 0; flex-wrap: wrap; }
+.balance .pan {
+  flex: 1 1 260px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: .9rem 1rem;
+  font-size: 1.05rem;
+}
+.balance .fulcrum { font-size: 2rem; }
+
+/* ===== پرامپت / اجزا ===== */
+.prompt-parts { display: flex; flex-direction: column; gap: .7rem; margin: 1rem 0; }
+.prompt-parts .part {
+  display: flex; gap: .9rem; align-items: flex-start;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: .7rem .9rem;
+}
+.prompt-parts .letter {
+  min-width: 2.2rem; height: 2.2rem;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent2);
+  color: #0b1020;
+  font-weight: 800;
+  border-radius: 8px;
+  font-size: 1.1rem;
+}
+.prompt-parts .part p { margin: .2rem 0 0; font-size: 1rem; color: var(--muted); }
+
+/* ===== تمرین‌ها ===== */
+.exercise {
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-inline-start: 4px solid var(--accent2);
+  border-radius: 10px;
+  padding: .8rem 1.1rem;
+  margin-bottom: .9rem;
+}
+.exercise h3 { margin: 0 0 .3rem; color: var(--accent2); }
+.exercise p { margin: .2rem 0; font-size: 1.05rem; }
+
+/* ===== کد ===== */
+pre.codebox {
+  background: #080f14;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  font-family: Vazirmatn, Tahoma, monospace;
+  font-size: clamp(.9rem, 1.15vw, 1.05rem);
+  line-height: 1.9;
+  white-space: pre-wrap;
+  direction: rtl;
+  text-align: right;
+}
+
+code { background: var(--bg2); padding: .1rem .4rem; border-radius: 6px; direction: ltr; unicode-bidi: embed; }
+
+/* ===== ناوبری ===== */
+.nav {
+  position: fixed;
+  bottom: 1rem;
+  inset-inline-start: 1rem;
+  display: flex;
+  gap: .5rem;
+  z-index: 40;
+}
+.nav button {
+  background: rgba(21, 35, 44, .94);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: .4rem .8rem;
+  font-family: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.nav button:hover { border-color: var(--accent); }
+.nav button:focus-visible { outline: 2px solid var(--accent2); outline-offset: 3px; }
+.counter {
+  position: fixed;
+  bottom: 1.15rem;
+  inset-inline-end: 1.2rem;
+  color: var(--muted);
+  font-size: .95rem;
+  z-index: 40;
+}
+
+/* ===== حالت مدرس ===== */
+.notes {
+  display: none;
+  position: fixed;
+  inset-block-start: 0; inset-inline-end: 0;
+  width: 340px;
+  max-height: 100%;
+  overflow: auto;
+  background: #0b1020;
+  border-inline-start: 1px solid var(--line);
+  padding: 1rem 1.1rem;
+  font-size: .95rem;
+  color: var(--muted);
+  z-index: 60;
+  line-height: 1.8;
+}
+body.presenter .notes { display: block; }
+body.presenter .slide { padding-inline-end: 380px; }
+
+@keyframes slide-in {
+  from { opacity: .5; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 760px) {
+  .slide { padding: 2.6rem 1.2rem 4.5rem; }
+  .cols2, .cols3, .autonomy { grid-template-columns: 1fr; }
+  .balance { align-items: stretch; }
+  .balance .pan { flex-basis: 100%; }
+  .balance .fulcrum { text-align: center; }
+  .slide h1 { max-width: 100%; }
+  .nav { bottom: .55rem; inset-inline-start: .55rem; }
+  .nav button { padding: .35rem .6rem; font-size: .9rem; }
+  .counter { bottom: .75rem; inset-inline-end: .65rem; font-size: .8rem; }
+  body.presenter .slide { padding-inline-end: 1.2rem; }
+  .notes { width: min(88vw, 340px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+/* ===== چاپ ===== */
+@media print {
+  html, body { height: auto; background: #fff; color: #172126; }
+  .slide { display: block !important; position: relative; page-break-after: always; padding: 2rem; background: #fff; color: #172126; }
+  .slide h2, .card h3 { color: #286d5c; }
+  .card, .exercise, .rule, .checklist li { background: #fff; color: #172126; box-shadow: none; }
+  .card p, .slide p, .slide li { color: #172126; }
+  #progress, .nav, .counter, .notes { display: none !important; }
+}
+
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<main class="deck">
+<section class="slide" data-notes="این بخش را با آرامش و بدون ترساندن شروع کنید. هدف این نیست که هرگونه استفاده از ابزار را رد کنیم؛ هدف این است که پیش از فرستادن، درباره‌ی داده و ریسک آن تصمیم بگیریم.">
+<h1>حریم خصوصی (Privacy): پیش از فرستادن متن، مسیرش را بشناسیم</h1>
+<p class="subtitle">ماژول ۴ — حریم خصوصی، نگهداری و انتخاب آگاهانه</p>
+<div class="meta">پیش‌نیاز: ماژول ۳ · ۱۶۰ دقیقه</div>
+<div class="hero">🔐</div>
+</section>
+<section class="slide story-slide" data-notes="این روایت را به‌عنوان سناریوی آموزشی معرفی کنید، نه حادثه‌ی واقعی. بپرسید چه کاری می‌شد پیش از بارگذاری انجام داد.">
+<h2>یک جدول را می‌شد با اطلاعات کمتری ساخت (Data Minimization)</h2>
+<p>کامران برای مرتب‌کردن گزارش‌ها، پرونده‌ای را به یک ابزار اینترنتی می‌دهد. در پرونده نام، شماره‌ی تماس و نشانی چند نفر هم هست؛ اما برای ساختن جدول، این جزئیات لازم نیست.</p>
+<ul class="big-list">
+<li>کار سریع انجام می‌شود و جدول مرتب است.</li>
+<li>بعدتر، کامران می‌فهمد که پیش از بارگذاری، سیاست نگهداری و حذف فایل را نخوانده بوده.</li>
+<li>حالا باید مشخص کند چه داده‌ای فرستاده، کجا نگهداری می‌شود و آیا لازم است کسی را از این موضوع باخبر کند.</li>
+</ul>
+<p class="question"><strong>پرسش:</strong> چطور می‌توانست همان جدول را با اطلاعات کمتر بسازد؟</p>
+</section>
+<section class="slide" data-notes="زنجیره را با مثال فایل خبر توضیح دهید. برای واسطه‌ی شبکه، میان فراداده و محتوای رمزگذاری‌شده فرق بگذارید. از ادعاهای یکسان برای همه‌ی سرویس‌ها بپرهیزید.">
+<h2>فایل چه مسیری را طی می‌کند؟</h2>
+<div class="chain"><span>رایانه یا تلفن</span> → <span>اتصال اینترنت</span> → <span>سرویس ابزار</span> → <span>پردازش فایل</span> → <span>احتمال نگهداری</span> → <span>تاریخچه یا خروجی</span></div>
+<div class="cols2">
+<div class="card"><h3>چیزی که باید بررسی کنیم</h3><p>چه فایلی فرستاده شده، سرویس چه مدت آن را نگه می‌دارد، چه کسانی دسترسی دارند و آیا برای بهبود خدمات استفاده می‌شود؟</p></div>
+<div class="card"><h3>چیزی که نباید فرض کنیم</h3><p>فقط از نام ابزار نمی‌توان فهمید داده ذخیره می‌شود یا نه. تنظیمات، قرارداد و سیاست جاری را پیدا کنید.</p></div>
+</div>
+<p class="small">فراداده (Metadata) یعنی اطلاعاتی درباره‌ی خود اتصال، مثل زمان و اندازه‌ی فایل. واسط اینترنتی ممکن است این‌ها را ببیند؛ رمزگذاری (Encryption) معمولاً محتوای پیام را از واسطه پنهان می‌کند.</p>
+</section>
+<section class="slide" data-notes="چراغ راهنما یک ابزار گفت‌وگوی گروهی است، نه گواه حقوقی. یک متن می‌تواند با کنار هم گذاشتن چند جزئیات هم فردی را شناسایی کند.">
+<h2>سه رنگ برای گفت‌وگو درباره‌ی داده (Data Classification)</h2>
+<div class="cols3">
+<div class="card"><div class="icon">🟢</div><h3>عمومی</h3><p>متنی که برای انتشار آماده شده و جزئیات شخصیِ ناخواسته ندارد. باز هم منبع و حق استفاده را بررسی کنید.</p></div>
+<div class="card"><div class="icon">🟡</div><h3>داخلی</h3><p>نوشته یا گزارشی که هنوز منتشر نشده است. اگر بیرون برود شاید برای نویسنده یا کارش پیامد داشته باشد.</p></div>
+<div class="card"><div class="icon">🔴</div><h3>اطلاعات شناسایی‌کننده (Personally Identifiable Information, PII)</h3><p>مثل نام و نشانی، سوابق فردی، اطلاعات تماس یا هر جزئیاتی که افشایش ممکن است به کسی آسیب بزند.</p></div>
+</div>
+<p class="question">وقتی مطمئن نیستیم، اطلاعات را عمومی فرض نکنیم؛ اول از مسئول آن بپرسیم.</p>
+</section>
+<section class="slide" data-notes="این اسلاید را مستقیم به کارهای شخصی روزمره وصل کنید، نه فقط به کار خبری. از هرکس بخواهید یک نمونه از تجربه‌ی خودش (بدون گفتن جزئیات واقعی) به یاد بیاورد که ممکن بود این قاعده را زیر پا بگذارد.">
+<h2>در گفت‌وگوی روزمره با دستیار هوش مصنوعی، این‌ها را ننویسیم</h2>
+<div class="cols2">
+<div class="card"><div class="icon">🆔</div><h3>هویت و مدارک</h3><p>کد ملی، شماره‌ی شناسنامه، عکس کارت شناسایی یا رمز عبور را برای «کمک‌گرفتن» در گفت‌وگو تایپ نکنید.</p></div>
+<div class="card"><div class="icon">💳</div><h3>اطلاعات مالی</h3><p>شماره‌ی کارت بانکی، رمز دوم یا موجودی حساب را حتی برای مثال هم وارد نکنید؛ برای پرسش درباره‌ی «چطور بودجه‌بندی کنم» عدد ساختگی کافی است.</p></div>
+<div class="card"><div class="icon">🩺</div><h3>سوابق پزشکی کامل</h3><p>برای فهمیدن یک اصطلاح پزشکی، خودِ اصطلاح را بپرسید؛ لازم نیست کل پرونده یا آزمایش را بارگذاری کنید.</p></div>
+<div class="card"><div class="icon">👪</div><h3>اطلاعات دیگران</h3><p>پیام خصوصی، شماره‌تماس یا نشانی یک دوست یا همکار را بدون اجازه‌ی او در گفت‌وگو کپی نکنید.</p></div>
+</div>
+<p class="warning">قاعده‌ی ساده برای زندگی روزمره: اگر چیزی را برای یک غریبه‌ی پشت تلفن نمی‌گفتید، برای یک سرویس هوش مصنوعیِ عمومی هم ننویسید.</p>
+</section>
+<section class="slide" data-notes="مثال را از یک خبر کوچک بسازید: اگر متن فقط می‌گوید «یک پزشک در شهر کوچک در روز خاص»، ممکن است اطرافیان حدس بزنند منظور کیست.">
+<h2>حذف نام، همیشه به معنی بی‌نام‌سازی (Anonymization) نیست</h2>
+<div class="balance">
+<div class="pan">شغل کم‌یاب</div><div class="pan">محله یا شهر کوچک</div><div class="pan">روز و رویداد مشخص</div>
+</div>
+<p>هر جزء به‌تنهایی شاید چیزی را آشکار نکند. کنار هم، ممکن است خواننده‌ای که محل را می‌شناسد فرد را حدس بزند.</p>
+<div class="cols2">
+<div class="card"><h3>پیش از فرستادن</h3><p>نام، تلفن، نشانی و شماره‌ی پرونده را بردارید. بعد سراغ جزئیات کم‌یاب و تاریخ‌های دقیق بروید.</p></div>
+<div class="card"><h3>پس از جایگزینی</h3><p>با یک همکار که ماجرا را از قبل می‌داند مرور کنید: آیا هنوز می‌شود حدس زد فرد کیست؟</p></div>
+</div>
+</section>
+<section class="slide" data-notes="نمونه‌ها را همراه با راه جایگزین بگویید. از بیان «همه‌ی ابزارها داده را برای آموزش ذخیره می‌کنند» پرهیز کنید؛ نتیجه به محصول، حساب، تنظیمات و قرارداد بستگی دارد.">
+<h2>سه اشتباه رایج درباره‌ی فایل و گفت‌وگو</h2>
+<div class="cols3">
+<div class="card"><h3>«این فقط یک متن معمولی است»</h3><p>چند نشانه‌ی کوچک ممکن است کنار هم هویت یا برنامه‌ای را آشکار کنند.</p><p><strong>بهتر:</strong> پیش از بارگذاری، فقط بخش لازم را نگه دارید.</p></div>
+<div class="card"><h3>«گفت‌وگو را پاک کردم، پس همه‌چیز پاک شد»</h3><p>حذف از صفحه لزوماً به معنی حذف فوری همه‌ی نسخه‌ها نیست.</p><p><strong>بهتر:</strong> سیاست حذف و مدت نگهداری همان سرویس را بخوانید.</p></div>
+<div class="card"><h3>«هرچه بیشتر بداند بهتر جواب می‌دهد»</h3><p>فایل کامل شاید جزئیاتی داشته باشد که برای این کار لازم نیست.</p><p><strong>بهتر:</strong> با نمونه‌ی ساختگی یا خلاصه‌ی بی‌نام‌شده شروع کنید.</p></div>
+</div>
+</section>
+<section class="slide" data-notes="کمینه‌سازی را با پرونده‌ی دارای شماره‌ی تماس توضیح دهید. نام مستعار به تنهایی ناشناس‌سازی کامل نیست. کلید تبدیل کدها به هویت واقعی را کنار همان پرونده نگذارید.">
+<h2>پیش از بارگذاری، داده را کم کنید (Data Minimization)</h2>
+<div class="loop">
+<div class="step">آیا این بخش لازم است؟</div><div class="step">اگر نه، حذفش کن</div><div class="step">اگر بله، شناسه‌ها را بردار</div><div class="step">ترکیب جزئیات را دوباره ببین</div><div class="step loop-back">اگر شک داری، مکث کن</div>
+</div>
+<div class="cols2">
+<div class="card"><h3>مثال: ساخت جدول</h3><p>برای شمردن نظرها، معمولاً نام، شماره تماس و نشانی نویسنده لازم نیست؛ متن‌های ساختگی یا دسته‌بندی‌شده کافی‌اند.</p></div>
+<div class="card"><h3>جایگزینی نام با کد (Pseudonymization)</h3><p>«فرد الف» هنوز ممکن است از روی محل، تاریخ یا شغل شناخته شود. کلید تبدیل اسم به کد را جدا و در جای امن نگه دارید.</p></div>
+</div>
+</section>
+<section class="slide" data-notes="درباره‌ی تماس با سرویس، همگام‌سازی یا افزونه‌ها پرس‌وجو کنید. تنظیمات امروز و سیاست یک حساب خاص ممکن است با نسخه‌ای دیگر فرق کند.">
+<h2>تنظیمات سرویس را پیش از افزودن فایل ببینید</h2>
+<ul class="big-list">
+<li>آیا گفت‌وگوها یا فایل‌ها نگه داشته می‌شوند؟ برای چه مدتی؟</li>
+<li>آیا گزینه‌ای برای خاموش‌کردن استفاده از داده‌ها جهت بهبود سرویس وجود دارد؟ آیا این گزینه شامل فایل‌ها هم می‌شود؟</li>
+<li>«گفت‌وگوی موقت» دقیقاً چه چیزی را حذف می‌کند و چه چیزی ممکن است باقی بماند؟</li>
+<li>آیا فایل با فضای ابری، افزونه یا حساب دیگری همگام می‌شود؟</li>
+<li>اگر اشتباهی فایل فرستادیم، چه کسی می‌تواند درخواست حذف بدهد؟</li>
+</ul>
+<p class="warning">در صورت نامعلوم‌بودن پاسخ، فایل حساس را نفرستید تا اطلاعات کافی پیدا کنید.</p>
+</section>
+<section class="slide" data-notes="قرارداد را به زبان ساده بخوانید. قرارداد نباید وعده‌ی غیرواقعی بدهد. فرد مسئول، راه گزارش خطا و تاریخ بازبینی را مشخص کنند.">
+<h2>توافق کار با داده (Data Handling Agreement)</h2>
+<pre class="codebox">برای چه کاری از ابزار استفاده می‌کنیم؟ ___________
+چه اطلاعاتی را هرگز بارگذاری نمی‌کنیم؟ __________
+پیش از فرستادن، چه کسی فایل را بررسی می‌کند؟ ____
+چه ابزارها و حساب‌هایی بررسی شده‌اند؟ __________
+فایل کجا می‌ماند و چه کسی می‌تواند حذفش کند؟ _____
+اگر اشتباهی فایلی فرستادیم، به چه کسی می‌گوییم؟ __
+مسئول بازبینی و تاریخ بعدی: __________________</pre>
+<p class="small">این توافق را با اعضای مربوط مرور کنید؛ هر سه ماه یا با تغییر ابزار دوباره بخوانید.</p>
+</section>
+<section class="slide" data-notes="تمرین را با متن ساختگی و بی‌خطر انجام دهید. اگر ابزار در دسترس است، تنظیمات را فقط مشاهده کنید و فایلی بارگذاری نکنید.">
+<h2>تمرین: آیا این فایل را باید بفرستیم؟</h2>
+<div class="exercise"><h3>مرحله‌ی اول</h3><p>روی یک نمونه‌ی ساختگی نشانه بزنید: نام، شماره، مکان، تاریخ و جزئیات کم‌یاب.</p></div>
+<div class="exercise"><h3>مرحله‌ی دوم</h3><p>مشخص کنید برای ساخت یک جدول ساده کدام بخش‌ها لازم نیست و می‌توان حذف کرد.</p></div>
+<div class="exercise"><h3>مرحله‌ی سوم</h3><p>اگر هنوز درباره‌ی نگهداری فایل چیزی نمی‌دانید، بنویسید پیش از ادامه چه کسی باید چه چیزی را بررسی کند.</p></div>
+</section>
+<section class="slide" data-notes="سه پرسش پایانی را با هم مرور کنید: چه چیزی می‌فرستم، چه کسی به آن دسترسی دارد و اگر نخواهم بفرستم چه جایگزینی دارم؟">
+<h2>سه پرسش پیش از فشردن دکمه‌ی ارسال</h2>
+<div class="prompt-parts">
+<div class="part"><span class="letter">۱</span><div><strong>آیا برای انجام این کار به این داده نیاز است؟</strong><p>اگر نه، آن را نفرستید.</p></div></div>
+<div class="part"><span class="letter">۲</span><div><strong>فایل پس از ارسال کجا می‌رود؟</strong><p>سیاست، تنظیمات و اتصال‌های ابزار را بررسی کنید.</p></div></div>
+<div class="part"><span class="letter">۳</span><div><strong>آیا می‌توان کار را با نمونه یا نسخه‌ی کم‌جزئیات انجام داد؟</strong><p>اغلب می‌شود تمرین را با داده‌ی ساختگی پیش برد.</p></div></div>
+</div>
+<p class="question">این پرسش‌ها برای جلوگیری از کار نیستند؛ برای انتخاب آگاهانه‌اند.</p>
+</section>
+</main>
+
+<script>
+// موتور ساده اسلاید — ایجنت‌های هوش مصنوعی برای کنشگران
+// کنترل: فلش راست/چپ یا Space، F تمام‌صفحه، Esc فهرست، P حالت مدرس
+
+(function () {
+  "use strict";
+
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var current = 0;
+  var presenter = false;
+  var notesBox = null;
+
+  if (slides.length === 0) return;
+
+  // شماره اولیه از هش (#3)
+  var h = parseInt((location.hash || "").replace("#", ""), 10);
+  if (!isNaN(h) && h >= 1 && h <= slides.length) current = h - 1;
+
+  // ناوبری پایین صفحه
+  var nav = document.createElement("div");
+  nav.className = "nav";
+  nav.innerHTML =
+    '<button type="button" data-act="next" title="بعدی (فلش چپ)">بعدی ←</button>' +
+    '<button type="button" data-act="prev" title="قبلی (فلش راست)">→ قبلی</button>';
+  document.body.appendChild(nav);
+
+  var counter = document.createElement("div");
+  counter.className = "counter";
+  document.body.appendChild(counter);
+
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+
+  function show(i) {
+    current = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach(function (s, idx) {
+      s.classList.toggle("active", idx === current);
+    });
+    counter.textContent = pad(current + 1) + " / " + pad(slides.length);
+    document.getElementById("progress").style.width =
+      ((current + 1) / slides.length) * 100 + "%";
+    location.hash = "#" + (current + 1);
+    if (presenter && notesBox) {
+      var n = slides[current].getAttribute("data-notes") || "—";
+      notesBox.textContent = n;
+    }
+  }
+
+  // جعبه یادداشت مدرس
+  function togglePresenter() {
+    presenter = !presenter;
+    document.body.classList.toggle("presenter", presenter);
+    if (presenter) {
+      notesBox = document.createElement("div");
+      notesBox.className = "notes";
+      notesBox.title = "یادداشت‌های مدرس — با P ببندید";
+      document.body.appendChild(notesBox);
+    } else if (notesBox) {
+      notesBox.remove();
+      notesBox = null;
+    }
+    show(current);
+  }
+
+  // نمای فهرست
+  function toggleOverview() {
+    var any = document.body.classList.toggle("overview");
+    if (any) {
+      slides.forEach(function (s, idx) {
+        s.classList.add("active");
+        s.style.display = "block";
+        s.style.position = "relative";
+        s.style.minHeight = "140px";
+        s.style.padding = "1rem 2rem";
+        s.style.borderBottom = "1px solid #2a3854";
+        s.style.cursor = "pointer";
+        s.onclick = function () {
+          clearOverview();
+          show(idx);
+        };
+      });
+      counter.textContent = "فهرست — برای انتخاب کلیک کنید";
+    } else {
+      clearOverview();
+      show(current);
+    }
+  }
+
+  function clearOverview() {
+    document.body.classList.remove("overview");
+    slides.forEach(function (s) {
+      s.style.display = "";
+      s.style.position = "";
+      s.style.minHeight = "";
+      s.style.padding = "";
+      s.style.borderBottom = "";
+      s.style.cursor = "";
+      s.onclick = null;
+    });
+  }
+
+  function next() { show(current + 1); }
+  function prev() { show(current - 1); }
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowLeft" || e.key === " " || e.key === "PageDown") {
+      e.preventDefault(); next();
+    } else if (e.key === "ArrowRight" || e.key === "PageUp") {
+      e.preventDefault(); prev();
+    } else if (e.key === "ArrowDown") { e.preventDefault(); next(); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); prev(); }
+    else if (e.key === "Home") { e.preventDefault(); show(0); }
+    else if (e.key === "End") { e.preventDefault(); show(slides.length - 1); }
+    else if (e.key === "f" || e.key === "F") {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    } else if (e.key === "p" || e.key === "P") {
+      togglePresenter();
+    } else if (e.key === "Escape") {
+      toggleOverview();
+    }
+  });
+
+  // کلیک روی دکمه‌های ناوبری
+  nav.addEventListener("click", function (e) {
+    var act = e.target && e.target.getAttribute("data-act");
+    if (act === "next") next();
+    if (act === "prev") prev();
+  });
+
+  // لمس (اسوایپ) برای تبلت
+  var touchX = null;
+  document.addEventListener("touchstart", function (e) {
+    touchX = e.touches[0].clientX;
+  }, { passive: true });
+  document.addEventListener("touchend", function (e) {
+    if (touchX === null) return;
+    var dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 50) { dx > 0 ? prev() : next(); }
+    touchX = null;
+  }, { passive: true });
+
+  window.addEventListener("hashchange", function () {
+    var h = parseInt((location.hash || "").replace("#", ""), 10);
+    if (!isNaN(h) && h >= 1 && h <= slides.length && h - 1 !== current) show(h - 1);
+  });
+
+  show(current);
+})();
+
+</script>
+</body>
+</html>

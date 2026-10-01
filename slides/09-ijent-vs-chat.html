@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ایجنت در برابر چت هوش مصنوعی — سند مرجع</title>
+<style>
+:root {
+  --bg: #0a1117;
+  --bg2: #111c24;
+  --panel: #15232c;
+  --ink: #f0f4ed;
+  --muted: #adbdba;
+  --accent: #f2b35f;
+  --accent2: #81d6bd;
+  --warn: #ffd080;
+  --danger: #ff8791;
+  --line: #2b4147;
+  --shadow: 0 18px 50px rgba(0, 0, 0, .22);
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  background:
+    radial-gradient(ellipse at 10% 5%, rgba(129, 214, 189, .08), transparent 32rem),
+    radial-gradient(ellipse at 95% 95%, rgba(242, 179, 95, .07), transparent 35rem),
+    var(--bg);
+  color: var(--ink);
+  font-family: Vazirmatn, "Vazirmatn UI", "Segoe UI", Tahoma, Arial, sans-serif;
+  direction: rtl;
+  line-height: 1.9;
+}
+.doc { max-width: 900px; margin: 0 auto; padding: 3.5rem 2rem 5rem; }
+.doc > .kicker {
+  display: inline-block; padding: .4rem .9rem; margin-bottom: 1rem;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: rgba(129,214,189,.07); color: var(--accent2); font-size: .92rem;
+}
+h1 { font-size: clamp(2rem, 4.5vw, 3rem); line-height: 1.4; letter-spacing: -.03em; margin: 0 0 .6rem; }
+.subtitle { color: var(--muted); font-size: 1.15rem; max-width: 62ch; margin: 0 0 2.4rem; }
+h2 {
+  color: var(--accent); font-size: clamp(1.35rem, 2.6vw, 1.8rem);
+  margin: 3rem 0 1rem; padding-top: 1.6rem; border-top: 1px solid var(--line);
+  letter-spacing: -.01em;
+}
+h2:first-of-type { border-top: none; padding-top: 0; }
+h3 { color: var(--accent2); font-size: 1.15rem; margin: 1.6rem 0 .6rem; }
+p { font-size: 1.06rem; margin: 0 0 1.1rem; }
+p.lead { font-size: 1.15rem; color: var(--ink); }
+strong { color: var(--ink); }
+.eng { direction: ltr; unicode-bidi: embed; color: var(--muted); font-size: .95em; }
+
+.callout {
+  margin: 1.2rem 0; padding: .9rem 1.2rem;
+  background: linear-gradient(110deg, rgba(129,214,189,.13), rgba(129,214,189,.035));
+  border-inline-start: 4px solid var(--accent2);
+  border-radius: 4px 14px 14px 4px;
+}
+.callout.warn {
+  background: rgba(255,196,107,.09);
+  border-inline-start-color: var(--warn);
+}
+
+table.compare {
+  width: 100%; border-collapse: collapse; margin: 1.2rem 0;
+  font-size: .98rem;
+}
+table.compare th, table.compare td {
+  border: 1px solid var(--line); padding: .8rem 1rem; text-align: right; vertical-align: top; line-height: 1.75;
+}
+table.compare th { background: var(--panel); color: var(--accent2); }
+table.compare tr:nth-child(even) td { background: rgba(255,255,255,.018); }
+
+.cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.2rem 0; }
+.cols3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.2rem 0; }
+.card {
+  background: linear-gradient(145deg, rgba(255,255,255,.035), transparent 60%), var(--panel);
+  border: 1px solid var(--line); border-radius: 16px; padding: 1.1rem 1.2rem;
+  box-shadow: var(--shadow);
+}
+.card .icon { font-size: 1.7rem; }
+.card h3 { margin: .5rem 0 .3rem; }
+.card p { font-size: .98rem; color: var(--ink); margin: 0; }
+.card .eng-name { display: block; color: var(--muted); font-size: .85rem; margin-top: .15rem; }
+
+.autonomy { display: grid; grid-template-columns: repeat(4, 1fr); gap: .8rem; margin: 1.2rem 0; }
+.aut-level { border-radius: 12px; padding: .9rem; border: 1px solid var(--line); }
+.aut-level h3 { margin: 0 0 .3rem; font-size: 1rem; }
+.aut-level p { font-size: .92rem; margin: 0; color: var(--muted); }
+.aut-level.l1 { background: rgba(126,226,184,.12); }
+.aut-level.l2 { background: rgba(77,163,255,.12); }
+.aut-level.l3 { background: rgba(255,196,107,.12); }
+.aut-level.l4 { background: rgba(255,122,144,.12); }
+.aut-level.l4 h3 { color: var(--danger); }
+
+.toc {
+  border: 1px solid var(--line); border-radius: 16px; padding: 1.2rem 1.4rem;
+  background: rgba(17,28,36,.6); margin: 2rem 0;
+}
+.toc h2 { margin: 0 0 .7rem; padding: 0; border: none; font-size: 1.1rem; color: var(--accent2); }
+.toc ol { margin: 0; padding-inline-start: 1.3rem; }
+.toc li { margin-bottom: .4rem; }
+.toc a { color: var(--ink); text-decoration: none; }
+.toc a:hover { color: var(--accent2); }
+
+.footer-note {
+  margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--line);
+  color: var(--muted); font-size: .92rem;
+}
+
+@media (max-width: 720px) {
+  .doc { padding: 2.2rem 1.2rem 4rem; }
+  .cols2, .cols3, .autonomy { grid-template-columns: 1fr; }
+}
+@media print {
+  html, body { background: #fff; color: #172126; }
+  .card, .toc, .callout { box-shadow: none; }
+}
+</style>
+</head>
+<body>
+<div class="doc">
+
+<span class="kicker">سند مرجع تکمیلی · مرتبط با ماژول‌های ۱ و ۲</span>
+<h1>ایجنت هوش مصنوعی در برابر چت هوش مصنوعی</h1>
+<p class="subtitle">این سند برای مروری دقیق‌تر بر سه مفهومی نوشته شده که در گفت‌وگوهای روزمره اغلب با هم اشتباه گرفته می‌شوند: مدل زبانی، چت هوش مصنوعی و ایجنت. هدف این نیست که یکی را «بهتر» از دیگری نشان دهیم؛ هدف این است که با دیدن تفاوت‌ها، بدانیم هر بار با کدام‌یک طرفیم و چه انتظاری از آن درست است.</p>
+
+<div class="toc">
+<h2>در این سند می‌خوانید</h2>
+<ol>
+<li><a href="#chisti">ایجنت هوش مصنوعی دقیقاً چیست؟</a></li>
+<li><a href="#chat-vs-agent">تفاوت ایجنت با چت هوش مصنوعی</a></li>
+<li><a href="#anvaa">انواع ایجنت‌ها</a></li>
+<li><a href="#jamee">جمع‌بندی یک‌نگاه</a></li>
+</ol>
+</div>
+
+<h2 id="chisti">۱ · ایجنت هوش مصنوعی دقیقاً چیست؟</h2>
+
+<p class="lead"><strong>ایجنت هوش مصنوعی</strong> (<span class="eng">AI Agent</span>) برنامه‌ای است که یک هدف را می‌گیرد، آن را به چند گام کوچک‌تر تقسیم می‌کند و برای رسیدن به نتیجه، این گام‌ها را یکی پس از دیگری دنبال می‌کند — و در این مسیر، در صورت نیاز، از ابزارهای بیرونی هم کمک می‌گیرد. برای مثال اگر از یک ایجنت بخواهیم «برای سفر آخر هفته یک برنامه‌ی سه‌روزه بچین و هزینه‌ی تقریبی هر روز را هم بگو»، ایجنت ممکن است چند مرحله را خودش طی کند: نکته‌های مهم را از درخواست ما استخراج کند، برای پیدا کردن قیمت واقعی جست‌وجوی وب انجام دهد، نتیجه‌ها را در قالب یک جدول کنار هم بچیند و در پایان از ما بخواهد پیش از رزرو نهایی، یک‌بار آن را تأیید کنیم. نکته‌ی مهم این است که همه‌ی این مراحل، بدون این‌که ما هر بار دستور جداگانه بدهیم، در ادامه‌ی همان یک درخواست اول انجام می‌شود.</p>
+
+<p>آنچه یک ایجنت را ایجنت می‌کند، صرفاً «هوشمندبودن» نیست؛ ترکیبی از چند بخش است: یک هدف روشن، توانایی برنامه‌ریزی گام‌به‌گام، دسترسی به ابزار یا اطلاعات بیرونی (مثل جست‌وجوی وب، خواندن فایل یا فرستادن پیام)، و حافظه‌ای کوتاه‌مدت برای این‌که میان گام اول و گام دهم، رشته‌ی کار را گم نکند. به همین دلیل، میزان «اختیار» ایجنت‌ها هم یکسان نیست: بعضی فقط پیشنهاد می‌دهند و منتظر تأیید انسان می‌مانند، و بعضی دیگر می‌توانند تا انتهای کار پیش بروند و خودشان هم اقدام کنند. هرچه دسترسی و اختیار یک ایجنت بیشتر باشد، پیامد یک اشتباه هم بزرگ‌تر می‌شود؛ به همین دلیل در این دوره همیشه از «شروع کوچک و نظارت انسانی» صحبت می‌کنیم.</p>
+
+<h3>تفاوت ایجنت با مدل زبانی <span class="eng">(Large Language Model)</span></h3>
+<p><strong>مدل زبانی</strong> موتور زیرینِ کار است، نه خودِ ایجنت. مدل زبانی برنامه‌ای است که با دیدن مقدار زیادی متن در زمان آموزش، الگوهای زبان را یاد گرفته و بر همان اساس، محتمل‌ترین ادامه‌ی یک متن را پیش‌بینی و تولید می‌کند. مدل زبانی به‌تنهایی نه حافظه‌ای از گفت‌وگوهای قبلی دارد، نه می‌تواند به اینترنت وصل شود، نه می‌تواند فایلی بسازد یا پیامی بفرستد — او فقط ورودی می‌گیرد و متن تولید می‌کند. ایجنت، همین مدل زبانی را مثل «مغزِ استدلال‌کننده» به کار می‌گیرد، اما دور آن یک لایه‌ی اضافه می‌سازد: برنامه‌ای که تصمیم می‌گیرد کِی باید از ابزاری استفاده کرد، نتیجه‌ی آن ابزار را دوباره به مدل بدهد، و بر اساس پاسخ تازه، گام بعدی را تعیین کند. به زبان ساده: مدل زبانی «فکر می‌کند و می‌نویسد»؛ ایجنت «فکر می‌کند، تصمیم می‌گیرد، از ابزار استفاده می‌کند، تصمیم می‌گیرد، و باز هم ادامه می‌دهد» — تا وقتی هدف برآورده شود یا نوبت به تأیید انسان برسد.</p>
+
+<div class="callout">
+<strong>یک تشبیه ساده:</strong> مدل زبانی مثل کسی است که فقط می‌تواند در یک اتاق بنشیند و بر اساس آنچه از قبل خوانده، جواب بدهد. ایجنت مثل همان فرد است، اما حالا اجازه دارد از اتاق بیرون برود، از منابع دیگر بپرسد، کاری انجام دهد و دوباره برگردد و ادامه‌ی کار را جمع‌بندی کند.
+</div>
+
+<h2 id="chat-vs-agent">۲ · تفاوت ایجنت با چت هوش مصنوعی</h2>
+
+<p>«چت هوش مصنوعی» یا <span class="eng">AI chat</span> (که معمولاً چت‌بات هم نامیده می‌شود)، ساده‌ترین شکل استفاده از یک مدل زبانی است: ما پیامی تایپ می‌کنیم، مدل یک پاسخ می‌سازد، و نوبت به ما برمی‌گردد تا گام بعدی را خودمان تعیین کنیم. رابطه، گفت‌وگومحور و «نوبتی» است — شبیه پرسش‌وپاسخ. ایجنت، همین گفت‌وگو را نقطه‌ی شروع می‌داند، اما به‌جای این‌که پس از هر پاسخ منتظر دستور بعدیِ ما بماند، خودش می‌تواند چند گام را پشت‌سرهم و بدون دخالت مکرر ما جلو ببرد، به شرطی که برایش هدف و مرز مشخص کرده باشیم.</p>
+
+<table class="compare">
+<thead><tr><th>ویژگی</th><th>چت هوش مصنوعی <span class="eng">(AI Chat)</span></th><th>ایجنت هوش مصنوعی <span class="eng">(AI Agent)</span></th></tr></thead>
+<tbody>
+<tr><td>واحد کار</td><td>یک پیام، یک پاسخ</td><td>یک هدف، چند گام تا رسیدن به نتیجه</td></tr>
+<tr><td>چه کسی گام بعد را آغاز می‌کند؟</td><td>همیشه کاربر</td><td>معمولاً خودِ ایجنت، تا رسیدن به نقطه‌ی توقف یا تأیید</td></tr>
+<tr><td>دسترسی به ابزار</td><td>معمولاً ندارد یا بسیار محدود است</td><td>می‌تواند به جست‌وجو، فایل، تقویم یا سرویس دیگر وصل شود</td></tr>
+<tr><td>حافظه‌ی میان‌مرحله‌ای</td><td>فقط در همان گفت‌وگو، برای پاسخ بعدی</td><td>در طول اجرای کار، برای پیگیری گام‌های قبلی نگه داشته می‌شود</td></tr>
+<tr><td>نمونه‌ی کاربرد</td><td>«این پاراگراف را برایم خلاصه کن.»</td><td>«این گزارش را بخوان، نکته‌هایش را دربیاور، با منبع دیگری مقایسه کن و در پایان یک جدول به من بده.»</td></tr>
+<tr><td>ریسک اصلی</td><td>پاسخ نادرست یا ساختگی در یک پیام</td><td>همان ریسک، به‌علاوه‌ی احتمال اقدام واقعی (ارسال، حذف، خرید) بدون بازبینی</td></tr>
+</tbody>
+</table>
+
+<p>یک نکته‌ی مهم: مرز میان این دو همیشه قطعی نیست. بسیاری از سرویس‌های امروزی که با نام «چت» شناخته می‌شوند، به‌تدریج قابلیت‌های ایجنتی (جست‌وجوی وب، اجرای کد، اتصال به تقویم) به آن‌ها اضافه شده است. به همین دلیل، به‌جای تکیه بر نامِ محصول، بهتر است هر بار بپرسیم: «این ابزار الان دقیقاً به چه چیزهایی وصل است و چه اقدامی می‌تواند بدون اجازه‌ی من انجام دهد؟»</p>
+
+<h2 id="anvaa">۳ · انواع ایجنت‌ها</h2>
+
+<p>ایجنت‌ها را می‌توان از دو زاویه‌ی متفاوت دسته‌بندی کرد: از نظر <strong>میزان اختیاری</strong> که به آن‌ها داده‌ایم، و از نظر <strong>نوع کاری</strong> که برایش ساخته شده‌اند. هر دو دسته‌بندی برای تصمیم‌گیری روزمره مفیدند.</p>
+
+<h3>الف) دسته‌بندی بر اساس میزان اختیار <span class="eng">(Autonomy)</span></h3>
+<div class="autonomy">
+<div class="aut-level l1"><h3>۱ · پیشنهاددهنده</h3><p>فقط پیش‌نویس یا پیشنهاد می‌سازد؛ انسان خودش نتیجه را اجرا می‌کند.</p></div>
+<div class="aut-level l2"><h3>۲ · با اجازه پیش می‌رود</h3><p>هر گام را نشان می‌دهد و پیش از ادامه، اجازه می‌گیرد.</p></div>
+<div class="aut-level l3"><h3>۳ · در نقاط مشخص مکث می‌کند</h3><p>چند کار کم‌خطر را خودش انجام می‌دهد، اما پیش از اقدام مهم متوقف می‌شود.</p></div>
+<div class="aut-level l4"><h3>۴ · خودمختار</h3><p>می‌تواند تا پایان کار برود؛ خطا هم ممکن است بدون بازبینی به بیرون برسد.</p></div>
+</div>
+<p class="small" style="color:var(--muted); font-size:.95rem;">این سطح‌بندی همان چیزی است که در ماژول ۱ دیدیم؛ قاعده‌ی ساده همچنان پابرجاست: هرچه اقدام پرپیامدتر باشد، باید در سطح پایین‌تری از اختیار (و با نظارت بیشتر) اجرا شود.</p>
+
+<h3>ب) دسته‌بندی بر اساس نوع کار</h3>
+<div class="cols3">
+<div class="card"><div class="icon">💬</div><h3>ایجنتِ گفت‌وگومحورِ ساده<span class="eng-name">Single-turn / Reactive Agent</span></h3><p>هر بار فقط به همان درخواست فوری پاسخ می‌دهد؛ کمترین شباهت به «برنامه‌ریزی چندمرحله‌ای» را دارد و بیشتر شبیه چت هوشمند است.</p></div>
+<div class="card"><div class="icon">🧩</div><h3>ایجنتِ ابزارمحور<span class="eng-name">Tool-using Agent</span></h3><p>می‌تواند از یک یا چند ابزار مشخص (جست‌وجوی وب، ماشین‌حساب، خواندن فایل) در میانه‌ی کار استفاده کند تا پاسخ دقیق‌تری بسازد.</p></div>
+<div class="card"><div class="icon">🗺️</div><h3>ایجنتِ برنامه‌ریز<span class="eng-name">Planning Agent</span></h3><p>پیش از شروع، هدف را به چند زیرکار تقسیم می‌کند، ترتیب انجام آن‌ها را می‌چیند و در صورت شکست یک گام، برنامه را دوباره تنظیم می‌کند.</p></div>
+<div class="card"><div class="icon">🧠</div><h3>ایجنتِ دارای حافظه‌ی بلندمدت<span class="eng-name">Memory-augmented Agent</span></h3><p>اطلاعات یا ترجیحات را از یک نشست به نشست دیگر نگه می‌دارد؛ مثلاً به‌خاطر می‌سپارد قالب دلخواه شما برای گزارش چیست.</p></div>
+<div class="card"><div class="icon">🤝</div><h3>سامانه‌ی چندایجنتی<span class="eng-name">Multi-agent System</span></h3><p>چند ایجنت با نقش‌های متفاوت (مثلاً یکی پژوهشگر، یکی نویسنده، یکی بازبین) با هم و با نظارت یک هماهنگ‌کننده کار می‌کنند.</p></div>
+<div class="card"><div class="icon">🖥️</div><h3>ایجنتِ کاربرِ رایانه<span class="eng-name">Computer-use Agent</span></h3><p>می‌تواند مستقیماً با صفحه‌نمایش، مرورگر یا نرم‌افزار کار کند: کلیک بزند، فرم پر کند یا میان برنامه‌ها جابه‌جا شود.</p></div>
+</div>
+
+<div class="callout warn">
+<strong>یک هشدار عملی:</strong> نام دسته‌بندی، تضمین رفتار نیست. دو ایجنتِ «ابزارمحور» از دو سازنده‌ی مختلف ممکن است دسترسی، محدودیت و سطح نظارت کاملاً متفاوتی داشته باشند. برای هر ابزار تازه، همان پرسش ماژول ۳ را دوباره بپرسید: «دقیقاً به چه چیزی وصل است و چه کسی نتیجه را بازبینی می‌کند؟»
+</div>
+
+<h2 id="jamee">۴ · جمع‌بندی یک‌نگاه</h2>
+<table class="compare">
+<thead><tr><th></th><th>مدل زبانی <span class="eng">(LLM)</span></th><th>چت هوش مصنوعی <span class="eng">(AI Chat)</span></th><th>ایجنت هوش مصنوعی <span class="eng">(AI Agent)</span></th></tr></thead>
+<tbody>
+<tr><td>نقش اصلی</td><td>تولید متن بر اساس الگوی زبان</td><td>رابط گفت‌وگومحور برای استفاده از مدل</td><td>دنبال‌کردن یک هدف در چند گام</td></tr>
+<tr><td>حافظه</td><td>ندارد (مگر با ابزار بیرونی)</td><td>در همان گفت‌وگو</td><td>در طول اجرای کار، گاهی بین نشست‌ها</td></tr>
+<tr><td>ابزار بیرونی</td><td>ندارد</td><td>معمولاً محدود</td><td>بسته به تنظیم، می‌تواند گسترده باشد</td></tr>
+<tr><td>نیاز به تأیید انسان</td><td>موضوعیت ندارد</td><td>در هر پیام، طبیعتاً هست</td><td>باید از پیش و آگاهانه تنظیم شود</td></tr>
+</tbody>
+</table>
+
+<p class="footer-note">این سند مکمل ماژول‌های ۱ و ۲ دوره‌ی «ایجنت‌های هوش مصنوعی و روش کار با آن‌ها» است. برای تمرین عملی این تفاوت‌ها، به ماژول ۲ (کاربردها) و ماژول ۷ (کارگاه عملی) مراجعه کنید.</p>
+
+</div>
+</body>
+</html>
